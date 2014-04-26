@@ -19,7 +19,8 @@ public enum Tones implements NoteData
 	D2(74),
 	DIS2(75),
 	E2(76),
-	F2(77);
+	F2(77),
+	FIS2(78);
 	
 	private Integer tone;
 	

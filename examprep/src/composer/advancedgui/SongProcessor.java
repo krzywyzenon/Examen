@@ -15,6 +15,8 @@ public class SongProcessor
 	
 	public static void addNote(Integer toneValue)
 	{
+		if(Staff.getActiveStaff() != 1)
+		toneValue = toneValue - (Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff()) - Staff.getStaffBeginningCoordinates().get(1));
 		NoteData tone;
 		if(isSharp(toneValue))
 		{

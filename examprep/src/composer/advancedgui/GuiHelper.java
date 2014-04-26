@@ -13,14 +13,19 @@ import com.google.common.collect.ImmutableMap;
 import composer.data.NoteData;
 import composer.data.Tones;
 
-public class GuiHelper //TODO zrobic dzwiek do C i uzupelnic Sharpy
+public class GuiHelper //TODO zrobic odpowiednie rysowanie ukrytej linii przy C
 {
+	private static final Integer ROWS_BEGINNING = 100;
+	private static final Integer SPACE_BETWEEN_ROWS = 15;
+	private static final Integer ROW_HORIZONTAL_STARTING_POINT = 0;
+	private static final Integer ROW_HORIZONTAL_ENDING_POINT = 550;
+	
 	private static final Map<String, Integer> ROWS_HORIZONTAL_COORDINATES = ImmutableMap.of(
-			"First", 100,
-			"Second", 115,
-			"Third", 130,
-			"Fourth", 145,
-			"Fifth", 160
+			"First", ROWS_BEGINNING,
+			"Second", ROWS_BEGINNING + SPACE_BETWEEN_ROWS,
+			"Third", ROWS_BEGINNING + 2*SPACE_BETWEEN_ROWS,
+			"Fourth", ROWS_BEGINNING + 3*SPACE_BETWEEN_ROWS,
+			"Fifth", ROWS_BEGINNING + 4*SPACE_BETWEEN_ROWS
 			);
 	
 	private static final Map<String, Integer> BOXES_STARTPOINTS = ImmutableMap.of(
@@ -44,9 +49,7 @@ public class GuiHelper //TODO zrobic dzwiek do C i uzupelnic Sharpy
 	private static final Integer THIRD_ROW_VERTICAL_COORD = ROWS_HORIZONTAL_COORDINATES.get(THIRD);
 	private static final Integer FOURTH_ROW_VERTICAL_COORD = ROWS_HORIZONTAL_COORDINATES.get(FOURTH);
 	private static final Integer FIFTH_ROW_VERTICAL_COORD = ROWS_HORIZONTAL_COORDINATES.get(FIFTH);
-	
-	private static final Integer ROW_HORIZONTAL_STARTING_POINT = 0;
-	private static final Integer ROW_HORIZONTAL_ENDING_POINT = 550;
+	private static final Integer HIDDEN_ROW_VERTICAL_COORD = ROWS_HORIZONTAL_COORDINATES.get(FIFTH) + SPACE_BETWEEN_ROWS;
 	
 	private static final Integer FIRST_BOX_STARTING_POINT = BOXES_STARTPOINTS.get(FIRST);
 	private static final Integer SECOND_BOX_STARTING_POINT = BOXES_STARTPOINTS.get(SECOND);
@@ -59,6 +62,7 @@ public class GuiHelper //TODO zrobic dzwiek do C i uzupelnic Sharpy
 	private static final Integer BOX_WIDTH = 40;
 	private static final Integer BOX_HEIGHT = 70;
 	
+	private static final Integer C_TONE = (FIFTH_ROW_VERTICAL_COORD + HIDDEN_ROW_VERTICAL_COORD)/2 + 2;
 	private static final Integer D_TONE = FIFTH_ROW_VERTICAL_COORD;
 	private static final Integer E_TONE = (FOURTH_ROW_VERTICAL_COORD + FIFTH_ROW_VERTICAL_COORD)/2 + 2;
 	private static final Integer F_TONE = FOURTH_ROW_VERTICAL_COORD;
@@ -70,14 +74,19 @@ public class GuiHelper //TODO zrobic dzwiek do C i uzupelnic Sharpy
 	private static final Integer E2_TONE = FIRST_ROW_VERTICAL_COORD;
 	private static final Integer F2_TONE = FIRST_ROW_VERTICAL_COORD - 8;
 	//Sharps
-	private static final Integer C_SHARP = 0;
+	private static final Integer C_SHARP = C_TONE + 1000;
 	private static final Integer D_SHARP = D_TONE + 1000;
 	private static final Integer F_SHARP = F_TONE + 1000;
 	private static final Integer G_SHARP = G_TONE + 1000;
 	private static final Integer A_SHARP = A_TONE + 1000;
+	private static final Integer C2_SHARP = C2_TONE + 1000;
+	private static final Integer D2_SHARP = D2_TONE + 1000;
+	private static final Integer F2_SHARP = F2_TONE + 1000;
 	
 			
 	private static final Map<Integer, NoteData> TONES = ImmutableMap.<Integer, NoteData>builder()
+			.put(C_TONE, Tones.C)
+			.put(C_SHARP, Tones.CIS)
 			.put(D_TONE, Tones.D)
 			.put(D_SHARP, Tones.DIS)
 			.put(E_TONE, Tones.E)
@@ -89,25 +98,36 @@ public class GuiHelper //TODO zrobic dzwiek do C i uzupelnic Sharpy
 			.put(A_SHARP, Tones.AIS)
 			.put(B_TONE, Tones.B)
 			.put(C2_TONE, Tones.C2)
+			.put(C2_SHARP, Tones.CIS2)
 			.put(D2_TONE, Tones.D2)
+			.put(D2_SHARP, Tones.DIS2)
 			.put(E2_TONE, Tones.E2)
 			.put(F2_TONE, Tones.F2)
+			.put(F2_SHARP, Tones.FIS2)
 			.build();
 	
 	private static final Map<Integer, Boolean> SHARP_TONES = new HashMap<Integer,Boolean>();
 	static
 	{
+		SHARP_TONES.put(C_TONE, false);
 		SHARP_TONES.put(D_TONE, false);
 		SHARP_TONES.put(F_TONE, false);
 		SHARP_TONES.put(G_TONE, false);
 		SHARP_TONES.put(A_TONE, false);
+		SHARP_TONES.put(C2_TONE, false);
+		SHARP_TONES.put(D2_TONE, false);
+		SHARP_TONES.put(F2_TONE, false);
 		
 	}
 	private static final Map<Integer, Integer> TONES_TO_SHARP = ImmutableMap.<Integer, Integer>builder()
+			.put(C_TONE, C_SHARP)
 			.put(D_TONE, D_SHARP)
 			.put(F_TONE, F_SHARP)
 			.put(G_TONE, G_SHARP)
 			.put(A_TONE, A_SHARP)
+			.put(C2_TONE, C2_SHARP)
+			.put(D2_TONE, D2_SHARP)
+			.put(F2_TONE, F2_SHARP)
 			.build();
 	
 	
@@ -258,10 +278,76 @@ public class GuiHelper //TODO zrobic dzwiek do C i uzupelnic Sharpy
 			coordinate = (FOURTH_ROW_VERTICAL_COORD + FIFTH_ROW_VERTICAL_COORD)/2 + 2;
 			text.append("\nfifth half");
 		}
-		else
+		else if(y >= FIFTH_ROW_VERTICAL_COORD && y < (FIFTH_ROW_VERTICAL_COORD + HIDDEN_ROW_VERTICAL_COORD)/2)
 		{
 			coordinate = FIFTH_ROW_VERTICAL_COORD;
 			text.append("\nfifth");
+		}
+		else
+		{
+			coordinate = (FIFTH_ROW_VERTICAL_COORD + HIDDEN_ROW_VERTICAL_COORD)/2 + 2;
+			text.append("\n And finaly C");
+		}
+		
+		return coordinate;
+	}
+	
+	public static Integer verticalCoordinateUp(Integer y, Integer firstRow ,JTextArea text)
+	{
+		Integer coordinate = null;
+		if(y >= firstRow - 15 && y < firstRow - 5)
+		{
+			coordinate = firstRow - 8;
+		}
+		else if(y >= firstRow - 5 && y < (firstRow + firstRow + SPACE_BETWEEN_ROWS)/2)
+		{
+			coordinate = firstRow;
+			text.append("\nfirst");
+		}
+		else if(y >= (firstRow + firstRow + SPACE_BETWEEN_ROWS)/2 && y < (firstRow + SPACE_BETWEEN_ROWS))
+		{
+			coordinate = (firstRow + firstRow + SPACE_BETWEEN_ROWS)/2 + 2;
+			text.append("\nsecond half ");
+		}
+		else if(y >= (firstRow + SPACE_BETWEEN_ROWS) && y < (firstRow + SPACE_BETWEEN_ROWS + firstRow + 2*SPACE_BETWEEN_ROWS)/2)
+		{
+			coordinate = (firstRow + SPACE_BETWEEN_ROWS);
+			text.append("\nsecond");
+		}
+		else if(y >= (firstRow + SPACE_BETWEEN_ROWS + firstRow + 2*SPACE_BETWEEN_ROWS)/2 && y < (firstRow + 2*SPACE_BETWEEN_ROWS))
+		{
+			coordinate = (firstRow + SPACE_BETWEEN_ROWS + firstRow + 2*SPACE_BETWEEN_ROWS)/2 + 2;
+			text.append("\nthird half");
+		}
+		else if(y >= (firstRow + 2*SPACE_BETWEEN_ROWS) && y < (firstRow + 2*SPACE_BETWEEN_ROWS + firstRow + 3*SPACE_BETWEEN_ROWS)/2)
+		{
+			coordinate = (firstRow + 2*SPACE_BETWEEN_ROWS);
+			text.append("\nthird");
+		}
+		else if(y >= (firstRow + 2*SPACE_BETWEEN_ROWS + firstRow + 3*SPACE_BETWEEN_ROWS)/2 && y < (firstRow + 3*SPACE_BETWEEN_ROWS))
+		{
+			coordinate = (firstRow + 2*SPACE_BETWEEN_ROWS + firstRow + 3*SPACE_BETWEEN_ROWS)/2 + 2;
+			text.append("\nfour half");
+		}
+		else if(y >= (firstRow + 3*SPACE_BETWEEN_ROWS) && y < (firstRow + 3*SPACE_BETWEEN_ROWS + firstRow + 4*SPACE_BETWEEN_ROWS)/2)
+		{
+			coordinate = (firstRow + 3*SPACE_BETWEEN_ROWS);
+			text.append("\nfourth");
+		}
+		else if(y >= (firstRow + 3*SPACE_BETWEEN_ROWS + firstRow + 4*SPACE_BETWEEN_ROWS)/2 && y < (firstRow + 4*SPACE_BETWEEN_ROWS))
+		{
+			coordinate = (firstRow + 3*SPACE_BETWEEN_ROWS + firstRow + 4*SPACE_BETWEEN_ROWS)/2 + 2;
+			text.append("\nfifth half");
+		}
+		else if(y >= (firstRow + 4*SPACE_BETWEEN_ROWS) && y < (firstRow + 4*SPACE_BETWEEN_ROWS + firstRow + 5*SPACE_BETWEEN_ROWS)/2)
+		{
+			coordinate = firstRow + 4*SPACE_BETWEEN_ROWS;
+			text.append("\nfifth");
+		}
+		else
+		{
+			coordinate = (firstRow + 4*SPACE_BETWEEN_ROWS + firstRow + 5*SPACE_BETWEEN_ROWS)/2 + 2;
+			text.append("\n And finaly C");
 		}
 		
 		return coordinate;
@@ -286,6 +372,11 @@ public class GuiHelper //TODO zrobic dzwiek do C i uzupelnic Sharpy
 
 	public static File getPlayKeyFile() {
 		return PLAY_KEY_FILE;
+	}
+	
+	public static Integer getActiveStaffBeginningCoordinate()
+	{
+		return Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff());
 	}
 
 
