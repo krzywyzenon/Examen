@@ -13,12 +13,14 @@ public class HalfNote extends NoteDrawing {
 		
 	}
 	
-	public HalfNote(int bFX, int bFY)
+	public HalfNote(int bFX, int bFY, boolean checkForC)
 	{
 		this.ballFromX = bFX;
 		this.ballFromY = bFY;
 		this.stickFromX= this.ballFromX + 17;
 		this.stickFromY = this.ballFromY - 40;
+		this.checkIfNoteIsC = checkForC;
+		setCParameters();
 	}
 	
 	@Override
@@ -28,15 +30,18 @@ public class HalfNote extends NoteDrawing {
 		g2D.setStroke(new BasicStroke(4F));
 		g2D.drawOval(ballFromX, ballFromY, 20, 15);
 		g.fillRect(stickFromX, stickFromY , 5, 50);
+		paintShortLine(g);
 
 	}
 
 	@Override
-	public void setParameters(int bFX, int bFY) {
+	public void setParameters(int bFX, int bFY, boolean checkForC) {
 		this.ballFromX = bFX;
 		this.ballFromY = bFY;
 		this.stickFromX= this.ballFromX + 17;
 		this.stickFromY = this.ballFromY - 40;
+		this.checkIfNoteIsC = checkForC;
+		setCParameters();
 
 	}
 

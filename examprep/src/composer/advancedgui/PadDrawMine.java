@@ -29,15 +29,14 @@ class PadDrawMine extends JComponent //Popatrzec na sharp niedzialajacy na innyc
 	
 	private static List<NoteDrawing> drawnNotes = new ArrayList<NoteDrawing>();
 	
-	private static final EighthNote EIGHTH_NOTE = new EighthNote(GuiHelper.getFirstBoxStartingPoint() + 8, 62);
-	private static final QuarterNote QUARTER_NOTE = new QuarterNote(GuiHelper.getSecondBoxStartingPoint() + 10, 62); 
-	private static final HalfNote HALF_NOTE = new HalfNote(GuiHelper.getThirdBoxStartingPoint() + 10, 60);
-	private static final FullNote FULL_NOTE = new FullNote(GuiHelper.getFourthBoxStartingPoint() + 10, 60);
+	private static final EighthNote EIGHTH_NOTE = new EighthNote(GuiHelper.getFirstBoxStartingPoint() + 8, 62, NoteDrawing.SKIP_CHECK);
+	private static final QuarterNote QUARTER_NOTE = new QuarterNote(GuiHelper.getSecondBoxStartingPoint() + 10, 62, NoteDrawing.SKIP_CHECK); 
+	private static final HalfNote HALF_NOTE = new HalfNote(GuiHelper.getThirdBoxStartingPoint() + 10, 60, NoteDrawing.SKIP_CHECK);
+	private static final FullNote FULL_NOTE = new FullNote(GuiHelper.getFourthBoxStartingPoint() + 10, 60, NoteDrawing.SKIP_CHECK);
 	private static final SharpMarking SHARP_MARKING = new SharpMarking(GuiHelper.getFifthBoxStartingPoint() + 15,30);
 	
 	
 	Staff firstStaff = new Staff(Staff.getStaffBeginningCoordinates().get(1), Staff.VIOLIN_KEY);
-	//Staff firstStaff = new Staff(100, Staff.VIOLIN_KEY);
 	Staff secondStaff = new Staff(Staff.getStaffBeginningCoordinates().get(2), Staff.NO_VIOLIN_KEY);
 	Staff thirdStaff = new Staff(Staff.getStaffBeginningCoordinates().get(3), Staff.NO_VIOLIN_KEY);
 	
@@ -104,16 +103,16 @@ class PadDrawMine extends JComponent //Popatrzec na sharp niedzialajacy na innyc
 				if(!IS_RELEASED)
 				{
 					if(e.getY() >= GuiHelper.getActiveStaffBeginningCoordinate() - 15 && e.getY() <= GuiHelper.getActiveStaffBeginningCoordinate() + 90)
-//						if(e.getY() >= GuiHelper.getFirstRowVerticalCoord() - 15 && e.getY() <= GuiHelper.getFifthRowVerticalCoord() + 30)
 					{
 						
 						if(e.getX()> allowedX + 10)
 						{
 							graphics2D.setPaint(Color.BLACK);
-//							Integer verticalParameter = GuiHelper.verticalCoordinate(e.getY(), text);
-							Integer verticalParameter = GuiHelper.verticalCoordinateUp(e.getY(),GuiHelper.getActiveStaffBeginningCoordinate() ,text);
-//							currentNote.setParameters(currentX, GuiHelper.verticalCoordinate(e.getY(), text));
-							currentNote.setParameters(currentX, verticalParameter);
+							Integer verticalParameter = GuiHelper.verticalCoordinate(e.getY(),GuiHelper.getActiveStaffBeginningCoordinate() ,text);
+							currentNote.setParameters(currentX, verticalParameter, true);
+							text.append("Y coord : " + currentNote.getBallFromY()+ "\nC Coord: " + currentNote.getCoordinateForCNote() + "\n check c:" + currentNote.getCheckIfC());
+							boolean fuckYou = (currentNote.getCheckIfC() && currentNote.getBallFromY() == currentNote.getCoordinateForCNote()); //DELETE THIS
+							text.append("\n boolean = " + fuckYou );
 							currentNote.paint(graphics2D);
 							if(!(currentNote instanceof SharpMarking))
 							{
@@ -124,27 +123,22 @@ class PadDrawMine extends JComponent //Popatrzec na sharp niedzialajacy na innyc
 							allowedX = 10 + e.getX();
 							if(currentNote instanceof EighthNote)
 							{
-//								drawnNotes.add(new EighthNote(e.getX() - 10, GuiHelper.verticalCoordinate(e.getY(), text)));
-								drawnNotes.add(new EighthNote(e.getX() - 10,verticalParameter));
+								drawnNotes.add(new EighthNote(e.getX() - 10,verticalParameter, NoteDrawing.CHECK));
 							}
 							if(currentNote instanceof QuarterNote)
 							{
-//								drawnNotes.add(new QuarterNote(e.getX() - 10, GuiHelper.verticalCoordinate(e.getY(), text)));
-								drawnNotes.add(new QuarterNote(e.getX() - 10, verticalParameter));
+								drawnNotes.add(new QuarterNote(e.getX() - 10, verticalParameter, NoteDrawing.CHECK));
 							}
 							if(currentNote instanceof HalfNote)
 							{
-								drawnNotes.add(new HalfNote(e.getX() - 10, verticalParameter));
-//								drawnNotes.add(new HalfNote(e.getX() - 10, GuiHelper.verticalCoordinate(e.getY(), text)));
+								drawnNotes.add(new HalfNote(e.getX() - 10, verticalParameter, NoteDrawing.CHECK));
 							}
 							if(currentNote instanceof FullNote)
 							{
-								drawnNotes.add(new FullNote(e.getX() - 10, verticalParameter));
-//								drawnNotes.add(new FullNote(e.getX() - 10, GuiHelper.verticalCoordinate(e.getY(), text)));
+								drawnNotes.add(new FullNote(e.getX() - 10, verticalParameter, NoteDrawing.CHECK));
 							}
 							if(currentNote instanceof SharpMarking)
 							{
-//								drawnNotes.add(new SharpMarking(e.getX() - 10, GuiHelper.verticalCoordinate(e.getY(), text) - 10));
 								drawnNotes.add(new SharpMarking(e.getX() - 10, verticalParameter - 10));
 								SongProcessor.makeNoteSharp(verticalParameter);
 							}
@@ -187,11 +181,11 @@ class PadDrawMine extends JComponent //Popatrzec na sharp niedzialajacy na innyc
 					
 					paintLines();
 					graphics2D.setPaint(Color.WHITE);
-					currentNote.setParameters(oldX - 5, oldY - 2);
+					currentNote.setParameters(oldX - 5, oldY - 2, NoteDrawing.SKIP_CHECK);
 					currentNote.paintComponent(graphics2D);
 					
 					graphics2D.setPaint(Color.BLACK);
-					currentNote.setParameters(currentX, currentY);
+					currentNote.setParameters(currentX, currentY, NoteDrawing.SKIP_CHECK);
 					currentNote.paintComponent(graphics2D);
 					
 					repaint();
@@ -215,15 +209,7 @@ class PadDrawMine extends JComponent //Popatrzec na sharp niedzialajacy na innyc
 	public void paintLines()
 	{
 		clear();
-//		graphics2D.drawImage(GuiHelper.getImage(GuiHelper.getViolinKeyFile()), 0, GuiHelper.getFirstRowVerticalCoord() -20, 100, 100, null);
-//		graphics2D.drawLine(GuiHelper.getRowHorizontalStartingPoint(), GuiHelper.getFirstRowVerticalCoord(), GuiHelper.getRowHorizontalEndingPoint(), GuiHelper.getFirstRowVerticalCoord());
-//		graphics2D.drawLine(GuiHelper.getRowHorizontalStartingPoint(), GuiHelper.getSecondRowVerticalCoord(), GuiHelper.getRowHorizontalEndingPoint(), GuiHelper.getSecondRowVerticalCoord());
-//		graphics2D.drawLine(GuiHelper.getRowHorizontalStartingPoint(), GuiHelper.getThirdRowVerticalCoord(), GuiHelper.getRowHorizontalEndingPoint(), GuiHelper.getThirdRowVerticalCoord());
-//		graphics2D.drawLine(GuiHelper.getRowHorizontalStartingPoint(), GuiHelper.getFourthRowVerticalCoord(), GuiHelper.getRowHorizontalEndingPoint(), GuiHelper.getFourthRowVerticalCoord());
-//		graphics2D.drawLine(GuiHelper.getRowHorizontalStartingPoint(), GuiHelper.getFifthRowVerticalCoord(), GuiHelper.getRowHorizontalEndingPoint(), GuiHelper.getFifthRowVerticalCoord());
 		firstStaff.paintComponent(graphics2D);
-		graphics2D.drawLine(GuiHelper.getRowHorizontalStartingPoint(), GuiHelper.getFifthRowVerticalCoord() + 15, GuiHelper.getRowHorizontalEndingPoint(), GuiHelper.getFifthRowVerticalCoord() + 15);
-		
 		
 		graphics2D.drawRect(GuiHelper.getFirstBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.getBoxWidth(), GuiHelper.getBoxHeight());
 		graphics2D.drawRect(GuiHelper.getSecondBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.getBoxWidth(), GuiHelper.getBoxHeight());
@@ -254,7 +240,6 @@ class PadDrawMine extends JComponent //Popatrzec na sharp niedzialajacy na innyc
 			image = createImage(getSize().width, getSize().height);
 			graphics2D = (Graphics2D)image.getGraphics();
 			graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			
 			clear();
 
 		}

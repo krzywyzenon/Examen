@@ -13,20 +13,9 @@ import com.google.common.collect.ImmutableMap;
 import composer.data.NoteData;
 import composer.data.Tones;
 
-public class GuiHelper //TODO zrobic odpowiednie rysowanie ukrytej linii przy C
+public class GuiHelper
 {
-	private static final Integer ROWS_BEGINNING = 100;
 	private static final Integer SPACE_BETWEEN_ROWS = 15;
-	private static final Integer ROW_HORIZONTAL_STARTING_POINT = 0;
-	private static final Integer ROW_HORIZONTAL_ENDING_POINT = 550;
-	
-	private static final Map<String, Integer> ROWS_HORIZONTAL_COORDINATES = ImmutableMap.of(
-			"First", ROWS_BEGINNING,
-			"Second", ROWS_BEGINNING + SPACE_BETWEEN_ROWS,
-			"Third", ROWS_BEGINNING + 2*SPACE_BETWEEN_ROWS,
-			"Fourth", ROWS_BEGINNING + 3*SPACE_BETWEEN_ROWS,
-			"Fifth", ROWS_BEGINNING + 4*SPACE_BETWEEN_ROWS
-			);
 	
 	private static final Map<String, Integer> BOXES_STARTPOINTS = ImmutableMap.of(
 			"First", 0,
@@ -44,12 +33,12 @@ public class GuiHelper //TODO zrobic odpowiednie rysowanie ukrytej linii przy C
 	private static final String FOURTH = "Fourth";
 	private static final String FIFTH = "Fifth";
 	
-	private static final Integer FIRST_ROW_VERTICAL_COORD = ROWS_HORIZONTAL_COORDINATES.get(FIRST);
-	private static final Integer SECOND_ROW_VERTICAL_COORD = ROWS_HORIZONTAL_COORDINATES.get(SECOND);
-	private static final Integer THIRD_ROW_VERTICAL_COORD = ROWS_HORIZONTAL_COORDINATES.get(THIRD);
-	private static final Integer FOURTH_ROW_VERTICAL_COORD = ROWS_HORIZONTAL_COORDINATES.get(FOURTH);
-	private static final Integer FIFTH_ROW_VERTICAL_COORD = ROWS_HORIZONTAL_COORDINATES.get(FIFTH);
-	private static final Integer HIDDEN_ROW_VERTICAL_COORD = ROWS_HORIZONTAL_COORDINATES.get(FIFTH) + SPACE_BETWEEN_ROWS;
+	private static final Integer ORIGINAL_FIRST_ROW_VERTICAL_COORD = 100;
+	private static final Integer ORIGINAL_SECOND_ROW_VERTICAL_COORD = 115; 
+	private static final Integer ORIGINAL_THIRD_ROW_VERTICAL_COORD = 130; 
+	private static final Integer ORIGINAL_FOURTH_ROW_VERTICAL_COORD = 145;
+	private static final Integer ORIGINAL_FIFTH_ROW_VERTICAL_COORD = 160; 
+	private static final Integer ORIGINAL_SIXTH_ROW_VERTICAL_COORD = 175; 
 	
 	private static final Integer FIRST_BOX_STARTING_POINT = BOXES_STARTPOINTS.get(FIRST);
 	private static final Integer SECOND_BOX_STARTING_POINT = BOXES_STARTPOINTS.get(SECOND);
@@ -62,17 +51,17 @@ public class GuiHelper //TODO zrobic odpowiednie rysowanie ukrytej linii przy C
 	private static final Integer BOX_WIDTH = 40;
 	private static final Integer BOX_HEIGHT = 70;
 	
-	private static final Integer C_TONE = (FIFTH_ROW_VERTICAL_COORD + HIDDEN_ROW_VERTICAL_COORD)/2 + 2;
-	private static final Integer D_TONE = FIFTH_ROW_VERTICAL_COORD;
-	private static final Integer E_TONE = (FOURTH_ROW_VERTICAL_COORD + FIFTH_ROW_VERTICAL_COORD)/2 + 2;
-	private static final Integer F_TONE = FOURTH_ROW_VERTICAL_COORD;
-	private static final Integer G_TONE = (THIRD_ROW_VERTICAL_COORD + FOURTH_ROW_VERTICAL_COORD)/2 + 2;
-	private static final Integer A_TONE = THIRD_ROW_VERTICAL_COORD;
-	private static final Integer B_TONE = (SECOND_ROW_VERTICAL_COORD + THIRD_ROW_VERTICAL_COORD)/2 + 2;
-	private static final Integer C2_TONE = SECOND_ROW_VERTICAL_COORD;
-	private static final Integer D2_TONE = (FIRST_ROW_VERTICAL_COORD + SECOND_ROW_VERTICAL_COORD)/2 + 2;
-	private static final Integer E2_TONE = FIRST_ROW_VERTICAL_COORD;
-	private static final Integer F2_TONE = FIRST_ROW_VERTICAL_COORD - 8;
+	private static final Integer C_TONE = (ORIGINAL_FIFTH_ROW_VERTICAL_COORD + ORIGINAL_SIXTH_ROW_VERTICAL_COORD)/2 + 2;
+	private static final Integer D_TONE = ORIGINAL_FIFTH_ROW_VERTICAL_COORD;
+	private static final Integer E_TONE = (ORIGINAL_FOURTH_ROW_VERTICAL_COORD + ORIGINAL_FIFTH_ROW_VERTICAL_COORD)/2 + 2;
+	private static final Integer F_TONE = ORIGINAL_FOURTH_ROW_VERTICAL_COORD;
+	private static final Integer G_TONE = (ORIGINAL_THIRD_ROW_VERTICAL_COORD + ORIGINAL_FOURTH_ROW_VERTICAL_COORD)/2 + 2;
+	private static final Integer A_TONE = ORIGINAL_THIRD_ROW_VERTICAL_COORD;
+	private static final Integer B_TONE = (ORIGINAL_SECOND_ROW_VERTICAL_COORD + ORIGINAL_THIRD_ROW_VERTICAL_COORD)/2 + 2;
+	private static final Integer C2_TONE = ORIGINAL_SECOND_ROW_VERTICAL_COORD;
+	private static final Integer D2_TONE = (ORIGINAL_FIRST_ROW_VERTICAL_COORD + ORIGINAL_SECOND_ROW_VERTICAL_COORD)/2 + 2;
+	private static final Integer E2_TONE = ORIGINAL_FIRST_ROW_VERTICAL_COORD;
+	private static final Integer F2_TONE = ORIGINAL_FIRST_ROW_VERTICAL_COORD - 8;
 	//Sharps
 	private static final Integer C_SHARP = C_TONE + 1000;
 	private static final Integer D_SHARP = D_TONE + 1000;
@@ -129,53 +118,6 @@ public class GuiHelper //TODO zrobic odpowiednie rysowanie ukrytej linii przy C
 			.put(D2_TONE, D2_SHARP)
 			.put(F2_TONE, F2_SHARP)
 			.build();
-	
-	
-
-	public static Map<String, Integer> getRowsHorizontalCoordinates() {
-		return ROWS_HORIZONTAL_COORDINATES;
-	}
-
-	
-	public static Map<String, Integer> getBoxesStartpoints() {
-		return BOXES_STARTPOINTS;
-	}
-
-
-	public static Integer getFirstRowVerticalCoord() {
-		return FIRST_ROW_VERTICAL_COORD;
-	}
-
-
-	public static Integer getSecondRowVerticalCoord() {
-		return SECOND_ROW_VERTICAL_COORD;
-	}
-
-
-	public static Integer getThirdRowVerticalCoord() {
-		return THIRD_ROW_VERTICAL_COORD;
-	}
-
-
-	public static Integer getFourthRowVerticalCoord() {
-		return FOURTH_ROW_VERTICAL_COORD;
-	}
-
-
-	public static Integer getFifthRowVerticalCoord() {
-		return FIFTH_ROW_VERTICAL_COORD;
-	}
-
-
-	public static Integer getRowHorizontalStartingPoint() {
-		return ROW_HORIZONTAL_STARTING_POINT;
-	}
-
-
-	public static Integer getRowHorizontalEndingPoint() {
-		return ROW_HORIZONTAL_ENDING_POINT;
-	}
-
 
 	public static Integer getFirstBoxStartingPoint() {
 		return FIRST_BOX_STARTING_POINT;
@@ -229,70 +171,8 @@ public class GuiHelper //TODO zrobic odpowiednie rysowanie ukrytej linii przy C
 	public static Map<Integer, Integer> getTonesToSharp() {
 		return TONES_TO_SHARP;
 	}
-
-
-	public static Integer verticalCoordinate(Integer y, JTextArea text)
-	{
-		Integer coordinate = null;
-		if(y >= FIRST_ROW_VERTICAL_COORD - 15 && y < FIRST_ROW_VERTICAL_COORD - 5)
-		{
-			coordinate = FIRST_ROW_VERTICAL_COORD - 8;
-		}
-		else if(y >= FIRST_ROW_VERTICAL_COORD - 5 && y < (FIRST_ROW_VERTICAL_COORD + SECOND_ROW_VERTICAL_COORD)/2)
-		{
-			coordinate = FIRST_ROW_VERTICAL_COORD;
-			text.append("\nfirst");
-		}
-		else if(y >= (FIRST_ROW_VERTICAL_COORD + SECOND_ROW_VERTICAL_COORD)/2 && y < SECOND_ROW_VERTICAL_COORD)
-		{
-			coordinate = (FIRST_ROW_VERTICAL_COORD + SECOND_ROW_VERTICAL_COORD)/2 + 2;
-			text.append("\nsecond half ");
-		}
-		else if(y >= SECOND_ROW_VERTICAL_COORD && y < (SECOND_ROW_VERTICAL_COORD + THIRD_ROW_VERTICAL_COORD)/2)
-		{
-			coordinate = SECOND_ROW_VERTICAL_COORD;
-			text.append("\nsecond");
-		}
-		else if(y >= (SECOND_ROW_VERTICAL_COORD + THIRD_ROW_VERTICAL_COORD)/2 && y < THIRD_ROW_VERTICAL_COORD)
-		{
-			coordinate = (SECOND_ROW_VERTICAL_COORD + THIRD_ROW_VERTICAL_COORD)/2 + 2;
-			text.append("\nthird half");
-		}
-		else if(y >= THIRD_ROW_VERTICAL_COORD && y < (THIRD_ROW_VERTICAL_COORD + FOURTH_ROW_VERTICAL_COORD)/2)
-		{
-			coordinate = THIRD_ROW_VERTICAL_COORD;
-			text.append("\nthird");
-		}
-		else if(y >= (THIRD_ROW_VERTICAL_COORD + FOURTH_ROW_VERTICAL_COORD)/2 && y < FOURTH_ROW_VERTICAL_COORD)
-		{
-			coordinate = (THIRD_ROW_VERTICAL_COORD + FOURTH_ROW_VERTICAL_COORD)/2 + 2;
-			text.append("\nfour half");
-		}
-		else if(y >= FOURTH_ROW_VERTICAL_COORD && y < (FOURTH_ROW_VERTICAL_COORD + FIFTH_ROW_VERTICAL_COORD)/2)
-		{
-			coordinate = FOURTH_ROW_VERTICAL_COORD;
-			text.append("\nfourth");
-		}
-		else if(y >= (FOURTH_ROW_VERTICAL_COORD + FIFTH_ROW_VERTICAL_COORD)/2 && y < FIFTH_ROW_VERTICAL_COORD)
-		{
-			coordinate = (FOURTH_ROW_VERTICAL_COORD + FIFTH_ROW_VERTICAL_COORD)/2 + 2;
-			text.append("\nfifth half");
-		}
-		else if(y >= FIFTH_ROW_VERTICAL_COORD && y < (FIFTH_ROW_VERTICAL_COORD + HIDDEN_ROW_VERTICAL_COORD)/2)
-		{
-			coordinate = FIFTH_ROW_VERTICAL_COORD;
-			text.append("\nfifth");
-		}
-		else
-		{
-			coordinate = (FIFTH_ROW_VERTICAL_COORD + HIDDEN_ROW_VERTICAL_COORD)/2 + 2;
-			text.append("\n And finaly C");
-		}
-		
-		return coordinate;
-	}
 	
-	public static Integer verticalCoordinateUp(Integer y, Integer firstRow ,JTextArea text)
+	public static Integer verticalCoordinate(Integer y, Integer firstRow ,JTextArea text)
 	{
 		Integer coordinate = null;
 		if(y >= firstRow - 15 && y < firstRow - 5)
@@ -377,6 +257,11 @@ public class GuiHelper //TODO zrobic odpowiednie rysowanie ukrytej linii przy C
 	public static Integer getActiveStaffBeginningCoordinate()
 	{
 		return Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff());
+	}
+	
+	public static Integer getHiddenLineCoord()
+	{
+		return Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff()) + 5 * Staff.getSpaceBetweenRows();
 	}
 
 

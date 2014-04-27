@@ -11,8 +11,9 @@ import com.google.common.collect.ImmutableMap;
 
 public class Staff extends JComponent 
 {
+	private static final long serialVersionUID = 1L;
 	private static Integer activeStaff = 1;
-	private  Integer rowsBeginning;
+	private Integer rowsBeginning;
 	private static final Integer SPACE_BETWEEN_ROWS = 15;
 	private static final Integer ROW_HORIZONTAL_STARTING_POINT = 0;
 	private static final Integer ROW_HORIZONTAL_ENDING_POINT = 550;
@@ -49,9 +50,8 @@ public class Staff extends JComponent
 	}
 
 	public static Integer getActiveStaff() {
-		Integer actSt = activeStaff;
-		return actSt;
-		//return activeStaff;
+		 
+		return activeStaff;
 	}
 
 	public static void setActiveStaff(Integer activeStaff) {
@@ -60,6 +60,10 @@ public class Staff extends JComponent
 
 	public static Map<Integer, Integer> getStaffBeginningCoordinates() {
 		return STAFF_BEGINNING_COORDINATES;
+	}
+
+	public static Integer getSpaceBetweenRows() {
+		return SPACE_BETWEEN_ROWS;
 	}
 
 }

@@ -6,16 +6,49 @@ import javax.swing.JComponent;
 
 public abstract class NoteDrawing extends JComponent 
 {
-	
 	private static final long serialVersionUID = 1L;
+	public static final boolean CHECK = true;
+	public static final boolean SKIP_CHECK = false;
+	boolean checkIfNoteIsC = false;
 	int ballFromX;
 	int ballFromY;
 	int stickFromX;
 	int stickFromY;
 	
+	int coordinateForCNote;
+	
+	int hiddenLineCoord;
+	
 	public abstract void paintComponent(Graphics g);
 	
-	public abstract void setParameters(int bFX, int bFY);
+	public abstract void setParameters(int bFX, int bFY, boolean checkC);
+	
+	public void paintShortLine(Graphics g)
+	{
+		if(checkIfNoteIsC && this.ballFromY == this.coordinateForCNote)
+		{
+			g.drawLine(ballFromX - 5,hiddenLineCoord, ballFromX + 25, hiddenLineCoord);			
+		}
+	}
 
-
+	public int getBallFromY()
+	{
+		return ballFromY;
+	}
+	
+	public int getCoordinateForCNote()
+	{
+		return coordinateForCNote;
+	}
+	
+	public boolean getCheckIfC()
+	{
+		return checkIfNoteIsC;
+	}
+	
+	public void setCParameters()
+	{
+		this.coordinateForCNote = (2 * Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff()) + 9 * Staff.getSpaceBetweenRows()) / 2 + 2;
+		this.hiddenLineCoord = GuiHelper.getHiddenLineCoord();
+	}
 }

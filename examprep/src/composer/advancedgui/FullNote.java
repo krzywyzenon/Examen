@@ -13,10 +13,12 @@ public class FullNote extends NoteDrawing
 		
 	}
 	
-	public FullNote(int bFX, int bFY)
+	public FullNote(int bFX, int bFY, boolean checkForC)
 	{
 		this.ballFromX = bFX;
 		this.ballFromY = bFY;
+		this.checkIfNoteIsC = checkForC;
+		setCParameters();
 	}
 
 	@Override
@@ -25,13 +27,16 @@ public class FullNote extends NoteDrawing
 		Graphics2D g2D = (Graphics2D) gNew;
 		g2D.setStroke(new BasicStroke(4F));
 		g2D.drawOval(ballFromX, ballFromY, 20, 15);
+		paintShortLine(g);
 
 	}
 
 	@Override
-	public void setParameters(int bFX, int bFY) {
+	public void setParameters(int bFX, int bFY, boolean checkForC) {
 		this.ballFromX = bFX;
 		this.ballFromY = bFY;
+		this.checkIfNoteIsC = checkForC;
+		setCParameters();
 	}
 
 }

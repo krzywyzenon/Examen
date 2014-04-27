@@ -16,26 +16,31 @@ class QuarterNote extends NoteDrawing
 		
 	}
 	
-	public QuarterNote(int bFX, int bFY)
+	public QuarterNote(int bFX, int bFY, boolean checkForC)
 	{
 		this.ballFromX = bFX;
 		this.ballFromY = bFY;
 		this.stickFromX= this.ballFromX + 15;
 		this.stickFromY = this.ballFromY - 40;
+		this.checkIfNoteIsC = checkForC;
+		setCParameters();
 	}
 	
 	public void paintComponent(Graphics g)
 	{
 		g.fillOval(ballFromX, ballFromY, 20, 15);
 		g.fillRect(stickFromX, stickFromY , 5, 50);
+		paintShortLine(g);
 	}
 	
-	public void setParameters(int bFX, int bFY)
+	public void setParameters(int bFX, int bFY, boolean checkForC)
 	{
 		this.ballFromX = bFX;
 		this.ballFromY = bFY;
 		this.stickFromX= this.ballFromX + 15;
 		this.stickFromY = this.ballFromY - 40;
+		this.checkIfNoteIsC = checkForC;
+		setCParameters();
 	}
 	
 }

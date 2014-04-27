@@ -34,7 +34,7 @@ public class SharpMarking extends NoteDrawing {
 	}
 
 	@Override
-	public void setParameters(int bFX, int bFY) 
+	public void setParameters(int bFX, int bFY, boolean c) 
 	{
 		this.fromX = bFX;
 		this.fromY = bFY;

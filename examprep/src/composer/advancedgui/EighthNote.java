@@ -10,13 +10,15 @@ public class EighthNote extends NoteDrawing {
 	int[] xPoints;
 	int[] yPoints;
 	
+	
+	
 	public EighthNote()
 	{
 		xPoints = new int[3];
 		yPoints = new int[3];
 	}
 	
-	public EighthNote(int bFX, int bFY)
+	public EighthNote(int bFX, int bFY, boolean checkForC)
 	{
 		xPoints = new int[3];
 		yPoints = new int[3];
@@ -30,6 +32,8 @@ public class EighthNote extends NoteDrawing {
 		this.yPoints[0] = this.stickFromY + 8; 
 		this.yPoints[1] = this.stickFromY + 6;
 		this.yPoints[2] = this.stickFromY;
+		this.checkIfNoteIsC = checkForC;
+		setCParameters();
 		
 	}
 	@Override
@@ -38,11 +42,11 @@ public class EighthNote extends NoteDrawing {
 		g.fillRect(stickFromX, stickFromY , 5, 50);
 		g.fillRect(stickFromX, stickFromY , 10, 5);
 		g.fillPolygon(xPoints, yPoints, 3);
-
+		paintShortLine(g);
 	}
 
 	@Override
-	public void setParameters(int bFX, int bFY) {
+	public void setParameters(int bFX, int bFY, boolean checkC) {
 		this.ballFromX = bFX;
 		this.ballFromY = bFY;
 		this.stickFromX= this.ballFromX + 15;
@@ -53,6 +57,8 @@ public class EighthNote extends NoteDrawing {
 		this.yPoints[0] = this.stickFromY + 8; 
 		this.yPoints[1] = this.stickFromY + 6;
 		this.yPoints[2] = this.stickFromY;
+		this.checkIfNoteIsC = checkC;
+		setCParameters();
 
 	}
 
