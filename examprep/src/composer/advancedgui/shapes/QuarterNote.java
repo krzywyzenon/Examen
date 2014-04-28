@@ -1,8 +1,9 @@
-package composer.advancedgui;
+package composer.advancedgui.shapes;
 
 import java.awt.Graphics;
 
-class QuarterNote extends NoteDrawing
+
+public class QuarterNote extends NoteDrawing
 {
 	
 	private static final long serialVersionUID = 1L;

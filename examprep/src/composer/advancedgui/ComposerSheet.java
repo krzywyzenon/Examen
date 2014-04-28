@@ -14,9 +14,15 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JTextArea;
 
+import composer.advancedgui.shapes.EighthNote;
+import composer.advancedgui.shapes.FullNote;
+import composer.advancedgui.shapes.HalfNote;
+import composer.advancedgui.shapes.NoteDrawing;
+import composer.advancedgui.shapes.SharpMarking;
+import composer.advancedgui.shapes.QuarterNote;
 import composer.data.Lengths;
 
-class PadDrawMine extends JComponent //Popatrzec na sharp niedzialajacy na innych liniach
+class ComposerSheet extends JComponent
 {
 	
 	private static final long serialVersionUID = 1L;
@@ -25,20 +31,9 @@ class PadDrawMine extends JComponent //Popatrzec na sharp niedzialajacy na innyc
 	int currentX, currentY, oldX, oldY;
 	private int allowedX = 80;
 	
+	private int pageDisplayed = 1;
+	
 	private boolean IS_RELEASED = true;
-	
-	private static List<NoteDrawing> drawnNotes = new ArrayList<NoteDrawing>();
-	
-	private static final EighthNote EIGHTH_NOTE = new EighthNote(GuiHelper.getFirstBoxStartingPoint() + 8, 62, NoteDrawing.SKIP_CHECK);
-	private static final QuarterNote QUARTER_NOTE = new QuarterNote(GuiHelper.getSecondBoxStartingPoint() + 10, 62, NoteDrawing.SKIP_CHECK); 
-	private static final HalfNote HALF_NOTE = new HalfNote(GuiHelper.getThirdBoxStartingPoint() + 10, 60, NoteDrawing.SKIP_CHECK);
-	private static final FullNote FULL_NOTE = new FullNote(GuiHelper.getFourthBoxStartingPoint() + 10, 60, NoteDrawing.SKIP_CHECK);
-	private static final SharpMarking SHARP_MARKING = new SharpMarking(GuiHelper.getFifthBoxStartingPoint() + 15,30);
-	
-	
-	Staff firstStaff = new Staff(Staff.getStaffBeginningCoordinates().get(1), Staff.VIOLIN_KEY);
-	Staff secondStaff = new Staff(Staff.getStaffBeginningCoordinates().get(2), Staff.NO_VIOLIN_KEY);
-	Staff thirdStaff = new Staff(Staff.getStaffBeginningCoordinates().get(3), Staff.NO_VIOLIN_KEY);
 	
 	EighthNote eighthNote = new EighthNote();
 	QuarterNote quarterNote = new QuarterNote(); 
@@ -46,11 +41,11 @@ class PadDrawMine extends JComponent //Popatrzec na sharp niedzialajacy na innyc
 	FullNote fullNote = new FullNote();
 	SharpMarking sharpMarking = new SharpMarking();
 	NoteDrawing currentNote;
-	public PadDrawMine(){
+	public ComposerSheet(){
 		
 	}
 	
-	public PadDrawMine(final JTextArea text){
+	public ComposerSheet(final JTextArea text){
 		super();
 
 		setDoubleBuffered(false);
@@ -93,7 +88,7 @@ class PadDrawMine extends JComponent //Popatrzec na sharp niedzialajacy na innyc
 		});
 		addMouseListener(new MouseAdapter(){
 			public void mouseClicked(MouseEvent e){
-				text.append("\nX : " + e.getX() + " Y : " + e.getY() + "Staff: " + Staff.getActiveStaff() + "\n" + IS_RELEASED);
+				text.append("allowed x " + allowedX);
 				repaint();
 			}
 		});
@@ -105,14 +100,11 @@ class PadDrawMine extends JComponent //Popatrzec na sharp niedzialajacy na innyc
 					if(e.getY() >= GuiHelper.getActiveStaffBeginningCoordinate() - 15 && e.getY() <= GuiHelper.getActiveStaffBeginningCoordinate() + 90)
 					{
 						
-						if(e.getX()> allowedX + 10)
+						if(e.getX()> allowedX + 10 && e.getX() > ((Staff.getActiveStaff() == 1) ? 150 : allowedX + 10) && !(currentNote instanceof SharpMarking))
 						{
 							graphics2D.setPaint(Color.BLACK);
 							Integer verticalParameter = GuiHelper.verticalCoordinate(e.getY(),GuiHelper.getActiveStaffBeginningCoordinate() ,text);
 							currentNote.setParameters(currentX, verticalParameter, true);
-							text.append("Y coord : " + currentNote.getBallFromY()+ "\nC Coord: " + currentNote.getCoordinateForCNote() + "\n check c:" + currentNote.getCheckIfC());
-							boolean fuckYou = (currentNote.getCheckIfC() && currentNote.getBallFromY() == currentNote.getCoordinateForCNote()); //DELETE THIS
-							text.append("\n boolean = " + fuckYou );
 							currentNote.paint(graphics2D);
 							if(!(currentNote instanceof SharpMarking))
 							{
@@ -123,38 +115,55 @@ class PadDrawMine extends JComponent //Popatrzec na sharp niedzialajacy na innyc
 							allowedX = 10 + e.getX();
 							if(currentNote instanceof EighthNote)
 							{
-								drawnNotes.add(new EighthNote(e.getX() - 10,verticalParameter, NoteDrawing.CHECK));
+								PageController.getPages().get(pageDisplayed).getDrawnNotes().add(new EighthNote(e.getX() - 10,verticalParameter, NoteDrawing.CHECK));
 							}
 							if(currentNote instanceof QuarterNote)
 							{
-								drawnNotes.add(new QuarterNote(e.getX() - 10, verticalParameter, NoteDrawing.CHECK));
+								PageController.getPages().get(pageDisplayed).getDrawnNotes().add(new QuarterNote(e.getX() - 10, verticalParameter, NoteDrawing.CHECK));
 							}
 							if(currentNote instanceof HalfNote)
 							{
-								drawnNotes.add(new HalfNote(e.getX() - 10, verticalParameter, NoteDrawing.CHECK));
+								PageController.getPages().get(pageDisplayed).getDrawnNotes().add(new HalfNote(e.getX() - 10, verticalParameter, NoteDrawing.CHECK));
 							}
 							if(currentNote instanceof FullNote)
 							{
-								drawnNotes.add(new FullNote(e.getX() - 10, verticalParameter, NoteDrawing.CHECK));
-							}
-							if(currentNote instanceof SharpMarking)
-							{
-								drawnNotes.add(new SharpMarking(e.getX() - 10, verticalParameter - 10));
-								SongProcessor.makeNoteSharp(verticalParameter);
+								PageController.getPages().get(pageDisplayed).getDrawnNotes().add(new FullNote(e.getX() - 10, verticalParameter, NoteDrawing.CHECK));
 							}
 							
 							paintLines();
 							
 						}
-						else
+						else if(currentNote instanceof SharpMarking && e.getX()> allowedX + 10)
 						{
+							allowedX = 10 + e.getX();
+							Integer verticalParameter = GuiHelper.verticalCoordinate(e.getY(),GuiHelper.getActiveStaffBeginningCoordinate() ,text);
+							PageController.getPages().get(pageDisplayed).getDrawnNotes().add(new SharpMarking(e.getX() - 10, verticalParameter - 10));
+							currentNote.setParameters(currentX, verticalParameter, true);
+							currentNote.paint(graphics2D);
+							if(e.getX() < 120 && Staff.getActiveStaff() == 1)
+							{
+								SongProcessor.makeNoteSharpGlobally(verticalParameter);
+							}
+							else
+							{
+								SongProcessor.makeNoteSharp(verticalParameter);
+							}
+								
 							paintLines();
 						}
 						if(e.getX() > 525 && Staff.getActiveStaff() < 3)
 						{
-							text.append("STAFF: " + Staff.getActiveStaff());
 							allowedX = 0;
 							Staff.setActiveStaff(Staff.getActiveStaff() + 1);
+						}
+						else if(e.getX() > 525 && Staff.getActiveStaff() == 3)
+						{
+							PageController.getPages().get(pageDisplayed).setActive(false);
+							pageDisplayed += 1;
+							PageController.getPages().put(pageDisplayed, new Page(pageDisplayed));
+							PageController.setActivePage(pageDisplayed);
+							Staff.setActiveStaff(1);
+							allowedX = 80;
 						}
 					}
 					paintLines();
@@ -209,29 +218,7 @@ class PadDrawMine extends JComponent //Popatrzec na sharp niedzialajacy na innyc
 	public void paintLines()
 	{
 		clear();
-		firstStaff.paintComponent(graphics2D);
-		
-		graphics2D.drawRect(GuiHelper.getFirstBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.getBoxWidth(), GuiHelper.getBoxHeight());
-		graphics2D.drawRect(GuiHelper.getSecondBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.getBoxWidth(), GuiHelper.getBoxHeight());
-		graphics2D.drawRect(GuiHelper.getThirdBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.getBoxWidth(), GuiHelper.getBoxHeight());
-		graphics2D.drawRect(GuiHelper.getFourthBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.getBoxWidth(), GuiHelper.getBoxHeight());
-		graphics2D.drawRect(GuiHelper.getFifthBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.getBoxWidth(), GuiHelper.getBoxHeight());
-		
-		EIGHTH_NOTE.paintComponent(graphics2D);
-		QUARTER_NOTE.paintComponent(graphics2D);
-		HALF_NOTE.paintComponent(graphics2D);
-		FULL_NOTE.paintComponent(graphics2D);
-		
-		SHARP_MARKING.paintComponent(graphics2D);
-		
-		secondStaff.paintComponent(graphics2D);
-		
-		thirdStaff.paintComponent(graphics2D);
-		
-		for(NoteDrawing nD : drawnNotes)
-		{
-			nD.paintComponent(graphics2D);
-		}
+		PageController.getPages().get(pageDisplayed).paintComponent(graphics2D);
 	}
 
 	public void paintComponent(Graphics g){
@@ -258,16 +245,21 @@ class PadDrawMine extends JComponent //Popatrzec na sharp niedzialajacy na innyc
 		repaint();
 	}
 
-	public static List<NoteDrawing> getDrawnNotes() {
-		return drawnNotes;
-	}
-
 	public int getAllowedX() {
 		return allowedX;
 	}
 
 	public void setAllowedX(int allowedX) {
 		this.allowedX = allowedX;
+	}
+
+	public int getPageDisplayed() {
+		return pageDisplayed;
+	}
+
+	public void setPageDisplayed(int page) {
+		this.pageDisplayed = page;
+		paintLines();
 	}
 
 }

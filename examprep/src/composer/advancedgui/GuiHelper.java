@@ -108,6 +108,20 @@ public class GuiHelper
 		SHARP_TONES.put(F2_TONE, false);
 		
 	}
+	
+	private static final Map<Integer, Boolean> TEMPORARY_SHARP_TONES = new HashMap<Integer,Boolean>();
+	static
+	{
+		TEMPORARY_SHARP_TONES.put(C_TONE, false);
+		TEMPORARY_SHARP_TONES.put(D_TONE, false);
+		TEMPORARY_SHARP_TONES.put(F_TONE, false);
+		TEMPORARY_SHARP_TONES.put(G_TONE, false);
+		TEMPORARY_SHARP_TONES.put(A_TONE, false);
+		TEMPORARY_SHARP_TONES.put(C2_TONE, false);
+		TEMPORARY_SHARP_TONES.put(D2_TONE, false);
+		TEMPORARY_SHARP_TONES.put(F2_TONE, false);
+		
+	}
 	private static final Map<Integer, Integer> TONES_TO_SHARP = ImmutableMap.<Integer, Integer>builder()
 			.put(C_TONE, C_SHARP)
 			.put(D_TONE, D_SHARP)
@@ -165,6 +179,11 @@ public class GuiHelper
 
 	public static Map<Integer, Boolean> getSharpTones() {
 		return SHARP_TONES;
+	}
+
+
+	public static Map<Integer, Boolean> getTemporarySharpTones() {
+		return TEMPORARY_SHARP_TONES;
 	}
 
 

@@ -1,6 +1,7 @@
-package composer.advancedgui;
+package composer.advancedgui.shapes;
 
 import java.awt.Graphics;
+
 
 public class EighthNote extends NoteDrawing {
 

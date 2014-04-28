@@ -18,9 +18,14 @@ public class SongProcessor
 		if(Staff.getActiveStaff() != 1)
 		toneValue = toneValue - (Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff()) - Staff.getStaffBeginningCoordinates().get(1));
 		NoteData tone;
-		if(isSharp(toneValue))
+		if(isGloballySharp(toneValue))
 		{
 			tone = GuiHelper.getTones().get(GuiHelper.getTonesToSharp().get(toneValue));
+		}
+		else if(isSharp(toneValue))
+		{
+			tone = GuiHelper.getTones().get(GuiHelper.getTonesToSharp().get(toneValue));
+			GuiHelper.getTemporarySharpTones().put(toneValue, false);
 		}
 		else
 		{
@@ -30,7 +35,7 @@ public class SongProcessor
 		SONG.add(new Note(tone, LENGTH));
 	}
 	
-	public static boolean isSharp(Integer toneValue)
+	public static boolean isGloballySharp(Integer toneValue)
 	{
 		if(GuiHelper.getSharpTones().containsKey(toneValue))
 		{
@@ -42,9 +47,36 @@ public class SongProcessor
 		}
 	}
 	
+	public static boolean isSharp(Integer toneValue)
+	{
+		if(GuiHelper.getTemporarySharpTones().containsKey(toneValue))
+		{
+			return GuiHelper.getTemporarySharpTones().get(toneValue);		
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	public static void makeNoteSharpGlobally(Integer toneValue)
+	{
+		toneValue = (Staff.getActiveStaff() != 1) ? toneValue - (Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff()) - Staff.getStaffBeginningCoordinates().get(1)) : toneValue;
+		if(GuiHelper.getSharpTones().containsKey(toneValue))
+		{
+			GuiHelper.getSharpTones().put(toneValue, true);
+		}
+			
+	}
+	
 	public static void makeNoteSharp(Integer toneValue)
 	{
-		GuiHelper.getSharpTones().put(toneValue, true);
+		toneValue = (Staff.getActiveStaff() != 1) ? toneValue - (Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff()) - Staff.getStaffBeginningCoordinates().get(1)) : toneValue;
+		if(GuiHelper.getTemporarySharpTones().containsKey(toneValue))
+		{
+			GuiHelper.getTemporarySharpTones().put(toneValue, true);
+		}
+		
 	}
 	
 	public static void cleanAllSharps()

@@ -25,18 +25,17 @@ public class ComposerGui {
 	public static void main(String[] args) {
 		ImageIcon playIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getPlayKeyFile()));
 		JFrame frame = new JFrame("Composer");
-		//Creates a frame with a title of "Paint it"
 		
 		Container content = frame.getContentPane();
-		//Creates a new container
 		content.setLayout(new BorderLayout());
-		//sets the layout
-		JTextArea text = new JTextArea();
+		final JTextArea text = new JTextArea();
 		text.setPreferredSize(new Dimension(210,1168));
 		
 		final JButton playButton = new JButton();
 		playButton.setIcon(playIcon);
 		JButton clearButton = new JButton("Clear");
+		JButton nextPage = new JButton("Next Page");
+		JButton previousPage = new JButton("Previous Page");
 		playButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -48,18 +47,46 @@ public class ComposerGui {
 				
 			}
 		});
-		final PadDrawMine drawPad = new PadDrawMine(text);
+		final ComposerSheet composerSheet = new ComposerSheet(text);
 		
 		clearButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				PadDrawMine.getDrawnNotes().clear();
-				drawPad.setAllowedX(80);
+				PageController.clearNotes();
+				composerSheet.setPageDisplayed(1);
+				composerSheet.setAllowedX(80);
 				SongProcessor.getSong().clear();
 				SongProcessor.cleanAllSharps();
-				drawPad.initialize();
+				composerSheet.initialize();
 				
+			}
+		});
+		
+		nextPage.addActionListener(new ActionListener() 
+		{
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				if(PageController.getPages().containsKey(composerSheet.getPageDisplayed() + 1))
+				{
+					composerSheet.setPageDisplayed(composerSheet.getPageDisplayed() + 1);
+				}
+					
+				text.append("\nCurrent page: " + composerSheet.getPageDisplayed());
+			}
+		});
+		
+		previousPage.addActionListener(new ActionListener() 
+		{
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				if(PageController.getPages().containsKey(composerSheet.getPageDisplayed() - 1))
+				{
+					composerSheet.setPageDisplayed(composerSheet.getPageDisplayed() - 1);
+				}
+				text.append("\nCurrent page: " + composerSheet.getPageDisplayed());
 			}
 		});
 	
@@ -68,7 +95,7 @@ public class ComposerGui {
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		
 		
-		content.add(drawPad, BorderLayout.CENTER);
+		content.add(composerSheet, BorderLayout.CENTER);
 		
 		JPanel panel = new JPanel();
 		
@@ -79,17 +106,15 @@ public class ComposerGui {
 		panel.add(scrollPane);
 		panel.add(playButton);
 		panel.add(clearButton);
+		panel.add(previousPage);
+		panel.add(nextPage);
 		
 		content.add(panel, BorderLayout.WEST);
-		//sets the panel to the left
 		
 		frame.setSize(800, 600);
-		//sets the size of the frame
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//makes it so you can close
 		frame.setVisible(true);
-		//makes it so you can see it
-		drawPad.initialize();
+		composerSheet.initialize();
 
 	}
 
