@@ -10,13 +10,12 @@ import javax.imageio.ImageIO;
 import javax.swing.JTextArea;
 
 import com.google.common.collect.ImmutableMap;
+
 import composer.data.NoteData;
 import composer.data.Tones;
 
 public class GuiHelper
 {
-	private static final Integer SPACE_BETWEEN_ROWS = 15;
-	
 	private static final Map<String, Integer> BOXES_STARTPOINTS = ImmutableMap.of(
 			"First", 0,
 			"Second", 60,
@@ -26,6 +25,7 @@ public class GuiHelper
 			
 	private static final File VIOLIN_KEY_FILE = new File("resources/violinkey.jpg");
 	private static final File PLAY_KEY_FILE = new File("resources/play.png");
+	private static final File SAVES_DIRECTORY = new File("saves");
 	
 	private static final String FIRST = "First";
 	private static final String SECOND = "Second";
@@ -198,54 +198,54 @@ public class GuiHelper
 		{
 			coordinate = firstRow - 8;
 		}
-		else if(y >= firstRow - 5 && y < (firstRow + firstRow + SPACE_BETWEEN_ROWS)/2)
+		else if(y >= firstRow - 5 && y < (firstRow + firstRow + Staff.getSpaceBetweenRows())/2)
 		{
 			coordinate = firstRow;
 			text.append("\nfirst");
 		}
-		else if(y >= (firstRow + firstRow + SPACE_BETWEEN_ROWS)/2 && y < (firstRow + SPACE_BETWEEN_ROWS))
+		else if(y >= (firstRow + firstRow + Staff.getSpaceBetweenRows())/2 && y < (firstRow + Staff.getSpaceBetweenRows()))
 		{
-			coordinate = (firstRow + firstRow + SPACE_BETWEEN_ROWS)/2 + 2;
+			coordinate = (firstRow + firstRow + Staff.getSpaceBetweenRows())/2 + 2;
 			text.append("\nsecond half ");
 		}
-		else if(y >= (firstRow + SPACE_BETWEEN_ROWS) && y < (firstRow + SPACE_BETWEEN_ROWS + firstRow + 2*SPACE_BETWEEN_ROWS)/2)
+		else if(y >= (firstRow + Staff.getSpaceBetweenRows()) && y < (firstRow + Staff.getSpaceBetweenRows() + firstRow + 2*Staff.getSpaceBetweenRows())/2)
 		{
-			coordinate = (firstRow + SPACE_BETWEEN_ROWS);
+			coordinate = (firstRow + Staff.getSpaceBetweenRows());
 			text.append("\nsecond");
 		}
-		else if(y >= (firstRow + SPACE_BETWEEN_ROWS + firstRow + 2*SPACE_BETWEEN_ROWS)/2 && y < (firstRow + 2*SPACE_BETWEEN_ROWS))
+		else if(y >= (firstRow + Staff.getSpaceBetweenRows() + firstRow + 2*Staff.getSpaceBetweenRows())/2 && y < (firstRow + 2*Staff.getSpaceBetweenRows()))
 		{
-			coordinate = (firstRow + SPACE_BETWEEN_ROWS + firstRow + 2*SPACE_BETWEEN_ROWS)/2 + 2;
+			coordinate = (firstRow + Staff.getSpaceBetweenRows() + firstRow + 2*Staff.getSpaceBetweenRows())/2 + 2;
 			text.append("\nthird half");
 		}
-		else if(y >= (firstRow + 2*SPACE_BETWEEN_ROWS) && y < (firstRow + 2*SPACE_BETWEEN_ROWS + firstRow + 3*SPACE_BETWEEN_ROWS)/2)
+		else if(y >= (firstRow + 2*Staff.getSpaceBetweenRows()) && y < (firstRow + 2*Staff.getSpaceBetweenRows() + firstRow + 3*Staff.getSpaceBetweenRows())/2)
 		{
-			coordinate = (firstRow + 2*SPACE_BETWEEN_ROWS);
+			coordinate = (firstRow + 2*Staff.getSpaceBetweenRows());
 			text.append("\nthird");
 		}
-		else if(y >= (firstRow + 2*SPACE_BETWEEN_ROWS + firstRow + 3*SPACE_BETWEEN_ROWS)/2 && y < (firstRow + 3*SPACE_BETWEEN_ROWS))
+		else if(y >= (firstRow + 2*Staff.getSpaceBetweenRows() + firstRow + 3*Staff.getSpaceBetweenRows())/2 && y < (firstRow + 3*Staff.getSpaceBetweenRows()))
 		{
-			coordinate = (firstRow + 2*SPACE_BETWEEN_ROWS + firstRow + 3*SPACE_BETWEEN_ROWS)/2 + 2;
+			coordinate = (firstRow + 2*Staff.getSpaceBetweenRows() + firstRow + 3*Staff.getSpaceBetweenRows())/2 + 2;
 			text.append("\nfour half");
 		}
-		else if(y >= (firstRow + 3*SPACE_BETWEEN_ROWS) && y < (firstRow + 3*SPACE_BETWEEN_ROWS + firstRow + 4*SPACE_BETWEEN_ROWS)/2)
+		else if(y >= (firstRow + 3*Staff.getSpaceBetweenRows()) && y < (firstRow + 3*Staff.getSpaceBetweenRows() + firstRow + 4*Staff.getSpaceBetweenRows())/2)
 		{
-			coordinate = (firstRow + 3*SPACE_BETWEEN_ROWS);
+			coordinate = (firstRow + 3*Staff.getSpaceBetweenRows());
 			text.append("\nfourth");
 		}
-		else if(y >= (firstRow + 3*SPACE_BETWEEN_ROWS + firstRow + 4*SPACE_BETWEEN_ROWS)/2 && y < (firstRow + 4*SPACE_BETWEEN_ROWS))
+		else if(y >= (firstRow + 3*Staff.getSpaceBetweenRows() + firstRow + 4*Staff.getSpaceBetweenRows())/2 && y < (firstRow + 4*Staff.getSpaceBetweenRows()))
 		{
-			coordinate = (firstRow + 3*SPACE_BETWEEN_ROWS + firstRow + 4*SPACE_BETWEEN_ROWS)/2 + 2;
+			coordinate = (firstRow + 3*Staff.getSpaceBetweenRows() + firstRow + 4*Staff.getSpaceBetweenRows())/2 + 2;
 			text.append("\nfifth half");
 		}
-		else if(y >= (firstRow + 4*SPACE_BETWEEN_ROWS) && y < (firstRow + 4*SPACE_BETWEEN_ROWS + firstRow + 5*SPACE_BETWEEN_ROWS)/2)
+		else if(y >= (firstRow + 4*Staff.getSpaceBetweenRows()) && y < (firstRow + 4*Staff.getSpaceBetweenRows() + firstRow + 5*Staff.getSpaceBetweenRows())/2)
 		{
-			coordinate = firstRow + 4*SPACE_BETWEEN_ROWS;
+			coordinate = firstRow + 4*Staff.getSpaceBetweenRows();
 			text.append("\nfifth");
 		}
 		else
 		{
-			coordinate = (firstRow + 4*SPACE_BETWEEN_ROWS + firstRow + 5*SPACE_BETWEEN_ROWS)/2 + 2;
+			coordinate = (firstRow + 4*Staff.getSpaceBetweenRows() + firstRow + 5*Staff.getSpaceBetweenRows())/2 + 2;
 			text.append("\n And finaly C");
 		}
 		
@@ -273,6 +273,11 @@ public class GuiHelper
 		return PLAY_KEY_FILE;
 	}
 	
+	public static File getSavesDirectory()
+	{
+		return SAVES_DIRECTORY;
+	}
+	
 	public static Integer getActiveStaffBeginningCoordinate()
 	{
 		return Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff());
@@ -296,6 +301,7 @@ public class GuiHelper
 			return null;
 		}
 	}
+	
 
 }
 

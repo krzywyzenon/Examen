@@ -1,10 +1,13 @@
 package composer.sound;
 
+import java.io.Serializable;
+
 import composer.data.NoteData;
 
-public class Note
+public class Note implements Serializable
 {
 
+	private static final long serialVersionUID = 324375778088678131L;
 	private Integer tone;
 	private Integer length;
 	

@@ -9,7 +9,7 @@ import composer.sound.Song;
 
 public class SongProcessor 
 {
-	private static final Song SONG = new Song();
+	private static Song SONG = new Song();
 	
 	private static Lengths LENGTH = null;
 	
@@ -100,6 +100,10 @@ public class SongProcessor
 
 	public static Song getSong() {
 		return SONG;
+	}
+	
+	public static void setSong(Song song) {
+		SONG = song;
 	}
 
 }

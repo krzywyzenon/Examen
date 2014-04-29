@@ -2,10 +2,10 @@ package composer.data;
 
 public enum Lengths implements NoteData
 {
-	EIGHT(125),
-	QUARTER(250),
-	HALF(500),
-	WHOLE(1000);
+	EIGHT(200),
+	QUARTER(400),
+	HALF(800),
+	WHOLE(1600);
 	
 	Integer length;
 	

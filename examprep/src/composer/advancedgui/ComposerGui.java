@@ -5,90 +5,115 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 
+import com.google.common.collect.ImmutableMap;
 import composer.controller.Player;
+import composer.controller.SaveAndLoad;
+import composer.controller.State;
 
-
-
-
-public class ComposerGui {
-
+public class ComposerGui implements ActionListener
+{
+	private static Map<Object, Integer> SOURCE = null;
 	
-	public static void main(String[] args) {
-		ImageIcon playIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getPlayKeyFile()));
-		JFrame frame = new JFrame("Composer");
-		
-		Container content = frame.getContentPane();
-		content.setLayout(new BorderLayout());
-		final JTextArea text = new JTextArea();
+	private static final int LOAD = 1;
+	private static final int SAVE = 2;
+	private static final int QUIT = 3;
+	private static final int CLEAR = 4;
+	private static final int PLAY = 5;
+	private static final int NEXT = 6;
+	private static final int PREVIOUS = 7;
+	
+	private ComposerSheet composerSheet;
+	
+	private ImageIcon playIcon;
+	private JTextArea text;
+	private JFrame frame;
+	
+	private Container content;
+	
+	private JButton clearButton;
+	private JButton nextPage;
+	private JButton previousPage;
+	private JButton playButton;
+	private JMenuItem loadItem;
+	private JMenuItem saveItem;
+	private JMenuItem quitItem;
+	
+	private JMenuBar menuBar;
+	private JMenu fileMenu;
+	
+	private JPanel panel;
+	
+	private JFileChooser fc;
+	
+	public ComposerGui() {
+		playIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getPlayKeyFile()));
+		frame = new JFrame("Composer");
+		text = new JTextArea();
 		text.setPreferredSize(new Dimension(210,1168));
 		
-		final JButton playButton = new JButton();
+		composerSheet  = new ComposerSheet(text);
+		clearButton = new JButton("Clear");
+		nextPage = new JButton("Next Page");
+		previousPage = new JButton("Previous Page");
+		playButton = new JButton();
+
+		loadItem = new JMenuItem("Load song");
+		saveItem = new JMenuItem("Save song");
+		quitItem = new JMenuItem("Quit");
+		
+		fc = new JFileChooser();
+		fc.setCurrentDirectory(GuiHelper.getSavesDirectory());
+		
+		SOURCE = ImmutableMap.<Object, Integer>builder()
+					.put(loadItem, 1)
+					.put(saveItem, 2)
+					.put(quitItem, 3)
+					.put(clearButton, 4)
+					.put(playButton, 5)
+					.put(nextPage, 6)
+					.put(previousPage, 7)
+					.build();
+		
+		content = frame.getContentPane();
+		content.setLayout(new BorderLayout());
+		
+		
 		playButton.setIcon(playIcon);
-		JButton clearButton = new JButton("Clear");
-		JButton nextPage = new JButton("Next Page");
-		JButton previousPage = new JButton("Previous Page");
-		playButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) 
-			{
-				Player p = new Player(SongProcessor.getSong());
-				Thread t = new Thread(p);
-				t.start();
-				
-			}
-		});
-		final ComposerSheet composerSheet = new ComposerSheet(text);
 		
-		clearButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				PageController.clearNotes();
-				composerSheet.setPageDisplayed(1);
-				composerSheet.setAllowedX(80);
-				SongProcessor.getSong().clear();
-				SongProcessor.cleanAllSharps();
-				composerSheet.initialize();
-				
-			}
-		});
+		menuBar = new JMenuBar();
+		fileMenu = new JMenu("File");
+		fileMenu.add(saveItem);
+		fileMenu.add(loadItem);
+		fileMenu.add(new JSeparator());
+		fileMenu.add(quitItem);
+		menuBar.add(fileMenu);
+		frame.setJMenuBar(menuBar);
 		
-		nextPage.addActionListener(new ActionListener() 
-		{
-			@Override
-			public void actionPerformed(ActionEvent e) 
-			{
-				if(PageController.getPages().containsKey(composerSheet.getPageDisplayed() + 1))
-				{
-					composerSheet.setPageDisplayed(composerSheet.getPageDisplayed() + 1);
-				}
-					
-				text.append("\nCurrent page: " + composerSheet.getPageDisplayed());
-			}
-		});
-		
-		previousPage.addActionListener(new ActionListener() 
-		{
-			@Override
-			public void actionPerformed(ActionEvent e) 
-			{
-				if(PageController.getPages().containsKey(composerSheet.getPageDisplayed() - 1))
-				{
-					composerSheet.setPageDisplayed(composerSheet.getPageDisplayed() - 1);
-				}
-				text.append("\nCurrent page: " + composerSheet.getPageDisplayed());
-			}
-		});
+		quitItem.addActionListener(this);
+		loadItem.addActionListener(this); 
+		saveItem.addActionListener(this); 
+		playButton.addActionListener(this);
+		clearButton.addActionListener(this);
+		nextPage.addActionListener(this);
+		previousPage.addActionListener(this);
 	
 		JScrollPane scrollPane = new JScrollPane(text);
 		scrollPane.setPreferredSize(new Dimension(210,168));
@@ -97,7 +122,7 @@ public class ComposerGui {
 		
 		content.add(composerSheet, BorderLayout.CENTER);
 		
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		
 		panel.setPreferredSize(new Dimension(220, 168));
 		panel.setMinimumSize(new Dimension(220, 68));
@@ -116,6 +141,99 @@ public class ComposerGui {
 		frame.setVisible(true);
 		composerSheet.initialize();
 
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) 
+	{
+		int source = SOURCE.get(e.getSource());
+		switch(source)
+		{
+			case QUIT:
+			{
+				System.exit(0);
+				break;
+			}
+			case PLAY:
+			{
+				Player p = new Player(SongProcessor.getSong());
+				Thread t = new Thread(p);
+				t.start();
+				break;
+			}
+			case NEXT:
+			{
+				if(PageController.getPages().containsKey(composerSheet.getPageDisplayed() + 1))
+				{
+					composerSheet.setPageDisplayed(composerSheet.getPageDisplayed() + 1);
+				}
+					
+				text.append("\nCurrent page: " + composerSheet.getPageDisplayed());
+				break;
+			}
+			case PREVIOUS:
+			{
+				if(PageController.getPages().containsKey(composerSheet.getPageDisplayed() - 1))
+				{
+					composerSheet.setPageDisplayed(composerSheet.getPageDisplayed() - 1);
+				}
+				text.append("\nCurrent page: " + composerSheet.getPageDisplayed());
+				break;
+			}
+			case CLEAR:
+			{
+				PageController.clearNotes();
+				composerSheet.setPageDisplayed(1);
+				composerSheet.setAllowedX(80);
+				SongProcessor.getSong().clear();
+				SongProcessor.cleanAllSharps();
+				composerSheet.initialize();
+				break;
+			}
+			case LOAD:
+			{
+				int returnVal = fc.showOpenDialog(null);
+				if(returnVal == JFileChooser.APPROVE_OPTION)
+				{
+					File file = fc.getSelectedFile();
+					State state;
+					try {
+						state = SaveAndLoad.loadSong(file);
+						SongProcessor.setSong(state.getSong());
+						PageController.setPages(state.getPages());
+					} catch (FileNotFoundException e1) {
+						e1.printStackTrace();
+					} catch (ClassNotFoundException e1) {
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					composerSheet.paintLines();
+				}
+				break;
+			}
+			case SAVE:
+			{
+				int returnVal = fc.showSaveDialog(null);
+				if(returnVal == JFileChooser.APPROVE_OPTION)
+				{
+					File file = fc.getSelectedFile();
+					State state = new State(SongProcessor.getSong(), PageController.getPages());
+					try {
+						SaveAndLoad.saveSong(state, file);
+					} catch (FileNotFoundException e1) {
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+				break;
+			}
+		}
+	}
+	
+	public static void main(String[] args) {
+		ComposerGui gui = new ComposerGui();
 	}
 
 }

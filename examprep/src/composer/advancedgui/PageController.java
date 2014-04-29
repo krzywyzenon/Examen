@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 
 public class PageController 
 {
-	private final static Map<Integer, Page> PAGES = new HashMap<>();
+	private static Map<Integer, Page> PAGES = new HashMap<>();
 	static
 	{
 		PAGES.put(1, new Page());
@@ -17,6 +17,11 @@ public class PageController
 	public static Map<Integer, Page> getPages() 
 	{
 		return PAGES;
+	}
+	
+	public static void setPages(Map<Integer, Page> pages) 
+	{
+		PAGES = pages;
 	}
 
 	public static Integer getActivePage() {
