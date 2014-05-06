@@ -156,6 +156,7 @@ public class ComposerGui implements ActionListener
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		composerSheet.initialize();
+		frame.repaint();
 		System.out.println(menuBar.getSize());
 
 	}
