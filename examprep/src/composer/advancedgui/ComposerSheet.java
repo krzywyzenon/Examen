@@ -35,6 +35,8 @@ class ComposerSheet extends JComponent
 	
 	private boolean IS_RELEASED = true;
 	
+	private boolean isInverted = false;
+	
 	EighthNote eighthNote = new EighthNote();
 	QuarterNote quarterNote = new QuarterNote(); 
 	HalfNote halfNote = new HalfNote();
@@ -88,7 +90,7 @@ class ComposerSheet extends JComponent
 		});
 		addMouseListener(new MouseAdapter(){
 			public void mouseClicked(MouseEvent e){
-				text.append("allowed x " + allowedX);
+				text.append("allowed x " + allowedX + "\nX: " + e.getX() + "\nY: " + e.getY());
 				repaint();
 			}
 		});
@@ -100,30 +102,39 @@ class ComposerSheet extends JComponent
 					if(e.getY() >= GuiHelper.getActiveStaffBeginningCoordinate() - 15 && e.getY() <= GuiHelper.getActiveStaffBeginningCoordinate() + 90)
 					{
 						
-						if(e.getX()> allowedX + 10 && e.getX() > ((Staff.getActiveStaff() == 1) ? 150 : allowedX + 10) && !(currentNote instanceof SharpMarking))
+						if(e.getX()> allowedX + 10 && e.getX() > ((Staff.getActiveStaff() == 1) ? 160 : allowedX + 10) && !(currentNote instanceof SharpMarking))
 						{
 							graphics2D.setPaint(Color.BLACK);
 							Integer verticalParameter = GuiHelper.verticalCoordinate(e.getY(),GuiHelper.getActiveStaffBeginningCoordinate() ,text);
 							currentNote.setParameters(currentX, verticalParameter, true);
-							currentNote.paint(graphics2D);
 							if(!(currentNote instanceof SharpMarking))
 							{
-								SongProcessor.addNote(verticalParameter);
+								Integer tone = SongProcessor.addNote(verticalParameter);
+								if(tone<130)
+								{
+									isInverted = true;
+								}
+								else
+								{
+									isInverted = false;
+								}
+								text.append(tone.toString());
 							}
+							currentNote.paint(graphics2D);
 							
 							
 							allowedX = 10 + e.getX();
 							if(currentNote instanceof EighthNote)
 							{
-								PageController.getPages().get(pageDisplayed).getDrawnNotes().add(new EighthNote(e.getX() - 10,verticalParameter, NoteDrawing.CHECK));
+								PageController.getPages().get(pageDisplayed).getDrawnNotes().add(new EighthNote(e.getX() - 10,verticalParameter, NoteDrawing.CHECK, isInverted));
 							}
 							if(currentNote instanceof QuarterNote)
 							{
-								PageController.getPages().get(pageDisplayed).getDrawnNotes().add(new QuarterNote(e.getX() - 10, verticalParameter, NoteDrawing.CHECK));
+								PageController.getPages().get(pageDisplayed).getDrawnNotes().add(new QuarterNote(e.getX() - 10, verticalParameter, NoteDrawing.CHECK, isInverted));
 							}
 							if(currentNote instanceof HalfNote)
 							{
-								PageController.getPages().get(pageDisplayed).getDrawnNotes().add(new HalfNote(e.getX() - 10, verticalParameter, NoteDrawing.CHECK));
+								PageController.getPages().get(pageDisplayed).getDrawnNotes().add(new HalfNote(e.getX() - 10, verticalParameter, NoteDrawing.CHECK, isInverted));
 							}
 							if(currentNote instanceof FullNote)
 							{
@@ -151,12 +162,12 @@ class ComposerSheet extends JComponent
 								
 							paintLines();
 						}
-						if(e.getX() > 525 && Staff.getActiveStaff() < 3)
+						if(allowedX + 10 > 525 && Staff.getActiveStaff() < 3)
 						{
 							allowedX = 0;
 							Staff.setActiveStaff(Staff.getActiveStaff() + 1);
 						}
-						else if(e.getX() > 525 && Staff.getActiveStaff() == 3)
+						else if(allowedX + 10 > 525 && Staff.getActiveStaff() == 3)
 						{
 							PageController.getPages().get(pageDisplayed).setActive(false);
 							pageDisplayed += 1;
@@ -188,11 +199,11 @@ class ComposerSheet extends JComponent
 					oldX = currentX;
 					oldY = currentY;
 					
-					paintLines();
-					graphics2D.setPaint(Color.WHITE);
-					currentNote.setParameters(oldX - 5, oldY - 2, NoteDrawing.SKIP_CHECK);
-					currentNote.paintComponent(graphics2D);
+//					graphics2D.setPaint(Color.WHITE);
+//					currentNote.setParameters(oldX - 5, oldY - 2, NoteDrawing.SKIP_CHECK);
+//					currentNote.paintComponent(graphics2D);
 					
+					paintLines();
 					graphics2D.setPaint(Color.BLACK);
 					currentNote.setParameters(currentX, currentY, NoteDrawing.SKIP_CHECK);
 					currentNote.paintComponent(graphics2D);

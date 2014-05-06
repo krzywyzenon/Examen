@@ -7,10 +7,7 @@ public class QuarterNote extends NoteDrawing
 {
 	
 	private static final long serialVersionUID = 1L;
-	//int ballFromX;
-	//int ballFromY;
-	//int stickFromX;
-	//int stickFromY;
+
 	
 	public QuarterNote()
 	{
@@ -26,13 +23,17 @@ public class QuarterNote extends NoteDrawing
 		this.checkIfNoteIsC = checkForC;
 		setCParameters();
 	}
-	
-	public void paintComponent(Graphics g)
+	public QuarterNote(int bFX, int bFY, boolean checkForC, boolean inverted)
 	{
-		g.fillOval(ballFromX, ballFromY, 20, 15);
-		g.fillRect(stickFromX, stickFromY , 5, 50);
-		paintShortLine(g);
+		this.ballFromX = bFX;
+		this.ballFromY = bFY;
+		this.stickFromX= this.ballFromX + 15;
+		this.stickFromY = this.ballFromY - 40;
+		this.checkIfNoteIsC = checkForC;
+		this.inverted = inverted;
+		setCParameters();
 	}
+	
 	
 	public void setParameters(int bFX, int bFY, boolean checkForC)
 	{
@@ -42,6 +43,21 @@ public class QuarterNote extends NoteDrawing
 		this.stickFromY = this.ballFromY - 40;
 		this.checkIfNoteIsC = checkForC;
 		setCParameters();
+	}
+	
+	public void normal(Graphics g)
+	{
+		g.fillOval(ballFromX, ballFromY, 20, 15);
+		g.fillRect(stickFromX, stickFromY , 5, 50);
+		paintShortLine(g);
+	}
+	
+	public void inverted(Graphics g)
+	{
+		g.fillOval(ballFromX, ballFromY, 20, 15);
+		g.fillRect(ballFromX + 1, ballFromY + 3 , 5, 50);
+		paintShortLine(g);
+		
 	}
 	
 }

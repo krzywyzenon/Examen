@@ -1,6 +1,7 @@
 package composer.advancedgui;
 
 import java.awt.Graphics;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +45,7 @@ public class Page extends JComponent
 	
 	public void paintComponent(Graphics g)
 	{
+		g.drawImage(GuiHelper.getImage(GuiHelper.getPageBackgroundFile()), 0, 0, null);
 		firstStaff.paintComponent(g);
 		g.drawLine(150, Staff.getStaffBeginningCoordinates().get(1), 150, Staff.getStaffBeginningCoordinates().get(1) + 4 * Staff.getSpaceBetweenRows());
 		g.drawLine(152, Staff.getStaffBeginningCoordinates().get(1), 152, Staff.getStaffBeginningCoordinates().get(1) + 4 * Staff.getSpaceBetweenRows());

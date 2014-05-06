@@ -13,6 +13,8 @@ public abstract class NoteDrawing extends JComponent
 	public static final boolean CHECK = true;
 	public static final boolean SKIP_CHECK = false;
 	boolean checkIfNoteIsC = false;
+	protected boolean inverted = false;
+
 	int ballFromX;
 	int ballFromY;
 	int stickFromX;
@@ -22,7 +24,21 @@ public abstract class NoteDrawing extends JComponent
 	
 	int hiddenLineCoord;
 	
-	public abstract void paintComponent(Graphics g);
+	public void paintComponent(Graphics g)
+	{
+		if(inverted)
+		{
+			inverted(g);
+		}
+		else
+		{
+			normal(g);
+		}
+	}
+	
+	public abstract void normal(Graphics g);
+	
+	public abstract void inverted(Graphics g);
 	
 	public abstract void setParameters(int bFX, int bFY, boolean checkC);
 	
@@ -53,5 +69,12 @@ public abstract class NoteDrawing extends JComponent
 	{
 		this.coordinateForCNote = (2 * Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff()) + 9 * Staff.getSpaceBetweenRows()) / 2 + 2;
 		this.hiddenLineCoord = GuiHelper.getHiddenLineCoord();
+	}
+	public boolean isInverted() {
+		return inverted;
+	}
+	
+	public void setInverted(boolean inverted) {
+		this.inverted = inverted;
 	}
 }

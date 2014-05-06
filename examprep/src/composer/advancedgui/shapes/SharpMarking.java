@@ -21,9 +21,18 @@ public class SharpMarking extends NoteDrawing {
 	{
 		this.fromX = startX;
 		this.fromY = startY;
+		this.inverted = false;
 	}
+
 	@Override
-	public void paintComponent(Graphics g) 
+	public void setParameters(int bFX, int bFY, boolean c) 
+	{
+		this.fromX = bFX;
+		this.fromY = bFY;
+	}
+
+	@Override
+	public void normal(Graphics g) 
 	{
 		Graphics gNew = g.create();
 		Graphics2D g2D = (Graphics2D) gNew;
@@ -35,10 +44,9 @@ public class SharpMarking extends NoteDrawing {
 	}
 
 	@Override
-	public void setParameters(int bFX, int bFY, boolean c) 
+	public void inverted(Graphics g) 
 	{
-		this.fromX = bFX;
-		this.fromY = bFY;
+		
 	}
 
 }

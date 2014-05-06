@@ -23,9 +23,12 @@ public class GuiHelper
 			"Fourth", 180,
 			"Fifth", 240);
 			
-	private static final File VIOLIN_KEY_FILE = new File("resources/violinkey.jpg");
+	private static final File VIOLIN_KEY_FILE = new File("resources/violinkey.png");
 	private static final File PLAY_KEY_FILE = new File("resources/play.png");
 	private static final File SAVES_DIRECTORY = new File("saves");
+	private static final File MAIN_BACKGROUND_FILE = new File("resources/wood.png");
+	private static final File PANEL_BACKGROUND_FILE = new File("resources/leftwood1.png");
+	private static final File PAGE_BACKGROUND_FILE = new File("resources/papyrus.png");
 	
 	private static final String FIRST = "First";
 	private static final String SECOND = "Second";
@@ -273,6 +276,21 @@ public class GuiHelper
 		return PLAY_KEY_FILE;
 	}
 	
+	public static File getMainBackgroundFile() {
+		return MAIN_BACKGROUND_FILE;
+	}
+
+
+	public static File getPanelBackgroundFile() {
+		return PANEL_BACKGROUND_FILE;
+	}
+
+
+	public static File getPageBackgroundFile() {
+		return PAGE_BACKGROUND_FILE;
+	}
+
+
 	public static File getSavesDirectory()
 	{
 		return SAVES_DIRECTORY;

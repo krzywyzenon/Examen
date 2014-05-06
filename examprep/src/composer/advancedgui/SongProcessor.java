@@ -13,7 +13,7 @@ public class SongProcessor
 	
 	private static Lengths LENGTH = null;
 	
-	public static void addNote(Integer toneValue)
+	public static Integer addNote(Integer toneValue)
 	{
 		if(Staff.getActiveStaff() != 1)
 		toneValue = toneValue - (Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff()) - Staff.getStaffBeginningCoordinates().get(1));
@@ -33,6 +33,7 @@ public class SongProcessor
 		}
 			
 		SONG.add(new Note(tone, LENGTH));
+		return toneValue;
 	}
 	
 	public static boolean isGloballySharp(Integer toneValue)

@@ -1,8 +1,10 @@
 package composer.advancedgui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -10,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -17,7 +20,6 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
@@ -46,6 +48,8 @@ public class ComposerGui implements ActionListener
 	private JTextArea text;
 	private JFrame frame;
 	
+	private BackgroundPanel mainPanel;
+	
 	private Container content;
 	
 	private JButton clearButton;
@@ -56,18 +60,21 @@ public class ComposerGui implements ActionListener
 	private JMenuItem saveItem;
 	private JMenuItem quitItem;
 	
-	private JMenuBar menuBar;
+	private MyMenuBar menuBar;
 	private JMenu fileMenu;
 	
-	private JPanel panel;
+	private BackgroundPanel panel;
 	
 	private JFileChooser fc;
 	
 	public ComposerGui() {
 		playIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getPlayKeyFile()));
+		Image background = GuiHelper.getImage(GuiHelper.getMainBackgroundFile());
 		frame = new JFrame("Composer");
 		text = new JTextArea();
 		text.setPreferredSize(new Dimension(210,1168));
+		mainPanel = new BackgroundPanel(background);
+		mainPanel.setLayout(new BorderLayout());
 		
 		composerSheet  = new ComposerSheet(text);
 		clearButton = new JButton("Clear");
@@ -98,7 +105,9 @@ public class ComposerGui implements ActionListener
 		
 		playButton.setIcon(playIcon);
 		
-		menuBar = new JMenuBar();
+		menuBar = new MyMenuBar(GuiHelper.getImage(new File("resources/menuback.png")));
+		//menuBar.setBackground(new Color(157,75,35));
+		menuBar.setBorder(null);
 		fileMenu = new JMenu("File");
 		fileMenu.add(saveItem);
 		fileMenu.add(loadItem);
@@ -120,26 +129,34 @@ public class ComposerGui implements ActionListener
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		
 		
-		content.add(composerSheet, BorderLayout.CENTER);
+//		content.add(composerSheet, BorderLayout.CENTER);
+		mainPanel.add(composerSheet, BorderLayout.CENTER);
 		
-		panel = new JPanel();
+		panel = new BackgroundPanel(GuiHelper.getImage(GuiHelper.getPanelBackgroundFile()));
+//		panel = new BackgroundPanel();
 		
-		panel.setPreferredSize(new Dimension(220, 168));
-		panel.setMinimumSize(new Dimension(220, 68));
-		panel.setMaximumSize(new Dimension(220, 68));
+//		panel.setPreferredSize(new Dimension(220, 168));
+//		panel.setMinimumSize(new Dimension(220, 68));
+//		panel.setMaximumSize(new Dimension(220, 68));
 		
-		panel.add(scrollPane);
+//		panel.add(scrollPane);
 		panel.add(playButton);
 		panel.add(clearButton);
 		panel.add(previousPage);
 		panel.add(nextPage);
 		
-		content.add(panel, BorderLayout.WEST);
+		mainPanel.add(panel, BorderLayout.WEST);
+//		content.add(panel, BorderLayout.WEST);
 		
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 5));
+//		mainPanel.setBackground(Color.CYAN);
+		
+		content.add(mainPanel);
 		frame.setSize(800, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		composerSheet.initialize();
+		System.out.println(menuBar.getSize());
 
 	}
 
