@@ -19,11 +19,11 @@ import composer.advancedgui.shapes.HalfNote;
 import composer.advancedgui.shapes.NoteDrawing;
 import composer.advancedgui.shapes.QuarterNote;
 import composer.advancedgui.shapes.SharpMarking;
-import composer.data.Connections;
+import composer.data.SoundDrawRelations;
 import composer.data.Lengths;
-import composer.sound.Note;
+import composer.data.NoteData;
 
-class ComposerSheet extends JComponent //TODO inversja przy edycji, czyszczenie connections, connections to save
+class ComposerSheet extends JComponent
 {
 	
 	private static final long serialVersionUID = 1L;
@@ -152,25 +152,25 @@ class ComposerSheet extends JComponent //TODO inversja przy edycji, czyszczenie 
 								{
 									EighthNote eN = new EighthNote(e.getX() - 10,verticalParameter, NoteDrawing.CHECK, isInverted);
 									PageController.getPages().get(pageDisplayed).getDrawnNotes().add(eN);
-									Connections.CONNECTIONS.put(eN, toneData[1]);
+									SoundDrawRelations.getDrawingsAndSoundsRelations().put(eN, toneData[1]);
 								}
 								if(currentNote instanceof QuarterNote)
 								{
 									QuarterNote qN = new QuarterNote(e.getX() - 10, verticalParameter, NoteDrawing.CHECK, isInverted);
 									PageController.getPages().get(pageDisplayed).getDrawnNotes().add(qN);
-									Connections.CONNECTIONS.put(qN, toneData[1]);
+									SoundDrawRelations.getDrawingsAndSoundsRelations().put(qN, toneData[1]);
 								}
 								if(currentNote instanceof HalfNote)
 								{
 									HalfNote hN = new HalfNote(e.getX() - 10, verticalParameter, NoteDrawing.CHECK, isInverted);
 									PageController.getPages().get(pageDisplayed).getDrawnNotes().add(hN);
-									Connections.CONNECTIONS.put(hN, toneData[1]);
+									SoundDrawRelations.getDrawingsAndSoundsRelations().put(hN, toneData[1]);
 								}
 								if(currentNote instanceof FullNote)
 								{
 									FullNote fN = new FullNote(e.getX() - 10, verticalParameter, NoteDrawing.CHECK);
 									PageController.getPages().get(pageDisplayed).getDrawnNotes().add(fN);
-									Connections.CONNECTIONS.put(fN, toneData[1]);
+									SoundDrawRelations.getDrawingsAndSoundsRelations().put(fN, toneData[1]);
 								}
 								
 								paintLines();
@@ -219,11 +219,22 @@ class ComposerSheet extends JComponent //TODO inversja przy edycji, czyszczenie 
 							{
 								graphics2D.setPaint(Color.BLACK);
 								Integer verticalParameter = GuiHelper.verticalCoordinate(e.getY(),GuiHelper.getActiveStaffBeginningCoordinate() ,text);
-								Integer index = Connections.CONNECTIONS.get(currentNote);
-								
+								Integer index = SoundDrawRelations.getDrawingsAndSoundsRelations().get(currentNote);
+								Object[] data = SongProcessor.getMidiTone(verticalParameter);
+								Integer toneValue = (Integer) data[1];
+								if(toneValue<130)
+								{
+									isInverted = true;
+								}
+								else
+								{
+									isInverted = false;
+								}
 								currentNote.setParameters(currentNote.getBallFromX(), verticalParameter, true);
+								currentNote.setInverted(isInverted);
 								currentNote.paint(graphics2D);
-								SongProcessor.getSong().get(index).setTone(SongProcessor.getMidiTone(verticalParameter));
+								NoteData tone = (NoteData) data[0];
+								SongProcessor.getSong().get(index).setTone(tone);
 							}
 						}
 					}
@@ -246,20 +257,27 @@ class ComposerSheet extends JComponent //TODO inversja przy edycji, czyszczenie 
 				
 				if(currentNote != null)
 				{
-					
 					oldX = currentX;
 					oldY = currentY;
-					
+					paintLines();
+					if(!editingMode)
+					{
+						graphics2D.setPaint(Color.BLACK);
+						currentNote.setParameters(currentX, currentY, NoteDrawing.SKIP_CHECK);
+						currentNote.paintComponent(graphics2D);
+					}
+					else
+					{
+						graphics2D.setPaint(Color.BLACK);
+						currentNote.setParameters(currentNote.getBallFromX(), currentY, NoteDrawing.SKIP_CHECK);
+						currentNote.paintComponent(graphics2D);
+					}
+						
 //					graphics2D.setPaint(Color.WHITE);
 //					currentNote.setParameters(oldX - 5, oldY - 2, NoteDrawing.SKIP_CHECK);
 //					currentNote.paintComponent(graphics2D);
 					
-					paintLines();
-					graphics2D.setPaint(Color.BLACK);
-					currentNote.setParameters(currentX, currentY, NoteDrawing.SKIP_CHECK);
-					currentNote.paintComponent(graphics2D);
-					
-					repaint();
+//					repaint();
 				}
 			}
 		});		

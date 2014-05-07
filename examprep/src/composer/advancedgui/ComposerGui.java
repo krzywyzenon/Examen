@@ -29,6 +29,7 @@ import com.google.common.collect.ImmutableMap;
 import composer.controller.Player;
 import composer.controller.SaveAndLoad;
 import composer.controller.State;
+import composer.data.SoundDrawRelations;
 
 public class ComposerGui implements ActionListener
 {
@@ -224,6 +225,7 @@ public class ComposerGui implements ActionListener
 				composerSheet.setAllowedX(80);
 				SongProcessor.getSong().clear();
 				SongProcessor.cleanAllSharps();
+				SoundDrawRelations.resetRelations();
 				composerSheet.initialize();
 				break;
 			}
@@ -238,6 +240,7 @@ public class ComposerGui implements ActionListener
 						state = SaveAndLoad.loadSong(file);
 						SongProcessor.setSong(state.getSong());
 						PageController.setPages(state.getPages());
+						SoundDrawRelations.setDrawingsAndSoundsRelations(state.getRelations());
 					} catch (FileNotFoundException e1) {
 						e1.printStackTrace();
 					} catch (ClassNotFoundException e1) {
@@ -255,7 +258,7 @@ public class ComposerGui implements ActionListener
 				if(returnVal == JFileChooser.APPROVE_OPTION)
 				{
 					File file = fc.getSelectedFile();
-					State state = new State(SongProcessor.getSong(), PageController.getPages());
+					State state = new State(SongProcessor.getSong(), PageController.getPages(), SoundDrawRelations.getDrawingsAndSoundsRelations());
 					try {
 						SaveAndLoad.saveSong(state, file);
 					} catch (FileNotFoundException e1) {

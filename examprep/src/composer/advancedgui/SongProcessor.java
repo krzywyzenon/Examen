@@ -37,7 +37,7 @@ public class SongProcessor
 		return data;
 	}
 	
-	public static NoteData getMidiTone(Integer toneValue)
+	public static Object[] getMidiTone(Integer toneValue)
 	{
 		if(Staff.getActiveStaff() != 1)
 			toneValue = toneValue - (Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff()) - Staff.getStaffBeginningCoordinates().get(1));
@@ -56,7 +56,8 @@ public class SongProcessor
 			tone = GuiHelper.getTones().get(toneValue);
 		}
 		
-		return tone;
+		Object[] data = {tone, toneValue};
+		return data;
 	}
 	
 	public static boolean isGloballySharp(Integer toneValue)
