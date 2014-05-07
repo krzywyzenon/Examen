@@ -10,7 +10,6 @@ import javax.imageio.ImageIO;
 import javax.swing.JTextArea;
 
 import com.google.common.collect.ImmutableMap;
-
 import composer.data.NoteData;
 import composer.data.Tones;
 
@@ -25,6 +24,9 @@ public class GuiHelper
 			
 	private static final File VIOLIN_KEY_FILE = new File("resources/violinkey.png");
 	private static final File PLAY_KEY_FILE = new File("resources/play.png");
+	private static final File NEXT_PAGE_KEY_FILE = new File("resources/nextpage.png");
+	private static final File PREVIOUS_PAGE_KEY_FILE = new File("resources/previouspage.png");
+	private static final File CLEAR_KEY_FILE = new File("resources/clearbutton.png");
 	private static final File SAVES_DIRECTORY = new File("saves");
 	private static final File MAIN_BACKGROUND_FILE = new File("resources/wood.png");
 	private static final File PANEL_BACKGROUND_FILE = new File("resources/leftwood1.png");
@@ -276,6 +278,21 @@ public class GuiHelper
 		return PLAY_KEY_FILE;
 	}
 	
+	public static File getNextPageKeyFile() {
+		return NEXT_PAGE_KEY_FILE;
+	}
+
+
+	public static File getPreviousPageKeyFile() {
+		return PREVIOUS_PAGE_KEY_FILE;
+	}
+
+
+	public static File getClearKeyFile() {
+		return CLEAR_KEY_FILE;
+	}
+
+
 	public static File getMainBackgroundFile() {
 		return MAIN_BACKGROUND_FILE;
 	}

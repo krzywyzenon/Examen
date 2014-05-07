@@ -13,7 +13,7 @@ public class SongProcessor
 	
 	private static Lengths LENGTH = null;
 	
-	public static Integer addNote(Integer toneValue)
+	public static Integer[] addNote(Integer toneValue)
 	{
 		if(Staff.getActiveStaff() != 1)
 		toneValue = toneValue - (Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff()) - Staff.getStaffBeginningCoordinates().get(1));
@@ -31,9 +31,32 @@ public class SongProcessor
 		{
 			tone = GuiHelper.getTones().get(toneValue);
 		}
-			
-		SONG.add(new Note(tone, LENGTH));
-		return toneValue;
+		Note note = new Note(tone, LENGTH);	
+		SONG.add(note);
+		Integer[] data = {toneValue, SONG.indexOf(note)};
+		return data;
+	}
+	
+	public static NoteData getMidiTone(Integer toneValue)
+	{
+		if(Staff.getActiveStaff() != 1)
+			toneValue = toneValue - (Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff()) - Staff.getStaffBeginningCoordinates().get(1));
+		NoteData tone;
+		if(isGloballySharp(toneValue))
+		{
+			tone = GuiHelper.getTones().get(GuiHelper.getTonesToSharp().get(toneValue));
+		}
+//		else if(isSharp(toneValue))
+//		{
+//			tone = GuiHelper.getTones().get(GuiHelper.getTonesToSharp().get(toneValue));
+//			GuiHelper.getTemporarySharpTones().put(toneValue, false);
+//		}
+		else
+		{
+			tone = GuiHelper.getTones().get(toneValue);
+		}
+		
+		return tone;
 	}
 	
 	public static boolean isGloballySharp(Integer toneValue)

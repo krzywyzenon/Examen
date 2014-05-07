@@ -1,6 +1,9 @@
 package composer.advancedgui.shapes;
 
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 
 public class QuarterNote extends NoteDrawing
@@ -11,7 +14,6 @@ public class QuarterNote extends NoteDrawing
 	
 	public QuarterNote()
 	{
-		
 	}
 	
 	public QuarterNote(int bFX, int bFY, boolean checkForC)
@@ -32,6 +34,7 @@ public class QuarterNote extends NoteDrawing
 		this.checkIfNoteIsC = checkForC;
 		this.inverted = inverted;
 		setCParameters();
+		System.out.println("Create");
 	}
 	
 	
@@ -58,6 +61,11 @@ public class QuarterNote extends NoteDrawing
 		g.fillRect(ballFromX + 1, ballFromY + 3 , 5, 50);
 		paintShortLine(g);
 		
+	}
+	@Override
+	public void actionPerformed(ActionEvent e)
+	{
+		System.out.println("Hello world");
 	}
 	
 }

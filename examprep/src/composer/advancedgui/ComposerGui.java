@@ -45,6 +45,9 @@ public class ComposerGui implements ActionListener
 	private ComposerSheet composerSheet;
 	
 	private ImageIcon playIcon;
+	private ImageIcon nextIcon;
+	private ImageIcon previousIcon;
+	private ImageIcon clearIcon;
 	private JTextArea text;
 	private JFrame frame;
 	
@@ -69,6 +72,9 @@ public class ComposerGui implements ActionListener
 	
 	public ComposerGui() {
 		playIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getPlayKeyFile()));
+		nextIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getNextPageKeyFile()));
+		previousIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getPreviousPageKeyFile()));
+		clearIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getClearKeyFile()));
 		Image background = GuiHelper.getImage(GuiHelper.getMainBackgroundFile());
 		frame = new JFrame("Composer");
 		text = new JTextArea();
@@ -77,14 +83,20 @@ public class ComposerGui implements ActionListener
 		mainPanel.setLayout(new BorderLayout());
 		
 		composerSheet  = new ComposerSheet(text);
-		clearButton = new JButton("Clear");
-		nextPage = new JButton("Next Page");
-		previousPage = new JButton("Previous Page");
+		clearButton = new JButton();
+		nextPage = new JButton();
+		previousPage = new JButton();
 		playButton = new JButton();
 
 		loadItem = new JMenuItem("Load song");
+		loadItem.setBackground(new Color(157,75,35));
+		loadItem.setForeground(Color.ORANGE);
 		saveItem = new JMenuItem("Save song");
+		saveItem.setBackground(new Color(157,75,35));
+		saveItem.setForeground(Color.ORANGE);
 		quitItem = new JMenuItem("Quit");
+		quitItem.setBackground(new Color(157,75,35));
+		quitItem.setForeground(Color.ORANGE);
 		
 		fc = new JFileChooser();
 		fc.setCurrentDirectory(GuiHelper.getSavesDirectory());
@@ -102,13 +114,21 @@ public class ComposerGui implements ActionListener
 		content = frame.getContentPane();
 		content.setLayout(new BorderLayout());
 		
-		
 		playButton.setIcon(playIcon);
+		playButton.setBorder(null);
+		nextPage.setIcon(nextIcon);
+		nextPage.setBorder(null);
+		previousPage.setIcon(previousIcon);
+		previousPage.setBorder(null);
+		clearButton.setIcon(clearIcon);
+		clearButton.setBorder(null);
+		
 		
 		menuBar = new MyMenuBar(GuiHelper.getImage(new File("resources/menuback.png")));
 		//menuBar.setBackground(new Color(157,75,35));
 		menuBar.setBorder(null);
 		fileMenu = new JMenu("File");
+		fileMenu.setForeground(Color.ORANGE);
 		fileMenu.add(saveItem);
 		fileMenu.add(loadItem);
 		fileMenu.add(new JSeparator());
@@ -149,7 +169,6 @@ public class ComposerGui implements ActionListener
 //		content.add(panel, BorderLayout.WEST);
 		
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 5));
-//		mainPanel.setBackground(Color.CYAN);
 		
 		content.add(mainPanel);
 		frame.setSize(800, 600);

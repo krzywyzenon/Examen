@@ -1,19 +1,22 @@
 package composer.advancedgui.shapes;
 
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JComponent;
 
 import composer.advancedgui.GuiHelper;
 import composer.advancedgui.Staff;
 
-public abstract class NoteDrawing extends JComponent 
+public abstract class NoteDrawing extends JComponent implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
 	public static final boolean CHECK = true;
 	public static final boolean SKIP_CHECK = false;
 	boolean checkIfNoteIsC = false;
 	protected boolean inverted = false;
+	public boolean draw = true;
 
 	int ballFromX;
 	int ballFromY;
@@ -54,6 +57,10 @@ public abstract class NoteDrawing extends JComponent
 	{
 		return ballFromY;
 	}
+	public int getBallFromX()
+	{
+		return ballFromX;
+	}
 	
 	public int getCoordinateForCNote()
 	{
@@ -76,5 +83,11 @@ public abstract class NoteDrawing extends JComponent
 	
 	public void setInverted(boolean inverted) {
 		this.inverted = inverted;
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e)
+	{
+		System.out.println("Hello world");
 	}
 }

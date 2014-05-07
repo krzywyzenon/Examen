@@ -8,7 +8,6 @@ import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JComponent;
@@ -18,11 +17,13 @@ import composer.advancedgui.shapes.EighthNote;
 import composer.advancedgui.shapes.FullNote;
 import composer.advancedgui.shapes.HalfNote;
 import composer.advancedgui.shapes.NoteDrawing;
-import composer.advancedgui.shapes.SharpMarking;
 import composer.advancedgui.shapes.QuarterNote;
+import composer.advancedgui.shapes.SharpMarking;
+import composer.data.Connections;
 import composer.data.Lengths;
+import composer.sound.Note;
 
-class ComposerSheet extends JComponent
+class ComposerSheet extends JComponent //TODO inversja przy edycji, czyszczenie connections, connections to save
 {
 	
 	private static final long serialVersionUID = 1L;
@@ -34,7 +35,7 @@ class ComposerSheet extends JComponent
 	private int pageDisplayed = 1;
 	
 	private boolean IS_RELEASED = true;
-	
+	private boolean editingMode = false;
 	private boolean isInverted = false;
 	
 	EighthNote eighthNote = new EighthNote();
@@ -86,6 +87,23 @@ class ComposerSheet extends JComponent
 					currentNote = sharpMarking;
 					
 				}
+				else
+				{
+					oldX = e.getX();
+					oldY = e.getY();
+					Page page = PageController.getPages().get(pageDisplayed);
+					List<NoteDrawing> list = page.getDrawnNotes();
+					for(NoteDrawing nd : list)
+					{
+						if(GuiHelper.isCursorWithinLimits(oldX, oldY, nd.getBallFromX(), nd.getBallFromY()))
+						{
+							System.out.println("Hello World");
+							IS_RELEASED = false;
+							editingMode = true;
+							currentNote = nd;
+						}
+					}
+				}
 			}
 		});
 		addMouseListener(new MouseAdapter(){
@@ -98,91 +116,124 @@ class ComposerSheet extends JComponent
 			public void mouseReleased(MouseEvent e){
 
 				if(!IS_RELEASED)
-				{
-					if(e.getY() >= GuiHelper.getActiveStaffBeginningCoordinate() - 15 && e.getY() <= GuiHelper.getActiveStaffBeginningCoordinate() + 90)
+				{	
+					if(!editingMode)
 					{
 						
-						if(e.getX()> allowedX + 10 && e.getX() > ((Staff.getActiveStaff() == 1) ? 160 : allowedX + 10) && !(currentNote instanceof SharpMarking))
+						if(e.getY() >= GuiHelper.getActiveStaffBeginningCoordinate() - 15 && e.getY() <= GuiHelper.getActiveStaffBeginningCoordinate() + 90)
 						{
-							graphics2D.setPaint(Color.BLACK);
-							Integer verticalParameter = GuiHelper.verticalCoordinate(e.getY(),GuiHelper.getActiveStaffBeginningCoordinate() ,text);
-							currentNote.setParameters(currentX, verticalParameter, true);
-							if(!(currentNote instanceof SharpMarking))
+							
+							if(e.getX()> allowedX + 10 && e.getX() > ((Staff.getActiveStaff() == 1) ? 160 : allowedX + 10) && !(currentNote instanceof SharpMarking))
 							{
-								Integer tone = SongProcessor.addNote(verticalParameter);
-								if(tone<130)
+								graphics2D.setPaint(Color.BLACK);
+								Integer verticalParameter = GuiHelper.verticalCoordinate(e.getY(),GuiHelper.getActiveStaffBeginningCoordinate() ,text);
+								currentNote.setParameters(currentX, verticalParameter, true);
+								Integer [] toneData = null;
+								if(!(currentNote instanceof SharpMarking))
 								{
-									isInverted = true;
+									toneData = SongProcessor.addNote(verticalParameter);
+									Integer tone = toneData[0];
+									if(tone<130)
+									{
+										isInverted = true;
+									}
+									else
+									{
+										isInverted = false;
+									}
+									text.append(tone.toString());
+								}
+								
+								currentNote.paint(graphics2D);
+								
+								
+								allowedX = 10 + e.getX();
+								if(currentNote instanceof EighthNote)
+								{
+									EighthNote eN = new EighthNote(e.getX() - 10,verticalParameter, NoteDrawing.CHECK, isInverted);
+									PageController.getPages().get(pageDisplayed).getDrawnNotes().add(eN);
+									Connections.CONNECTIONS.put(eN, toneData[1]);
+								}
+								if(currentNote instanceof QuarterNote)
+								{
+									QuarterNote qN = new QuarterNote(e.getX() - 10, verticalParameter, NoteDrawing.CHECK, isInverted);
+									PageController.getPages().get(pageDisplayed).getDrawnNotes().add(qN);
+									Connections.CONNECTIONS.put(qN, toneData[1]);
+								}
+								if(currentNote instanceof HalfNote)
+								{
+									HalfNote hN = new HalfNote(e.getX() - 10, verticalParameter, NoteDrawing.CHECK, isInverted);
+									PageController.getPages().get(pageDisplayed).getDrawnNotes().add(hN);
+									Connections.CONNECTIONS.put(hN, toneData[1]);
+								}
+								if(currentNote instanceof FullNote)
+								{
+									FullNote fN = new FullNote(e.getX() - 10, verticalParameter, NoteDrawing.CHECK);
+									PageController.getPages().get(pageDisplayed).getDrawnNotes().add(fN);
+									Connections.CONNECTIONS.put(fN, toneData[1]);
+								}
+								
+								paintLines();
+								
+							}
+							else if(currentNote instanceof SharpMarking && e.getX()> allowedX + 10)
+							{
+								allowedX = 10 + e.getX();
+								Integer verticalParameter = GuiHelper.verticalCoordinate(e.getY(),GuiHelper.getActiveStaffBeginningCoordinate() ,text);
+								PageController.getPages().get(pageDisplayed).getDrawnNotes().add(new SharpMarking(e.getX() - 10, verticalParameter - 10));
+								currentNote.setParameters(currentX, verticalParameter, true);
+								currentNote.paint(graphics2D);
+								if(e.getX() < 120 && Staff.getActiveStaff() == 1)
+								{
+									SongProcessor.makeNoteSharpGlobally(verticalParameter);
 								}
 								else
 								{
-									isInverted = false;
+									SongProcessor.makeNoteSharp(verticalParameter);
 								}
-								text.append(tone.toString());
-							}
-							currentNote.paint(graphics2D);
-							
-							
-							allowedX = 10 + e.getX();
-							if(currentNote instanceof EighthNote)
-							{
-								PageController.getPages().get(pageDisplayed).getDrawnNotes().add(new EighthNote(e.getX() - 10,verticalParameter, NoteDrawing.CHECK, isInverted));
-							}
-							if(currentNote instanceof QuarterNote)
-							{
-								PageController.getPages().get(pageDisplayed).getDrawnNotes().add(new QuarterNote(e.getX() - 10, verticalParameter, NoteDrawing.CHECK, isInverted));
-							}
-							if(currentNote instanceof HalfNote)
-							{
-								PageController.getPages().get(pageDisplayed).getDrawnNotes().add(new HalfNote(e.getX() - 10, verticalParameter, NoteDrawing.CHECK, isInverted));
-							}
-							if(currentNote instanceof FullNote)
-							{
-								PageController.getPages().get(pageDisplayed).getDrawnNotes().add(new FullNote(e.getX() - 10, verticalParameter, NoteDrawing.CHECK));
-							}
-							
-							paintLines();
-							
-						}
-						else if(currentNote instanceof SharpMarking && e.getX()> allowedX + 10)
-						{
-							allowedX = 10 + e.getX();
-							Integer verticalParameter = GuiHelper.verticalCoordinate(e.getY(),GuiHelper.getActiveStaffBeginningCoordinate() ,text);
-							PageController.getPages().get(pageDisplayed).getDrawnNotes().add(new SharpMarking(e.getX() - 10, verticalParameter - 10));
-							currentNote.setParameters(currentX, verticalParameter, true);
-							currentNote.paint(graphics2D);
-							if(e.getX() < 120 && Staff.getActiveStaff() == 1)
-							{
-								SongProcessor.makeNoteSharpGlobally(verticalParameter);
-							}
-							else
-							{
-								SongProcessor.makeNoteSharp(verticalParameter);
-							}
 								
-							paintLines();
+								paintLines();
+							}
+							if(allowedX + 10 > 525 && Staff.getActiveStaff() < 3)
+							{
+								allowedX = 0;
+								Staff.setActiveStaff(Staff.getActiveStaff() + 1);
+							}
+							else if(allowedX + 10 > 525 && Staff.getActiveStaff() == 3)
+							{
+								PageController.getPages().get(pageDisplayed).setActive(false);
+								pageDisplayed += 1;
+								PageController.getPages().put(pageDisplayed, new Page(pageDisplayed));
+								PageController.setActivePage(pageDisplayed);
+								Staff.setActiveStaff(1);
+								allowedX = 80;
+							}
 						}
-						if(allowedX + 10 > 525 && Staff.getActiveStaff() < 3)
+					}
+					else
+					{
+						//edit
+						if(e.getY() >= GuiHelper.getActiveStaffBeginningCoordinate() - 15 && e.getY() <= GuiHelper.getActiveStaffBeginningCoordinate() + 90)
 						{
-							allowedX = 0;
-							Staff.setActiveStaff(Staff.getActiveStaff() + 1);
-						}
-						else if(allowedX + 10 > 525 && Staff.getActiveStaff() == 3)
-						{
-							PageController.getPages().get(pageDisplayed).setActive(false);
-							pageDisplayed += 1;
-							PageController.getPages().put(pageDisplayed, new Page(pageDisplayed));
-							PageController.setActivePage(pageDisplayed);
-							Staff.setActiveStaff(1);
-							allowedX = 80;
+							if(!(currentNote instanceof SharpMarking))
+							{
+								graphics2D.setPaint(Color.BLACK);
+								Integer verticalParameter = GuiHelper.verticalCoordinate(e.getY(),GuiHelper.getActiveStaffBeginningCoordinate() ,text);
+								Integer index = Connections.CONNECTIONS.get(currentNote);
+								
+								currentNote.setParameters(currentNote.getBallFromX(), verticalParameter, true);
+								currentNote.paint(graphics2D);
+								SongProcessor.getSong().get(index).setTone(SongProcessor.getMidiTone(verticalParameter));
+							}
 						}
 					}
 					paintLines();
-					
+					//
 				}
 				currentNote = null;
 				SongProcessor.setLENGTH(null);
 				IS_RELEASED = true;
+				editingMode = false;
 				repaint();
 				
 			}

@@ -25,6 +25,9 @@ public class Note implements Serializable
 	public Integer getTone() {
 		return tone;
 	}
+	public void setTone(NoteData tone) {
+		this.tone = tone.tone();
+	}
 	
 	public Integer getLength() {
 		return length;
