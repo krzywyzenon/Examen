@@ -23,7 +23,7 @@ import composer.data.SoundDrawRelations;
 import composer.data.Lengths;
 import composer.data.NoteData;
 
-class ComposerSheet extends JComponent
+class ComposerSheet extends JComponent 
 {
 	
 	private static final long serialVersionUID = 1L;
@@ -31,6 +31,7 @@ class ComposerSheet extends JComponent
 	Graphics2D graphics2D;
 	int currentX, currentY, oldX, oldY;
 	private int allowedX = 80;
+	private Integer originalVerticalPosition = null;
 	
 	private int pageDisplayed = 1;
 	
@@ -57,31 +58,31 @@ class ComposerSheet extends JComponent
 			public void mousePressed(MouseEvent e){
 				oldX = e.getX();
 				oldY = e.getY();
-				if(GuiHelper.isCursorWithinLimits(e.getX(), e.getY(), GuiHelper.getFirstBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint()))
+				if(GuiHelper.isCursorWithinLimits(e.getX(), e.getY(), GuiHelper.getFirstBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.ADD))
 				{
 					IS_RELEASED = false;
 					currentNote = eighthNote;
 					SongProcessor.setLENGTH(Lengths.EIGHT);
 				}
-				else if(GuiHelper.isCursorWithinLimits(e.getX(), e.getY(), GuiHelper.getSecondBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint()))
+				else if(GuiHelper.isCursorWithinLimits(e.getX(), e.getY(), GuiHelper.getSecondBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.ADD))
 				{
 					IS_RELEASED = false;
 					currentNote = quarterNote;
 					SongProcessor.setLENGTH(Lengths.QUARTER);
 				}
-				else if(GuiHelper.isCursorWithinLimits(e.getX(), e.getY(), GuiHelper.getThirdBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint()))
+				else if(GuiHelper.isCursorWithinLimits(e.getX(), e.getY(), GuiHelper.getThirdBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.ADD))
 				{
 					IS_RELEASED = false;
 					currentNote = halfNote;	
 					SongProcessor.setLENGTH(Lengths.HALF);
 				}
-				else if(GuiHelper.isCursorWithinLimits(e.getX(), e.getY(),  GuiHelper.getFourthBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint()))
+				else if(GuiHelper.isCursorWithinLimits(e.getX(), e.getY(),  GuiHelper.getFourthBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.ADD))
 				{
 					IS_RELEASED = false;
 					currentNote = fullNote;
 					SongProcessor.setLENGTH(Lengths.WHOLE);
 				}
-				else if(GuiHelper.isCursorWithinLimits(e.getX(), e.getY(), GuiHelper.getFifthBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint()))
+				else if(GuiHelper.isCursorWithinLimits(e.getX(), e.getY(), GuiHelper.getFifthBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.ADD))
 				{
 					IS_RELEASED = false;
 					currentNote = sharpMarking;
@@ -95,12 +96,13 @@ class ComposerSheet extends JComponent
 					List<NoteDrawing> list = page.getDrawnNotes();
 					for(NoteDrawing nd : list)
 					{
-						if(GuiHelper.isCursorWithinLimits(oldX, oldY, nd.getBallFromX(), nd.getBallFromY()))
+						if(GuiHelper.isCursorWithinLimits(oldX, oldY, nd.getBallFromX(), nd.getBallFromY(), GuiHelper.EDIT))
 						{
 							System.out.println("Hello World");
 							IS_RELEASED = false;
 							editingMode = true;
 							currentNote = nd;
+							originalVerticalPosition = nd.getBallFromY();
 						}
 					}
 				}
@@ -236,6 +238,13 @@ class ComposerSheet extends JComponent
 								NoteData tone = (NoteData) data[0];
 								SongProcessor.getSong().get(index).setTone(tone);
 							}
+						}
+						else
+						{
+							
+							currentNote.setParameters(currentNote.getBallFromX(), originalVerticalPosition, true);
+							currentNote.paint(graphics2D);
+							originalVerticalPosition = null;
 						}
 					}
 					paintLines();

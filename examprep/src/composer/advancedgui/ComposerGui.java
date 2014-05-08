@@ -18,7 +18,6 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
-import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -26,6 +25,7 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 
 import com.google.common.collect.ImmutableMap;
+import composer.advancedgui.shapes.NoteDrawing;
 import composer.controller.Player;
 import composer.controller.SaveAndLoad;
 import composer.controller.State;
@@ -42,6 +42,7 @@ public class ComposerGui implements ActionListener
 	private static final int PLAY = 5;
 	private static final int NEXT = 6;
 	private static final int PREVIOUS = 7;
+	private static final int DELETE_LAST = 8;
 	
 	private ComposerSheet composerSheet;
 	
@@ -49,6 +50,7 @@ public class ComposerGui implements ActionListener
 	private ImageIcon nextIcon;
 	private ImageIcon previousIcon;
 	private ImageIcon clearIcon;
+	private ImageIcon deleteNoteIcon;
 	private JTextArea text;
 	private JFrame frame;
 	
@@ -60,6 +62,7 @@ public class ComposerGui implements ActionListener
 	private JButton nextPage;
 	private JButton previousPage;
 	private JButton playButton;
+	private JButton deleteLastButton;
 	private JMenuItem loadItem;
 	private JMenuItem saveItem;
 	private JMenuItem quitItem;
@@ -76,6 +79,7 @@ public class ComposerGui implements ActionListener
 		nextIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getNextPageKeyFile()));
 		previousIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getPreviousPageKeyFile()));
 		clearIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getClearKeyFile()));
+		deleteNoteIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getDeleteLastNoteFile()));
 		Image background = GuiHelper.getImage(GuiHelper.getMainBackgroundFile());
 		frame = new JFrame("Composer");
 		text = new JTextArea();
@@ -88,6 +92,7 @@ public class ComposerGui implements ActionListener
 		nextPage = new JButton();
 		previousPage = new JButton();
 		playButton = new JButton();
+		deleteLastButton = new JButton();
 
 		loadItem = new JMenuItem("Load song");
 		loadItem.setBackground(new Color(157,75,35));
@@ -110,6 +115,7 @@ public class ComposerGui implements ActionListener
 					.put(playButton, 5)
 					.put(nextPage, 6)
 					.put(previousPage, 7)
+					.put(deleteLastButton, 8)
 					.build();
 		
 		content = frame.getContentPane();
@@ -117,12 +123,19 @@ public class ComposerGui implements ActionListener
 		
 		playButton.setIcon(playIcon);
 		playButton.setBorder(null);
+		playButton.setToolTipText("Play current song");
 		nextPage.setIcon(nextIcon);
 		nextPage.setBorder(null);
+		nextPage.setToolTipText("Next page");
 		previousPage.setIcon(previousIcon);
 		previousPage.setBorder(null);
+		previousPage.setToolTipText("Previous page");
 		clearButton.setIcon(clearIcon);
 		clearButton.setBorder(null);
+		clearButton.setToolTipText("Clear current song");
+		deleteLastButton.setIcon(deleteNoteIcon);
+		deleteLastButton.setBorder(null);
+		deleteLastButton.setToolTipText("Delete last note");
 		
 		
 		menuBar = new MyMenuBar(GuiHelper.getImage(new File("resources/menuback.png")));
@@ -144,6 +157,7 @@ public class ComposerGui implements ActionListener
 		clearButton.addActionListener(this);
 		nextPage.addActionListener(this);
 		previousPage.addActionListener(this);
+		deleteLastButton.addActionListener(this);
 	
 		JScrollPane scrollPane = new JScrollPane(text);
 		scrollPane.setPreferredSize(new Dimension(210,168));
@@ -165,6 +179,7 @@ public class ComposerGui implements ActionListener
 		panel.add(clearButton);
 		panel.add(previousPage);
 		panel.add(nextPage);
+		panel.add(deleteLastButton);
 		
 		mainPanel.add(panel, BorderLayout.WEST);
 //		content.add(panel, BorderLayout.WEST);
@@ -268,6 +283,17 @@ public class ComposerGui implements ActionListener
 					}
 				}
 				break;
+			}
+			case DELETE_LAST:
+			{
+				Page page = PageController.getPages().get(PageController.getActivePage());
+				int size = page.getDrawnNotes().size();
+				NoteDrawing nD = page.getDrawnNotes().get(size -1);
+				int index = SoundDrawRelations.getDrawingsAndSoundsRelations().get(nD);
+				SoundDrawRelations.getDrawingsAndSoundsRelations().remove(nD);
+				SongProcessor.getSong().remove(index);
+				page.getDrawnNotes().remove(size -1);
+				composerSheet.paintLines();
 			}
 		}
 	}

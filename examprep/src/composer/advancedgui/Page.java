@@ -1,7 +1,6 @@
 package composer.advancedgui;
 
 import java.awt.Graphics;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 

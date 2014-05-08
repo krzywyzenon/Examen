@@ -1,15 +1,13 @@
 package composer.advancedgui.shapes;
 
 import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JComponent;
 
 import composer.advancedgui.GuiHelper;
 import composer.advancedgui.Staff;
 
-public abstract class NoteDrawing extends JComponent implements ActionListener
+public abstract class NoteDrawing extends JComponent
 {
 	private static final long serialVersionUID = 1L;
 	public static final boolean CHECK = true;
@@ -85,9 +83,4 @@ public abstract class NoteDrawing extends JComponent implements ActionListener
 		this.inverted = inverted;
 	}
 	
-	@Override
-	public void actionPerformed(ActionEvent e)
-	{
-		System.out.println("Hello world");
-	}
 }

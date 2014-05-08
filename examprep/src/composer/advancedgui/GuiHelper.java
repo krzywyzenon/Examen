@@ -15,6 +15,9 @@ import composer.data.Tones;
 
 public class GuiHelper
 {
+	public static final Integer ADD = 0;
+	public static final Integer EDIT = 1;
+	
 	private static final Map<String, Integer> BOXES_STARTPOINTS = ImmutableMap.of(
 			"First", 0,
 			"Second", 60,
@@ -31,6 +34,7 @@ public class GuiHelper
 	private static final File MAIN_BACKGROUND_FILE = new File("resources/wood.png");
 	private static final File PANEL_BACKGROUND_FILE = new File("resources/leftwood1.png");
 	private static final File PAGE_BACKGROUND_FILE = new File("resources/papyrus.png");
+	private static final File DELETE_LAST_NOTE_FILE = new File("resources/deletenote.png");
 	
 	private static final String FIRST = "First";
 	private static final String SECOND = "Second";
@@ -257,9 +261,11 @@ public class GuiHelper
 		return coordinate;
 	}
 	
-	public static boolean isCursorWithinLimits(int x, int y, int destinedX, int destinedY)
+	public static boolean isCursorWithinLimits(int x, int y, int destinedX, int destinedY, Integer mode)
 	{
-		if((x>=destinedX && x <= destinedX + GuiHelper.getBoxWidth()) && (y >= destinedY && y <= destinedY + GuiHelper.getBoxHeight()))
+		Integer horizontalLimit = (mode == ADD)? getBoxWidth() : 20;
+		Integer verticalLimit = (mode == ADD) ? getBoxHeight() : 60;
+		if((x>=destinedX && x <= destinedX + horizontalLimit) && (y >= destinedY && y <= destinedY + verticalLimit))
 		{
 			return true;
 		}
@@ -290,6 +296,11 @@ public class GuiHelper
 
 	public static File getClearKeyFile() {
 		return CLEAR_KEY_FILE;
+	}
+
+
+	public static File getDeleteLastNoteFile() {
+		return DELETE_LAST_NOTE_FILE;
 	}
 
 

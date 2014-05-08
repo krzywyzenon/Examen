@@ -84,6 +84,12 @@ public class EighthNote extends NoteDrawing {
 		this.yPoints[0] = this.stickFromY + 8; 
 		this.yPoints[1] = this.stickFromY + 6;
 		this.yPoints[2] = this.stickFromY;
+		this.invXPoints[0] = this.ballFromX + 15;
+		this.invXPoints[1] = this.ballFromX + 10;
+		this.invXPoints[2] = this.ballFromX + 10;
+		this.invYPoints[0] = this.ballFromY + 44;
+		this.invYPoints[1] = this.ballFromY + 54;
+		this.invYPoints[2] = this.ballFromY + 48;
 		this.checkIfNoteIsC = checkC;
 		setCParameters();
 
