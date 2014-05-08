@@ -296,7 +296,8 @@ class ComposerSheet extends JComponent
 	{
 		Staff.setActiveStaff(1);
 		allowedX = 80;
-		image = createImage(getSize().width, getSize().height);
+//		image = createImage(getSize().width, getSize().height);
+		image = createImage(559, 531);
 		graphics2D = (Graphics2D)image.getGraphics();
 		graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		clear();

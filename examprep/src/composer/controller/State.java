@@ -17,11 +17,14 @@ public class State implements Serializable
 	
 	private Map<NoteDrawing, Integer> relations;
 	
-	public State(Song song, Map<Integer, Page> pages, Map<NoteDrawing, Integer> relations)
+	private String title;
+	
+	public State(Song song, Map<Integer, Page> pages, Map<NoteDrawing, Integer> relations, String title)
 	{
 		this.song = song;
 		this.pages = pages;
 		this.relations = relations;
+		this.title = title;
 	}
 
 	public Song getSong() {
@@ -35,5 +38,9 @@ public class State implements Serializable
 	public Map<NoteDrawing, Integer> getRelations()
 	{
 		return relations;
+	}
+
+	public String getTitle() {
+		return title;
 	}
 }

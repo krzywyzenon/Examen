@@ -4,6 +4,9 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,11 +20,13 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 
 import com.google.common.collect.ImmutableMap;
@@ -43,6 +48,7 @@ public class ComposerGui implements ActionListener
 	private static final int NEXT = 6;
 	private static final int PREVIOUS = 7;
 	private static final int DELETE_LAST = 8;
+	private static final int SET_TITLE = 9;
 	
 	private ComposerSheet composerSheet;
 	
@@ -51,8 +57,13 @@ public class ComposerGui implements ActionListener
 	private ImageIcon previousIcon;
 	private ImageIcon clearIcon;
 	private ImageIcon deleteNoteIcon;
+	private ImageIcon titleIcon;
+	
 	private JTextArea text;
 	private JFrame frame;
+	private JTextField title;
+	
+	JLabel titleLabel;
 	
 	private BackgroundPanel mainPanel;
 	
@@ -63,6 +74,7 @@ public class ComposerGui implements ActionListener
 	private JButton previousPage;
 	private JButton playButton;
 	private JButton deleteLastButton;
+	private JButton setTitleButton;
 	private JMenuItem loadItem;
 	private JMenuItem saveItem;
 	private JMenuItem quitItem;
@@ -74,18 +86,32 @@ public class ComposerGui implements ActionListener
 	
 	private JFileChooser fc;
 	
+	private GridBagConstraints gc;
+	
 	public ComposerGui() {
+		
+		gc = new GridBagConstraints();
 		playIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getPlayKeyFile()));
 		nextIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getNextPageKeyFile()));
 		previousIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getPreviousPageKeyFile()));
 		clearIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getClearKeyFile()));
 		deleteNoteIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getDeleteLastNoteFile()));
+		titleIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getTitleButtonFile()));
 		Image background = GuiHelper.getImage(GuiHelper.getMainBackgroundFile());
 		frame = new JFrame("Composer");
 		text = new JTextArea();
 		text.setPreferredSize(new Dimension(210,1168));
 		mainPanel = new BackgroundPanel(background);
 		mainPanel.setLayout(new BorderLayout());
+		title = new JTextField(10);
+		title.setPreferredSize(new Dimension(140, 30));
+		title.setMinimumSize(new Dimension(140, 30));
+		title.setBackground(new Color(157,75,35));
+		title.setForeground(Color.ORANGE);
+		titleLabel = new JLabel();
+		titleLabel.setFont(new Font("Serif", Font.BOLD, 18));
+		titleLabel.setForeground(Color.BLACK);
+		titleLabel.setText("Title:");
 		
 		composerSheet  = new ComposerSheet(text);
 		clearButton = new JButton();
@@ -93,6 +119,7 @@ public class ComposerGui implements ActionListener
 		previousPage = new JButton();
 		playButton = new JButton();
 		deleteLastButton = new JButton();
+		setTitleButton = new JButton();
 
 		loadItem = new JMenuItem("Load song");
 		loadItem.setBackground(new Color(157,75,35));
@@ -116,6 +143,7 @@ public class ComposerGui implements ActionListener
 					.put(nextPage, 6)
 					.put(previousPage, 7)
 					.put(deleteLastButton, 8)
+					.put(setTitleButton, 9)
 					.build();
 		
 		content = frame.getContentPane();
@@ -136,6 +164,9 @@ public class ComposerGui implements ActionListener
 		deleteLastButton.setIcon(deleteNoteIcon);
 		deleteLastButton.setBorder(null);
 		deleteLastButton.setToolTipText("Delete last note");
+		setTitleButton.setIcon(titleIcon);
+		setTitleButton.setBorder(null);
+		setTitleButton.setToolTipText("Set title for current song");
 		
 		
 		menuBar = new MyMenuBar(GuiHelper.getImage(new File("resources/menuback.png")));
@@ -158,6 +189,7 @@ public class ComposerGui implements ActionListener
 		nextPage.addActionListener(this);
 		previousPage.addActionListener(this);
 		deleteLastButton.addActionListener(this);
+		setTitleButton.addActionListener(this);
 	
 		JScrollPane scrollPane = new JScrollPane(text);
 		scrollPane.setPreferredSize(new Dimension(210,168));
@@ -175,11 +207,55 @@ public class ComposerGui implements ActionListener
 //		panel.setMaximumSize(new Dimension(220, 68));
 		
 //		panel.add(scrollPane);
-		panel.add(playButton);
-		panel.add(clearButton);
-		panel.add(previousPage);
-		panel.add(nextPage);
-		panel.add(deleteLastButton);
+		panel.setLayout(new GridBagLayout());
+		gc.anchor = GridBagConstraints.WEST;
+		gc.weighty = 0.05;
+		gc.weightx = 1;
+		gc.gridx = 0;
+		gc.gridy = 0;
+		panel.add(playButton, gc);
+		gc.gridx = 0;
+		gc.gridy = 1;
+		panel.add(previousPage, gc);
+		
+		gc.gridx = 1;
+		JLabel pageLabel = new JLabel("   PAGE");
+		pageLabel.setFont(new Font("Serif", Font.BOLD, 24));
+		pageLabel.setForeground(Color.BLACK);
+		pageLabel.setMinimumSize(new Dimension(120, 40));
+//		pageLabel.setBorder(BorderFactory.createBevelBorder(1));
+		gc.weightx = 0.01;
+		panel.add(pageLabel, gc);
+		gc.weightx =1;
+		
+		gc.gridx = 2;
+		gc.anchor = GridBagConstraints.EAST;
+		panel.add(nextPage, gc);
+		
+		gc.anchor = GridBagConstraints.CENTER;
+		gc.weightx = 1;
+		gc.gridy = 2;
+		gc.gridx = 0;
+		panel.add(clearButton, gc);
+		
+		gc.gridx = 1;
+		panel.add(deleteLastButton, gc);
+		gc.anchor = GridBagConstraints.WEST;
+		gc.weightx = 0;
+		gc.gridy = 3;
+		gc.gridx = 0;
+		gc.gridwidth = 2;
+		panel.add(title, gc);
+		gc.gridwidth = 1;
+		gc.gridx = 2;
+		panel.add(setTitleButton, gc);
+		
+		gc.gridy = 4;
+		gc.weighty = 1;
+		gc.gridx = 0;
+		gc.gridwidth = 3;
+		panel.add(titleLabel, gc);
+//		panel.add(new JLabel(), gc);
 		
 		mainPanel.add(panel, BorderLayout.WEST);
 //		content.add(panel, BorderLayout.WEST);
@@ -187,12 +263,13 @@ public class ComposerGui implements ActionListener
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 5));
 		
 		content.add(mainPanel);
-		frame.setSize(800, 600);
+		frame.setSize(806, 649);
+		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		composerSheet.initialize();
 		frame.repaint();
-		System.out.println(menuBar.getSize());
+		System.out.println(composerSheet.getSize());
 
 	}
 
@@ -241,6 +318,8 @@ public class ComposerGui implements ActionListener
 				SongProcessor.getSong().clear();
 				SongProcessor.cleanAllSharps();
 				SoundDrawRelations.resetRelations();
+				title.setText("");
+				titleLabel.setText("Title:");
 				composerSheet.initialize();
 				break;
 			}
@@ -256,6 +335,7 @@ public class ComposerGui implements ActionListener
 						SongProcessor.setSong(state.getSong());
 						PageController.setPages(state.getPages());
 						SoundDrawRelations.setDrawingsAndSoundsRelations(state.getRelations());
+						titleLabel.setText("Title: " + state.getTitle());
 					} catch (FileNotFoundException e1) {
 						e1.printStackTrace();
 					} catch (ClassNotFoundException e1) {
@@ -273,7 +353,8 @@ public class ComposerGui implements ActionListener
 				if(returnVal == JFileChooser.APPROVE_OPTION)
 				{
 					File file = fc.getSelectedFile();
-					State state = new State(SongProcessor.getSong(), PageController.getPages(), SoundDrawRelations.getDrawingsAndSoundsRelations());
+					String name = (title.getText() != null)  ? title.getText() : "";
+					State state = new State(SongProcessor.getSong(), PageController.getPages(), SoundDrawRelations.getDrawingsAndSoundsRelations(), name);
 					try {
 						SaveAndLoad.saveSong(state, file);
 					} catch (FileNotFoundException e1) {
@@ -294,6 +375,12 @@ public class ComposerGui implements ActionListener
 				SongProcessor.getSong().remove(index);
 				page.getDrawnNotes().remove(size -1);
 				composerSheet.paintLines();
+				break;
+			}
+			case SET_TITLE:
+			{
+				titleLabel.setText("Title: " + title.getText());
+				break;
 			}
 		}
 	}

@@ -35,6 +35,7 @@ public class GuiHelper
 	private static final File PANEL_BACKGROUND_FILE = new File("resources/leftwood1.png");
 	private static final File PAGE_BACKGROUND_FILE = new File("resources/papyrus.png");
 	private static final File DELETE_LAST_NOTE_FILE = new File("resources/deletenote.png");
+	private static final File TITLE_BUTTON_FILE = new File("resources/titlebutton.png");
 	
 	private static final String FIRST = "First";
 	private static final String SECOND = "Second";
@@ -301,6 +302,11 @@ public class GuiHelper
 
 	public static File getDeleteLastNoteFile() {
 		return DELETE_LAST_NOTE_FILE;
+	}
+
+
+	public static File getTitleButtonFile() {
+		return TITLE_BUTTON_FILE;
 	}
 
 
