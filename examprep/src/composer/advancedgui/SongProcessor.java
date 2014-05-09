@@ -11,9 +11,23 @@ public class SongProcessor
 {
 	private static Song SONG = new Song();
 	
-	private static Lengths LENGTH = null;
+	public static Integer[] addNote(Integer toneValue, Lengths length)
+	{
+		NoteData tone;
+		Object[] temp = getMidiTone(toneValue);
+		tone = (NoteData) temp[0];
+		if(isLocallySharp(toneValue))
+		{
+			tone = GuiHelper.getTones().get(GuiHelper.getTonesToSharp().get(toneValue));
+			GuiHelper.getTemporarySharpTones().put(toneValue, false);
+		}
+		Note note = new Note(tone, length);	
+		SONG.add(note);
+		Integer[] data = {(Integer) temp[1], SONG.indexOf(note)};
+		return data;
+	}
 	
-	public static Integer[] addNote(Integer toneValue)
+	public static Object[] getMidiTone(Integer toneValue)
 	{
 		if(Staff.getActiveStaff() != 1)
 		toneValue = toneValue - (Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff()) - Staff.getStaffBeginningCoordinates().get(1));
@@ -22,35 +36,6 @@ public class SongProcessor
 		{
 			tone = GuiHelper.getTones().get(GuiHelper.getTonesToSharp().get(toneValue));
 		}
-		else if(isSharp(toneValue))
-		{
-			tone = GuiHelper.getTones().get(GuiHelper.getTonesToSharp().get(toneValue));
-			GuiHelper.getTemporarySharpTones().put(toneValue, false);
-		}
-		else
-		{
-			tone = GuiHelper.getTones().get(toneValue);
-		}
-		Note note = new Note(tone, LENGTH);	
-		SONG.add(note);
-		Integer[] data = {toneValue, SONG.indexOf(note)};
-		return data;
-	}
-	
-	public static Object[] getMidiTone(Integer toneValue)
-	{
-		if(Staff.getActiveStaff() != 1)
-			toneValue = toneValue - (Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff()) - Staff.getStaffBeginningCoordinates().get(1));
-		NoteData tone;
-		if(isGloballySharp(toneValue))
-		{
-			tone = GuiHelper.getTones().get(GuiHelper.getTonesToSharp().get(toneValue));
-		}
-//		else if(isSharp(toneValue))
-//		{
-//			tone = GuiHelper.getTones().get(GuiHelper.getTonesToSharp().get(toneValue));
-//			GuiHelper.getTemporarySharpTones().put(toneValue, false);
-//		}
 		else
 		{
 			tone = GuiHelper.getTones().get(toneValue);
@@ -72,7 +57,7 @@ public class SongProcessor
 		}
 	}
 	
-	public static boolean isSharp(Integer toneValue)
+	public static boolean isLocallySharp(Integer toneValue)
 	{
 		if(GuiHelper.getTemporarySharpTones().containsKey(toneValue))
 		{
@@ -113,16 +98,6 @@ public class SongProcessor
 		}
 	}
 	
-	public static Lengths getLENGTH() {
-		return LENGTH;
-	}
-
-
-	public static void setLENGTH(Lengths lENGTH) {
-		LENGTH = lENGTH;
-	}
-
-
 	public static Song getSong() {
 		return SONG;
 	}

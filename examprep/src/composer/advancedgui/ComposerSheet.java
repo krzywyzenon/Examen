@@ -19,13 +19,12 @@ import composer.advancedgui.shapes.HalfNote;
 import composer.advancedgui.shapes.NoteDrawing;
 import composer.advancedgui.shapes.QuarterNote;
 import composer.advancedgui.shapes.SharpMarking;
-import composer.data.SoundDrawRelations;
 import composer.data.Lengths;
 import composer.data.NoteData;
+import composer.data.SoundDrawRelations;
 
 class ComposerSheet extends JComponent 
 {
-	
 	private static final long serialVersionUID = 1L;
 	Image image;
 	Graphics2D graphics2D;
@@ -35,7 +34,6 @@ class ComposerSheet extends JComponent
 	
 	private int pageDisplayed = 1;
 	
-	private boolean IS_RELEASED = true;
 	private boolean editingMode = false;
 	private boolean isInverted = false;
 	
@@ -60,31 +58,22 @@ class ComposerSheet extends JComponent
 				oldY = e.getY();
 				if(GuiHelper.isCursorWithinLimits(e.getX(), e.getY(), GuiHelper.getFirstBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.ADD))
 				{
-					IS_RELEASED = false;
 					currentNote = eighthNote;
-					SongProcessor.setLENGTH(Lengths.EIGHT);
 				}
 				else if(GuiHelper.isCursorWithinLimits(e.getX(), e.getY(), GuiHelper.getSecondBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.ADD))
 				{
-					IS_RELEASED = false;
 					currentNote = quarterNote;
-					SongProcessor.setLENGTH(Lengths.QUARTER);
 				}
 				else if(GuiHelper.isCursorWithinLimits(e.getX(), e.getY(), GuiHelper.getThirdBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.ADD))
 				{
-					IS_RELEASED = false;
 					currentNote = halfNote;	
-					SongProcessor.setLENGTH(Lengths.HALF);
 				}
 				else if(GuiHelper.isCursorWithinLimits(e.getX(), e.getY(),  GuiHelper.getFourthBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.ADD))
 				{
-					IS_RELEASED = false;
 					currentNote = fullNote;
-					SongProcessor.setLENGTH(Lengths.WHOLE);
 				}
 				else if(GuiHelper.isCursorWithinLimits(e.getX(), e.getY(), GuiHelper.getFifthBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.ADD))
 				{
-					IS_RELEASED = false;
 					currentNote = sharpMarking;
 					
 				}
@@ -99,7 +88,6 @@ class ComposerSheet extends JComponent
 						if(GuiHelper.isCursorWithinLimits(oldX, oldY, nd.getBallFromX(), nd.getBallFromY(), GuiHelper.EDIT))
 						{
 							System.out.println("Hello World");
-							IS_RELEASED = false;
 							editingMode = true;
 							currentNote = nd;
 							originalVerticalPosition = nd.getBallFromY();
@@ -111,14 +99,13 @@ class ComposerSheet extends JComponent
 		addMouseListener(new MouseAdapter(){
 			public void mouseClicked(MouseEvent e){
 				text.append("allowed x " + allowedX + "\nX: " + e.getX() + "\nY: " + e.getY());
+				System.out.println("x: " + e.getX());
 				repaint();
 			}
 		});
 		addMouseListener(new MouseAdapter(){
 			public void mouseReleased(MouseEvent e){
 
-				if(!IS_RELEASED)
-				{	
 					if(!editingMode)
 					{
 						
@@ -131,50 +118,39 @@ class ComposerSheet extends JComponent
 								Integer verticalParameter = GuiHelper.verticalCoordinate(e.getY(),GuiHelper.getActiveStaffBeginningCoordinate() ,text);
 								currentNote.setParameters(currentX, verticalParameter, true);
 								Integer [] toneData = null;
-								if(!(currentNote instanceof SharpMarking))
-								{
-									toneData = SongProcessor.addNote(verticalParameter);
-									Integer tone = toneData[0];
-									if(tone<130)
-									{
-										isInverted = true;
-									}
-									else
-									{
-										isInverted = false;
-									}
-									text.append(tone.toString());
-								}
 								
 								currentNote.paint(graphics2D);
-								
 								
 								allowedX = 10 + e.getX();
 								if(currentNote instanceof EighthNote)
 								{
-									EighthNote eN = new EighthNote(e.getX() - 10,verticalParameter, NoteDrawing.CHECK, isInverted);
-									PageController.getPages().get(pageDisplayed).getDrawnNotes().add(eN);
-									SoundDrawRelations.getDrawingsAndSoundsRelations().put(eN, toneData[1]);
+									toneData = SongProcessor.addNote(verticalParameter, Lengths.EIGHT);
+									isInverted = setInverted(toneData[0]);
+									EighthNote noteToAdd = new EighthNote(e.getX() - 10,verticalParameter, NoteDrawing.CHECK, isInverted);
+									addingNoteDrawing(noteToAdd, toneData[1]);
 								}
 								if(currentNote instanceof QuarterNote)
 								{
-									QuarterNote qN = new QuarterNote(e.getX() - 10, verticalParameter, NoteDrawing.CHECK, isInverted);
-									PageController.getPages().get(pageDisplayed).getDrawnNotes().add(qN);
-									SoundDrawRelations.getDrawingsAndSoundsRelations().put(qN, toneData[1]);
+									toneData = SongProcessor.addNote(verticalParameter, Lengths.QUARTER);
+									isInverted = setInverted(toneData[0]);
+									QuarterNote noteToAdd = new QuarterNote(e.getX() - 10, verticalParameter, NoteDrawing.CHECK, isInverted);
+									addingNoteDrawing(noteToAdd, toneData[1]);
 								}
 								if(currentNote instanceof HalfNote)
 								{
-									HalfNote hN = new HalfNote(e.getX() - 10, verticalParameter, NoteDrawing.CHECK, isInverted);
-									PageController.getPages().get(pageDisplayed).getDrawnNotes().add(hN);
-									SoundDrawRelations.getDrawingsAndSoundsRelations().put(hN, toneData[1]);
+									toneData = SongProcessor.addNote(verticalParameter, Lengths.HALF);
+									isInverted = setInverted(toneData[0]);
+									HalfNote noteToAdd = new HalfNote(e.getX() - 10, verticalParameter, NoteDrawing.CHECK, isInverted);
+									addingNoteDrawing(noteToAdd, toneData[1]);
 								}
 								if(currentNote instanceof FullNote)
 								{
-									FullNote fN = new FullNote(e.getX() - 10, verticalParameter, NoteDrawing.CHECK);
-									PageController.getPages().get(pageDisplayed).getDrawnNotes().add(fN);
-									SoundDrawRelations.getDrawingsAndSoundsRelations().put(fN, toneData[1]);
+									toneData = SongProcessor.addNote(verticalParameter, Lengths.WHOLE);
+									isInverted = setInverted(toneData[0]);
+									FullNote noteToAdd = new FullNote(e.getX() - 10, verticalParameter, NoteDrawing.CHECK);
+									addingNoteDrawing(noteToAdd, toneData[1]);
 								}
-								
+								System.out.println("allowed x: " + allowedX);
 								paintLines();
 								
 							}
@@ -214,7 +190,7 @@ class ComposerSheet extends JComponent
 					}
 					else
 					{
-						//edit
+						//Editing existing note
 						if(e.getY() >= GuiHelper.getActiveStaffBeginningCoordinate() - 15 && e.getY() <= GuiHelper.getActiveStaffBeginningCoordinate() + 90)
 						{
 							if(!(currentNote instanceof SharpMarking))
@@ -224,14 +200,7 @@ class ComposerSheet extends JComponent
 								Integer index = SoundDrawRelations.getDrawingsAndSoundsRelations().get(currentNote);
 								Object[] data = SongProcessor.getMidiTone(verticalParameter);
 								Integer toneValue = (Integer) data[1];
-								if(toneValue<130)
-								{
-									isInverted = true;
-								}
-								else
-								{
-									isInverted = false;
-								}
+								isInverted = setInverted(toneValue);
 								currentNote.setParameters(currentNote.getBallFromX(), verticalParameter, true);
 								currentNote.setInverted(isInverted);
 								currentNote.paint(graphics2D);
@@ -248,11 +217,7 @@ class ComposerSheet extends JComponent
 						}
 					}
 					paintLines();
-					//
-				}
 				currentNote = null;
-				SongProcessor.setLENGTH(null);
-				IS_RELEASED = true;
 				editingMode = false;
 				repaint();
 				
@@ -282,11 +247,6 @@ class ComposerSheet extends JComponent
 						currentNote.paintComponent(graphics2D);
 					}
 						
-//					graphics2D.setPaint(Color.WHITE);
-//					currentNote.setParameters(oldX - 5, oldY - 2, NoteDrawing.SKIP_CHECK);
-//					currentNote.paintComponent(graphics2D);
-					
-//					repaint();
 				}
 			}
 		});		
@@ -350,6 +310,24 @@ class ComposerSheet extends JComponent
 	public void setPageDisplayed(int page) {
 		this.pageDisplayed = page;
 		paintLines();
+	}
+	
+	public boolean setInverted(Integer value)
+	{
+		if(value<130)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	public void addingNoteDrawing(NoteDrawing drawing, Integer index){
+		
+		PageController.getPages().get(pageDisplayed).getDrawnNotes().add(drawing);
+		SoundDrawRelations.getDrawingsAndSoundsRelations().put(drawing, index);
 	}
 
 }
