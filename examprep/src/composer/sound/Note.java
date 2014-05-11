@@ -2,7 +2,7 @@ package composer.sound;
 
 import java.io.Serializable;
 
-import composer.data.NoteData;
+import composer.data.MidiDataExtractor;
 
 public class Note implements Serializable
 {
@@ -16,17 +16,17 @@ public class Note implements Serializable
 	{
 		
 	}
-	public Note(NoteData tone, NoteData length)
+	public Note(MidiDataExtractor tone, MidiDataExtractor length)
 	{
-		this.tone = tone.tone();
-		this.length = length.length();
+		this.tone = tone.value();
+		this.length = length.value();
 	}
 	
 	public Integer getTone() {
 		return tone;
 	}
-	public void setTone(NoteData tone) {
-		this.tone = tone.tone();
+	public void setTone(MidiDataExtractor tone) {
+		this.tone = tone.value();
 	}
 	
 	public Integer getLength() {

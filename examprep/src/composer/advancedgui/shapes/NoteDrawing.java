@@ -22,6 +22,7 @@ public abstract class NoteDrawing extends JComponent
 	int stickFromY;
 	
 	int coordinateForCNote;
+	int coordinateForB1Note;
 	
 	int hiddenLineCoord;
 	
@@ -45,7 +46,7 @@ public abstract class NoteDrawing extends JComponent
 	
 	public void paintShortLine(Graphics g)
 	{
-		if(checkIfNoteIsC && this.ballFromY == this.coordinateForCNote)
+		if(checkIfNoteIsC && (this.ballFromY == this.coordinateForCNote || this.ballFromY == this.coordinateForB1Note))
 		{
 			g.drawLine(ballFromX - 5,hiddenLineCoord, ballFromX + 25, hiddenLineCoord);			
 		}
@@ -70,9 +71,10 @@ public abstract class NoteDrawing extends JComponent
 		return checkIfNoteIsC;
 	}
 	
-	public void setCParameters()
+	public void setLowParameters()
 	{
 		this.coordinateForCNote = (2 * Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff()) + 9 * Staff.getSpaceBetweenRows()) / 2 + 2;
+		this.coordinateForB1Note = (Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff()) + 5 * Staff.getSpaceBetweenRows());
 		this.hiddenLineCoord = GuiHelper.getHiddenLineCoord();
 	}
 	public boolean isInverted() {

@@ -20,7 +20,7 @@ public class QuarterNote extends NoteDrawing
 		this.stickFromX= this.ballFromX + 15;
 		this.stickFromY = this.ballFromY - 40;
 		this.checkIfNoteIsC = checkForC;
-		setCParameters();
+		setLowParameters();
 	}
 	public QuarterNote(int bFX, int bFY, boolean checkForC, boolean inverted)
 	{
@@ -30,7 +30,7 @@ public class QuarterNote extends NoteDrawing
 		this.stickFromY = this.ballFromY - 40;
 		this.checkIfNoteIsC = checkForC;
 		this.inverted = inverted;
-		setCParameters();
+		setLowParameters();
 		System.out.println("Create");
 	}
 	
@@ -42,7 +42,7 @@ public class QuarterNote extends NoteDrawing
 		this.stickFromX= this.ballFromX + 15;
 		this.stickFromY = this.ballFromY - 40;
 		this.checkIfNoteIsC = checkForC;
-		setCParameters();
+		setLowParameters();
 	}
 	
 	public void normal(Graphics g)

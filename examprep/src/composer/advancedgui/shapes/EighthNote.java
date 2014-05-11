@@ -40,7 +40,7 @@ public class EighthNote extends NoteDrawing {
 		this.yPoints[1] = this.stickFromY + 6;
 		this.yPoints[2] = this.stickFromY;
 		this.checkIfNoteIsC = checkForC;
-		setCParameters();
+		setLowParameters();
 		
 	}
 	public EighthNote(int bFX, int bFY, boolean checkForC, boolean inverted)
@@ -67,7 +67,7 @@ public class EighthNote extends NoteDrawing {
 		this.invYPoints[2] = this.ballFromY + 48;
 		this.checkIfNoteIsC = checkForC;
 		this.inverted = inverted;
-		setCParameters();
+		setLowParameters();
 		
 	}
 
@@ -91,7 +91,7 @@ public class EighthNote extends NoteDrawing {
 		this.invYPoints[1] = this.ballFromY + 54;
 		this.invYPoints[2] = this.ballFromY + 48;
 		this.checkIfNoteIsC = checkC;
-		setCParameters();
+		setLowParameters();
 
 	}
 

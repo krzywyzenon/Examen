@@ -21,7 +21,7 @@ public class HalfNote extends NoteDrawing {
 		this.stickFromX= this.ballFromX + 17;
 		this.stickFromY = this.ballFromY - 40;
 		this.checkIfNoteIsC = checkForC;
-		setCParameters();
+		setLowParameters();
 	}
 	
 	public HalfNote(int bFX, int bFY, boolean checkForC, boolean inverted)
@@ -32,7 +32,7 @@ public class HalfNote extends NoteDrawing {
 		this.stickFromY = this.ballFromY - 40;
 		this.checkIfNoteIsC = checkForC;
 		this.inverted = inverted;
-		setCParameters();
+		setLowParameters();
 	}
 	
 
@@ -43,7 +43,7 @@ public class HalfNote extends NoteDrawing {
 		this.stickFromX= this.ballFromX + 17;
 		this.stickFromY = this.ballFromY - 40;
 		this.checkIfNoteIsC = checkForC;
-		setCParameters();
+		setLowParameters();
 
 	}
 

@@ -1,6 +1,6 @@
 package composer.data;
 
-public enum Lengths implements NoteData
+public enum Lengths implements MidiDataExtractor
 {
 	EIGHT(200),
 	QUARTER(400),
@@ -15,15 +15,10 @@ public enum Lengths implements NoteData
 	}
 
 	@Override
-	public Integer tone() 
-	{
-		return null;
-	}
-
-	@Override
-	public Integer length() 
+	public Integer value() 
 	{
 		return length;
 	}
+
 
 }

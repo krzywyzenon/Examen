@@ -19,7 +19,7 @@ public class FullNote extends NoteDrawing
 		this.ballFromX = bFX;
 		this.ballFromY = bFY;
 		this.checkIfNoteIsC = checkForC;
-		setCParameters();
+		setLowParameters();
 	}
 
 	@Override
@@ -27,7 +27,7 @@ public class FullNote extends NoteDrawing
 		this.ballFromX = bFX;
 		this.ballFromY = bFY;
 		this.checkIfNoteIsC = checkForC;
-		setCParameters();
+		setLowParameters();
 	}
 
 	@Override

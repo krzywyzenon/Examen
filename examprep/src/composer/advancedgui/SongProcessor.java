@@ -3,7 +3,7 @@ package composer.advancedgui;
 import java.util.Map;
 
 import composer.data.Lengths;
-import composer.data.NoteData;
+import composer.data.MidiDataExtractor;
 import composer.sound.Note;
 import composer.sound.Song;
 
@@ -13,9 +13,9 @@ public class SongProcessor
 	
 	public static Integer[] addNote(Integer toneValue, Lengths length)
 	{
-		NoteData tone;
+		MidiDataExtractor tone;
 		Object[] temp = getMidiTone(toneValue);
-		tone = (NoteData) temp[0];
+		tone = (MidiDataExtractor) temp[0];
 		if(isLocallySharp(toneValue))
 		{
 			tone = GuiHelper.getTones().get(GuiHelper.getTonesToSharp().get(toneValue));
@@ -31,7 +31,7 @@ public class SongProcessor
 	{
 		if(Staff.getActiveStaff() != 1)
 		toneValue = toneValue - (Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff()) - Staff.getStaffBeginningCoordinates().get(1));
-		NoteData tone;
+		MidiDataExtractor tone;
 		if(isGloballySharp(toneValue))
 		{
 			tone = GuiHelper.getTones().get(GuiHelper.getTonesToSharp().get(toneValue));

@@ -10,7 +10,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JTextArea;
 
 import com.google.common.collect.ImmutableMap;
-import composer.data.NoteData;
+import composer.data.MidiDataExtractor;
 import composer.data.Tones;
 
 public class GuiHelper
@@ -61,6 +61,7 @@ public class GuiHelper
 	private static final Integer BOX_WIDTH = 40;
 	private static final Integer BOX_HEIGHT = 70;
 	
+	private static final Integer B1_TONE = ORIGINAL_SIXTH_ROW_VERTICAL_COORD;
 	private static final Integer C_TONE = (ORIGINAL_FIFTH_ROW_VERTICAL_COORD + ORIGINAL_SIXTH_ROW_VERTICAL_COORD)/2 + 2;
 	private static final Integer D_TONE = ORIGINAL_FIFTH_ROW_VERTICAL_COORD;
 	private static final Integer E_TONE = (ORIGINAL_FOURTH_ROW_VERTICAL_COORD + ORIGINAL_FIFTH_ROW_VERTICAL_COORD)/2 + 2;
@@ -83,7 +84,8 @@ public class GuiHelper
 	private static final Integer F2_SHARP = F2_TONE + 1000;
 	
 			
-	private static final Map<Integer, NoteData> TONES = ImmutableMap.<Integer, NoteData>builder()
+	private static final Map<Integer, MidiDataExtractor> TONES = ImmutableMap.<Integer, MidiDataExtractor>builder()
+			.put(B1_TONE, Tones.B1)
 			.put(C_TONE, Tones.C)
 			.put(C_SHARP, Tones.CIS)
 			.put(D_TONE, Tones.D)
@@ -182,7 +184,7 @@ public class GuiHelper
 		return BOX_HEIGHT;
 	}
 	
-	public static Map<Integer, NoteData> getTones() {
+	public static Map<Integer, MidiDataExtractor> getTones() {
 		return TONES;
 	}
 
@@ -253,10 +255,14 @@ public class GuiHelper
 			coordinate = firstRow + 4*Staff.getSpaceBetweenRows();
 			text.append("\nfifth");
 		}
-		else
+		else if(y >= (firstRow + 4*Staff.getSpaceBetweenRows() + firstRow + 5*Staff.getSpaceBetweenRows())/2 && y < firstRow + 5*Staff.getSpaceBetweenRows())
 		{
 			coordinate = (firstRow + 4*Staff.getSpaceBetweenRows() + firstRow + 5*Staff.getSpaceBetweenRows())/2 + 2;
 			text.append("\n And finaly C");
+		}
+		else
+		{
+			coordinate = firstRow + 5*Staff.getSpaceBetweenRows();
 		}
 		
 		return coordinate;

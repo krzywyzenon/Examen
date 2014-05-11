@@ -13,9 +13,11 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -23,6 +25,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
@@ -34,9 +37,10 @@ import composer.advancedgui.shapes.NoteDrawing;
 import composer.controller.Player;
 import composer.controller.SaveAndLoad;
 import composer.controller.State;
+import composer.data.Instruments;
 import composer.data.SoundDrawRelations;
 
-public class ComposerGui implements ActionListener
+public class ComposerGui implements ActionListener //TODO: zaimplementowac menu instrumentow
 {
 	private static Map<Object, Integer> SOURCE = null;
 	
@@ -49,7 +53,13 @@ public class ComposerGui implements ActionListener
 	private static final int PREVIOUS = 7;
 	private static final int DELETE_LAST = 8;
 	private static final int SET_TITLE = 9;
-	
+	private static final int PIANO = 10;
+	private static final int ORGANS = 11;
+	private static final int HARP = 12;
+	private static final int TUBULAR_BELL = 13;
+	private static final int VIOLIN = 14;
+
+	private static Instruments instrument = Instruments.PIANO;
 	private ComposerSheet composerSheet;
 	
 	private ImageIcon playIcon;
@@ -78,9 +88,14 @@ public class ComposerGui implements ActionListener
 	private JMenuItem loadItem;
 	private JMenuItem saveItem;
 	private JMenuItem quitItem;
+	private JRadioButtonMenuItem pianoItem, organItem = new JRadioButtonMenuItem("Organs"), harpItem = new JRadioButtonMenuItem("Harp"), 
+			tubularBellItem = new JRadioButtonMenuItem("Tubular Bell"), violinItem = new JRadioButtonMenuItem("Violin") ;
+	private final JRadioButtonMenuItem[] instrumentList = {organItem, harpItem, tubularBellItem, violinItem};
+	private ButtonGroup instrumentGroup;
 	
 	private MyMenuBar menuBar;
 	private JMenu fileMenu;
+	private JMenu instrumentsMenu;
 	
 	private BackgroundPanel panel;
 	
@@ -131,6 +146,27 @@ public class ComposerGui implements ActionListener
 		quitItem.setBackground(new Color(157,75,35));
 		quitItem.setForeground(Color.ORANGE);
 		
+		instrumentGroup = new ButtonGroup();
+		instrumentsMenu = new JMenu("Instruments");
+		instrumentsMenu.setForeground(Color.ORANGE);
+		
+		pianoItem = new JRadioButtonMenuItem("Piano");
+		pianoItem.setSelected(true);
+		pianoItem.addActionListener(this);
+		pianoItem.setBackground(new Color(157,75,35));
+		pianoItem.setForeground(Color.ORANGE);
+		instrumentGroup.add(pianoItem);
+		instrumentsMenu.add(pianoItem);
+		
+		for(JRadioButtonMenuItem button : instrumentList)
+		{
+			button.addActionListener(this);
+			button.setBackground(new Color(157,75,35));
+			button.setForeground(Color.ORANGE);
+			instrumentGroup.add(button);
+			instrumentsMenu.add(button);
+		}
+		
 		fc = new JFileChooser();
 		fc.setCurrentDirectory(GuiHelper.getSavesDirectory());
 		
@@ -144,6 +180,11 @@ public class ComposerGui implements ActionListener
 					.put(previousPage, 7)
 					.put(deleteLastButton, 8)
 					.put(setTitleButton, 9)
+					.put(pianoItem, 10)
+					.put(organItem, 11)
+					.put(harpItem, 12)
+					.put(tubularBellItem, 13)
+					.put(violinItem, 14)
 					.build();
 		
 		content = frame.getContentPane();
@@ -178,7 +219,11 @@ public class ComposerGui implements ActionListener
 		fileMenu.add(loadItem);
 		fileMenu.add(new JSeparator());
 		fileMenu.add(quitItem);
+		
+		
+		
 		menuBar.add(fileMenu);
+		menuBar.add(instrumentsMenu);
 		frame.setJMenuBar(menuBar);
 		
 		quitItem.addActionListener(this);
@@ -276,6 +321,7 @@ public class ComposerGui implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e) 
 	{
+		System.out.println(e.getSource()  +"");
 		int source = SOURCE.get(e.getSource());
 		switch(source)
 		{
@@ -286,7 +332,7 @@ public class ComposerGui implements ActionListener
 			}
 			case PLAY:
 			{
-				Player p = new Player(SongProcessor.getSong());
+				Player p = new Player(SongProcessor.getSong(), instrument);
 				Thread t = new Thread(p);
 				t.start();
 				break;
@@ -382,6 +428,32 @@ public class ComposerGui implements ActionListener
 			case SET_TITLE:
 			{
 				titleLabel.setText("Title: " + title.getText());
+				break;
+			}
+			
+			case PIANO:
+			{
+				instrument = Instruments.PIANO;
+				break;
+			}
+			case ORGANS:
+			{
+				instrument = Instruments.ORGANS;
+				break;
+			}
+			case HARP:
+			{
+				instrument = Instruments.HARPSICHORD;
+				break;
+			}
+			case TUBULAR_BELL:
+			{
+				instrument = Instruments.TUBULAR_BELL;
+				break;
+			}
+			case VIOLIN:
+			{
+				instrument = Instruments.VIOLIN;
 				break;
 			}
 		}

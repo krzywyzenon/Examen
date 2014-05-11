@@ -20,7 +20,7 @@ import composer.advancedgui.shapes.NoteDrawing;
 import composer.advancedgui.shapes.QuarterNote;
 import composer.advancedgui.shapes.SharpMarking;
 import composer.data.Lengths;
-import composer.data.NoteData;
+import composer.data.MidiDataExtractor;
 import composer.data.SoundDrawRelations;
 
 class ComposerSheet extends JComponent 
@@ -204,7 +204,7 @@ class ComposerSheet extends JComponent
 								currentNote.setParameters(currentNote.getBallFromX(), verticalParameter, true);
 								currentNote.setInverted(isInverted);
 								currentNote.paint(graphics2D);
-								NoteData tone = (NoteData) data[0];
+								MidiDataExtractor tone = (MidiDataExtractor) data[0];
 								SongProcessor.getSong().get(index).setTone(tone);
 							}
 						}

@@ -1,7 +1,8 @@
 package composer.data;
 
-public enum Tones implements NoteData
+public enum Tones implements MidiDataExtractor
 {
+	B1(59),
 	C(60),
 	CIS(61),
 	D(62),
@@ -30,14 +31,10 @@ public enum Tones implements NoteData
 		this.tone = tone;
 	}
 	
-	public Integer tone()
+	public Integer value()
 	{
 		return tone;
 	}
 	
-	public Integer length()
-	{
-		return null;
-	}
 
 }
