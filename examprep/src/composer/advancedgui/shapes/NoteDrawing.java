@@ -23,8 +23,10 @@ public abstract class NoteDrawing extends JComponent
 	
 	int coordinateForCNote;
 	int coordinateForB1Note;
+	int coordinateForA1Note;
 	
 	int hiddenLineCoord;
+	int a1LineCoord;
 	
 	public void paintComponent(Graphics g)
 	{
@@ -50,6 +52,11 @@ public abstract class NoteDrawing extends JComponent
 		{
 			g.drawLine(ballFromX - 5,hiddenLineCoord, ballFromX + 25, hiddenLineCoord);			
 		}
+		else if(checkIfNoteIsLow && this.ballFromY == this.coordinateForA1Note)
+		{
+			g.drawLine(ballFromX - 5,hiddenLineCoord, ballFromX + 25, hiddenLineCoord);			
+			g.drawLine(ballFromX - 5,a1LineCoord, ballFromX + 25, a1LineCoord);			
+		}
 	}
 
 	public int getBallFromY()
@@ -73,9 +80,11 @@ public abstract class NoteDrawing extends JComponent
 	
 	public void setLowParameters()
 	{
+		this.coordinateForA1Note = (2 * Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff()) + 11 * Staff.getSpaceBetweenRows()) / 2 + 2;
 		this.coordinateForCNote = (2 * Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff()) + 9 * Staff.getSpaceBetweenRows()) / 2 + 2;
 		this.coordinateForB1Note = (Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff()) + 5 * Staff.getSpaceBetweenRows());
-		this.hiddenLineCoord = GuiHelper.getHiddenLineCoord();
+		this.hiddenLineCoord = GuiHelper.getCLineCoord();
+		this.a1LineCoord = GuiHelper.getA1LineCoord();
 	}
 	public boolean isInverted() {
 		return inverted;

@@ -2,10 +2,10 @@ package composer.data;
 
 public enum Lengths implements MidiDataExtractor
 {
-	EIGHT(200),
-	QUARTER(400),
-	HALF(800),
-	WHOLE(1600);
+	EIGHT(250),
+	QUARTER(500),
+	HALF(1000),
+	WHOLE(2000);
 	
 	Integer length;
 	

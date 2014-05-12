@@ -5,7 +5,9 @@ public enum Instruments implements MidiDataExtractor{
 	HARPSICHORD(6),
 	TUBULAR_BELL(14),
 	ORGANS(19),
-	VIOLIN(40);
+	VIOLIN(40),
+	CELLO(42),
+	CONTRABAS(43);
 	
 	private Integer instrumentNumber;
 	

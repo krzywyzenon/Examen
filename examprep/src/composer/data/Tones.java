@@ -2,6 +2,8 @@ package composer.data;
 
 public enum Tones implements MidiDataExtractor
 {
+	A1(57),
+	AIS1(58),
 	B1(59),
 	C(60),
 	CIS(61),

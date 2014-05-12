@@ -49,6 +49,7 @@ public class GuiHelper
 	private static final Integer ORIGINAL_FOURTH_ROW_VERTICAL_COORD = 145;
 	private static final Integer ORIGINAL_FIFTH_ROW_VERTICAL_COORD = 160; 
 	private static final Integer ORIGINAL_SIXTH_ROW_VERTICAL_COORD = 175; 
+	private static final Integer ORIGINAL_SEVENTH_ROW_VERTICAL_COORD = 190; 
 	
 	private static final Integer FIRST_BOX_STARTING_POINT = BOXES_STARTPOINTS.get(FIRST);
 	private static final Integer SECOND_BOX_STARTING_POINT = BOXES_STARTPOINTS.get(SECOND);
@@ -61,6 +62,7 @@ public class GuiHelper
 	private static final Integer BOX_WIDTH = 40;
 	private static final Integer BOX_HEIGHT = 70;
 	
+	private static final Integer A1_TONE = (ORIGINAL_SIXTH_ROW_VERTICAL_COORD + ORIGINAL_SEVENTH_ROW_VERTICAL_COORD)/2 + 2;
 	private static final Integer B1_TONE = ORIGINAL_SIXTH_ROW_VERTICAL_COORD;
 	private static final Integer C_TONE = (ORIGINAL_FIFTH_ROW_VERTICAL_COORD + ORIGINAL_SIXTH_ROW_VERTICAL_COORD)/2 + 2;
 	private static final Integer D_TONE = ORIGINAL_FIFTH_ROW_VERTICAL_COORD;
@@ -74,6 +76,8 @@ public class GuiHelper
 	private static final Integer E2_TONE = ORIGINAL_FIRST_ROW_VERTICAL_COORD;
 	private static final Integer F2_TONE = ORIGINAL_FIRST_ROW_VERTICAL_COORD - 8;
 	//Sharps
+	
+	private static final Integer A1_SHARP = A1_TONE + 1000;
 	private static final Integer C_SHARP = C_TONE + 1000;
 	private static final Integer D_SHARP = D_TONE + 1000;
 	private static final Integer F_SHARP = F_TONE + 1000;
@@ -85,6 +89,8 @@ public class GuiHelper
 	
 			
 	private static final Map<Integer, MidiDataExtractor> TONES = ImmutableMap.<Integer, MidiDataExtractor>builder()
+			.put(A1_TONE, Tones.A1)
+			.put(A1_SHARP, Tones.AIS1)
 			.put(B1_TONE, Tones.B1)
 			.put(C_TONE, Tones.C)
 			.put(C_SHARP, Tones.CIS)
@@ -110,6 +116,7 @@ public class GuiHelper
 	private static final Map<Integer, Boolean> SHARP_TONES = new HashMap<Integer,Boolean>();
 	static
 	{
+		SHARP_TONES.put(A1_TONE, false);
 		SHARP_TONES.put(C_TONE, false);
 		SHARP_TONES.put(D_TONE, false);
 		SHARP_TONES.put(F_TONE, false);
@@ -124,6 +131,7 @@ public class GuiHelper
 	private static final Map<Integer, Boolean> TEMPORARY_SHARP_TONES = new HashMap<Integer,Boolean>();
 	static
 	{
+		TEMPORARY_SHARP_TONES.put(A1_TONE, false);
 		TEMPORARY_SHARP_TONES.put(C_TONE, false);
 		TEMPORARY_SHARP_TONES.put(D_TONE, false);
 		TEMPORARY_SHARP_TONES.put(F_TONE, false);
@@ -135,6 +143,7 @@ public class GuiHelper
 		
 	}
 	private static final Map<Integer, Integer> TONES_TO_SHARP = ImmutableMap.<Integer, Integer>builder()
+			.put(A1_TONE, A1_SHARP)
 			.put(C_TONE, C_SHARP)
 			.put(D_TONE, D_SHARP)
 			.put(F_TONE, F_SHARP)
@@ -260,9 +269,13 @@ public class GuiHelper
 			coordinate = (firstRowVertivalCoordinate + 4*Staff.getSpaceBetweenRows() + firstRowVertivalCoordinate + 5*Staff.getSpaceBetweenRows())/2 + 2;
 			text.append("\n And finaly C");
 		}
-		else
+		else if(verticalPosition >= firstRowVertivalCoordinate + 5*Staff.getSpaceBetweenRows() && verticalPosition < (2 *firstRowVertivalCoordinate + 11*Staff.getSpaceBetweenRows())/2)
 		{
 			coordinate = firstRowVertivalCoordinate + 5*Staff.getSpaceBetweenRows();
+		}
+		else
+		{
+			coordinate = (2 *firstRowVertivalCoordinate + 11*Staff.getSpaceBetweenRows())/2 + 2;
 		}
 		
 		return coordinate;
@@ -341,9 +354,14 @@ public class GuiHelper
 		return Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff());
 	}
 	
-	public static Integer getHiddenLineCoord()
+	public static Integer getCLineCoord()
 	{
 		return Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff()) + 5 * Staff.getSpaceBetweenRows();
+	}
+
+	public static Integer getA1LineCoord()
+	{
+		return Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff()) + 6 * Staff.getSpaceBetweenRows();
 	}
 
 
