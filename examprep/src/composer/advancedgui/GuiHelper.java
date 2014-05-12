@@ -203,66 +203,66 @@ public class GuiHelper
 		return TONES_TO_SHARP;
 	}
 	
-	public static Integer verticalCoordinate(Integer y, Integer firstRow ,JTextArea text)
+	public static Integer countVerticalCoordinate(Integer verticalPosition, Integer firstRowVertivalCoordinate ,JTextArea text)
 	{
 		Integer coordinate = null;
-		if(y >= firstRow - 15 && y < firstRow - 5)
+		if(verticalPosition >= firstRowVertivalCoordinate - 15 && verticalPosition < firstRowVertivalCoordinate - 5)
 		{
-			coordinate = firstRow - 8;
+			coordinate = firstRowVertivalCoordinate - 8;
 		}
-		else if(y >= firstRow - 5 && y < (firstRow + firstRow + Staff.getSpaceBetweenRows())/2)
+		else if(verticalPosition >= firstRowVertivalCoordinate - 5 && verticalPosition < (firstRowVertivalCoordinate + firstRowVertivalCoordinate + Staff.getSpaceBetweenRows())/2)
 		{
-			coordinate = firstRow;
+			coordinate = firstRowVertivalCoordinate;
 			text.append("\nfirst");
 		}
-		else if(y >= (firstRow + firstRow + Staff.getSpaceBetweenRows())/2 && y < (firstRow + Staff.getSpaceBetweenRows()))
+		else if(verticalPosition >= (firstRowVertivalCoordinate + firstRowVertivalCoordinate + Staff.getSpaceBetweenRows())/2 && verticalPosition < (firstRowVertivalCoordinate + Staff.getSpaceBetweenRows()))
 		{
-			coordinate = (firstRow + firstRow + Staff.getSpaceBetweenRows())/2 + 2;
+			coordinate = (firstRowVertivalCoordinate + firstRowVertivalCoordinate + Staff.getSpaceBetweenRows())/2 + 2;
 			text.append("\nsecond half ");
 		}
-		else if(y >= (firstRow + Staff.getSpaceBetweenRows()) && y < (firstRow + Staff.getSpaceBetweenRows() + firstRow + 2*Staff.getSpaceBetweenRows())/2)
+		else if(verticalPosition >= (firstRowVertivalCoordinate + Staff.getSpaceBetweenRows()) && verticalPosition < (firstRowVertivalCoordinate + Staff.getSpaceBetweenRows() + firstRowVertivalCoordinate + 2*Staff.getSpaceBetweenRows())/2)
 		{
-			coordinate = (firstRow + Staff.getSpaceBetweenRows());
+			coordinate = (firstRowVertivalCoordinate + Staff.getSpaceBetweenRows());
 			text.append("\nsecond");
 		}
-		else if(y >= (firstRow + Staff.getSpaceBetweenRows() + firstRow + 2*Staff.getSpaceBetweenRows())/2 && y < (firstRow + 2*Staff.getSpaceBetweenRows()))
+		else if(verticalPosition >= (firstRowVertivalCoordinate + Staff.getSpaceBetweenRows() + firstRowVertivalCoordinate + 2*Staff.getSpaceBetweenRows())/2 && verticalPosition < (firstRowVertivalCoordinate + 2*Staff.getSpaceBetweenRows()))
 		{
-			coordinate = (firstRow + Staff.getSpaceBetweenRows() + firstRow + 2*Staff.getSpaceBetweenRows())/2 + 2;
+			coordinate = (firstRowVertivalCoordinate + Staff.getSpaceBetweenRows() + firstRowVertivalCoordinate + 2*Staff.getSpaceBetweenRows())/2 + 2;
 			text.append("\nthird half");
 		}
-		else if(y >= (firstRow + 2*Staff.getSpaceBetweenRows()) && y < (firstRow + 2*Staff.getSpaceBetweenRows() + firstRow + 3*Staff.getSpaceBetweenRows())/2)
+		else if(verticalPosition >= (firstRowVertivalCoordinate + 2*Staff.getSpaceBetweenRows()) && verticalPosition < (firstRowVertivalCoordinate + 2*Staff.getSpaceBetweenRows() + firstRowVertivalCoordinate + 3*Staff.getSpaceBetweenRows())/2)
 		{
-			coordinate = (firstRow + 2*Staff.getSpaceBetweenRows());
+			coordinate = (firstRowVertivalCoordinate + 2*Staff.getSpaceBetweenRows());
 			text.append("\nthird");
 		}
-		else if(y >= (firstRow + 2*Staff.getSpaceBetweenRows() + firstRow + 3*Staff.getSpaceBetweenRows())/2 && y < (firstRow + 3*Staff.getSpaceBetweenRows()))
+		else if(verticalPosition >= (firstRowVertivalCoordinate + 2*Staff.getSpaceBetweenRows() + firstRowVertivalCoordinate + 3*Staff.getSpaceBetweenRows())/2 && verticalPosition < (firstRowVertivalCoordinate + 3*Staff.getSpaceBetweenRows()))
 		{
-			coordinate = (firstRow + 2*Staff.getSpaceBetweenRows() + firstRow + 3*Staff.getSpaceBetweenRows())/2 + 2;
+			coordinate = (firstRowVertivalCoordinate + 2*Staff.getSpaceBetweenRows() + firstRowVertivalCoordinate + 3*Staff.getSpaceBetweenRows())/2 + 2;
 			text.append("\nfour half");
 		}
-		else if(y >= (firstRow + 3*Staff.getSpaceBetweenRows()) && y < (firstRow + 3*Staff.getSpaceBetweenRows() + firstRow + 4*Staff.getSpaceBetweenRows())/2)
+		else if(verticalPosition >= (firstRowVertivalCoordinate + 3*Staff.getSpaceBetweenRows()) && verticalPosition < (firstRowVertivalCoordinate + 3*Staff.getSpaceBetweenRows() + firstRowVertivalCoordinate + 4*Staff.getSpaceBetweenRows())/2)
 		{
-			coordinate = (firstRow + 3*Staff.getSpaceBetweenRows());
+			coordinate = (firstRowVertivalCoordinate + 3*Staff.getSpaceBetweenRows());
 			text.append("\nfourth");
 		}
-		else if(y >= (firstRow + 3*Staff.getSpaceBetweenRows() + firstRow + 4*Staff.getSpaceBetweenRows())/2 && y < (firstRow + 4*Staff.getSpaceBetweenRows()))
+		else if(verticalPosition >= (firstRowVertivalCoordinate + 3*Staff.getSpaceBetweenRows() + firstRowVertivalCoordinate + 4*Staff.getSpaceBetweenRows())/2 && verticalPosition < (firstRowVertivalCoordinate + 4*Staff.getSpaceBetweenRows()))
 		{
-			coordinate = (firstRow + 3*Staff.getSpaceBetweenRows() + firstRow + 4*Staff.getSpaceBetweenRows())/2 + 2;
+			coordinate = (firstRowVertivalCoordinate + 3*Staff.getSpaceBetweenRows() + firstRowVertivalCoordinate + 4*Staff.getSpaceBetweenRows())/2 + 2;
 			text.append("\nfifth half");
 		}
-		else if(y >= (firstRow + 4*Staff.getSpaceBetweenRows()) && y < (firstRow + 4*Staff.getSpaceBetweenRows() + firstRow + 5*Staff.getSpaceBetweenRows())/2)
+		else if(verticalPosition >= (firstRowVertivalCoordinate + 4*Staff.getSpaceBetweenRows()) && verticalPosition < (firstRowVertivalCoordinate + 4*Staff.getSpaceBetweenRows() + firstRowVertivalCoordinate + 5*Staff.getSpaceBetweenRows())/2)
 		{
-			coordinate = firstRow + 4*Staff.getSpaceBetweenRows();
+			coordinate = firstRowVertivalCoordinate + 4*Staff.getSpaceBetweenRows();
 			text.append("\nfifth");
 		}
-		else if(y >= (firstRow + 4*Staff.getSpaceBetweenRows() + firstRow + 5*Staff.getSpaceBetweenRows())/2 && y < firstRow + 5*Staff.getSpaceBetweenRows())
+		else if(verticalPosition >= (firstRowVertivalCoordinate + 4*Staff.getSpaceBetweenRows() + firstRowVertivalCoordinate + 5*Staff.getSpaceBetweenRows())/2 && verticalPosition < firstRowVertivalCoordinate + 5*Staff.getSpaceBetweenRows())
 		{
-			coordinate = (firstRow + 4*Staff.getSpaceBetweenRows() + firstRow + 5*Staff.getSpaceBetweenRows())/2 + 2;
+			coordinate = (firstRowVertivalCoordinate + 4*Staff.getSpaceBetweenRows() + firstRowVertivalCoordinate + 5*Staff.getSpaceBetweenRows())/2 + 2;
 			text.append("\n And finaly C");
 		}
 		else
 		{
-			coordinate = firstRow + 5*Staff.getSpaceBetweenRows();
+			coordinate = firstRowVertivalCoordinate + 5*Staff.getSpaceBetweenRows();
 		}
 		
 		return coordinate;
@@ -362,5 +362,3 @@ public class GuiHelper
 	
 
 }
-
-//100 120 140 160 180 

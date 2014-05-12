@@ -2,6 +2,8 @@ package composer.advancedgui.shapes;
 
 import java.awt.Graphics;
 
+import composer.advancedgui.Staff;
+
 
 public class QuarterNote extends NoteDrawing
 {
@@ -19,8 +21,9 @@ public class QuarterNote extends NoteDrawing
 		this.ballFromY = bFY;
 		this.stickFromX= this.ballFromX + 15;
 		this.stickFromY = this.ballFromY - 40;
-		this.checkIfNoteIsC = checkForC;
+		this.checkIfNoteIsLow = checkForC;
 		setLowParameters();
+		this.staff = Staff.getActiveStaff();
 	}
 	public QuarterNote(int bFX, int bFY, boolean checkForC, boolean inverted)
 	{
@@ -28,10 +31,11 @@ public class QuarterNote extends NoteDrawing
 		this.ballFromY = bFY;
 		this.stickFromX= this.ballFromX + 15;
 		this.stickFromY = this.ballFromY - 40;
-		this.checkIfNoteIsC = checkForC;
+		this.checkIfNoteIsLow = checkForC;
 		this.inverted = inverted;
 		setLowParameters();
 		System.out.println("Create");
+		this.staff = Staff.getActiveStaff();
 	}
 	
 	
@@ -41,7 +45,7 @@ public class QuarterNote extends NoteDrawing
 		this.ballFromY = bFY;
 		this.stickFromX= this.ballFromX + 15;
 		this.stickFromY = this.ballFromY - 40;
-		this.checkIfNoteIsC = checkForC;
+		this.checkIfNoteIsLow = checkForC;
 		setLowParameters();
 	}
 	

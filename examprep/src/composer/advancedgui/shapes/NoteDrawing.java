@@ -12,9 +12,9 @@ public abstract class NoteDrawing extends JComponent
 	private static final long serialVersionUID = 1L;
 	public static final boolean CHECK = true;
 	public static final boolean SKIP_CHECK = false;
-	boolean checkIfNoteIsC = false;
+	boolean checkIfNoteIsLow = false;
 	protected boolean inverted = false;
-	public boolean draw = true;
+	protected Integer staff;
 
 	int ballFromX;
 	int ballFromY;
@@ -46,7 +46,7 @@ public abstract class NoteDrawing extends JComponent
 	
 	public void paintShortLine(Graphics g)
 	{
-		if(checkIfNoteIsC && (this.ballFromY == this.coordinateForCNote || this.ballFromY == this.coordinateForB1Note))
+		if(checkIfNoteIsLow && (this.ballFromY == this.coordinateForCNote || this.ballFromY == this.coordinateForB1Note))
 		{
 			g.drawLine(ballFromX - 5,hiddenLineCoord, ballFromX + 25, hiddenLineCoord);			
 		}
@@ -68,7 +68,7 @@ public abstract class NoteDrawing extends JComponent
 	
 	public boolean getCheckIfC()
 	{
-		return checkIfNoteIsC;
+		return checkIfNoteIsLow;
 	}
 	
 	public void setLowParameters()
@@ -83,6 +83,10 @@ public abstract class NoteDrawing extends JComponent
 	
 	public void setInverted(boolean inverted) {
 		this.inverted = inverted;
+	}
+
+	public Integer staffForThisNote() {
+		return staff;
 	}
 	
 }

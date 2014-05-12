@@ -40,7 +40,7 @@ import composer.controller.State;
 import composer.data.Instruments;
 import composer.data.SoundDrawRelations;
 
-public class ComposerGui implements ActionListener //TODO: zaimplementowac menu instrumentow
+public class ComposerGui implements ActionListener
 {
 	private static Map<Object, Integer> SOURCE = null;
 	
@@ -211,7 +211,6 @@ public class ComposerGui implements ActionListener //TODO: zaimplementowac menu 
 		
 		
 		menuBar = new MyMenuBar(GuiHelper.getImage(new File("resources/menuback.png")));
-		//menuBar.setBackground(new Color(157,75,35));
 		menuBar.setBorder(null);
 		fileMenu = new JMenu("File");
 		fileMenu.setForeground(Color.ORANGE);
@@ -241,15 +240,9 @@ public class ComposerGui implements ActionListener //TODO: zaimplementowac menu 
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		
 		
-//		content.add(composerSheet, BorderLayout.CENTER);
 		mainPanel.add(composerSheet, BorderLayout.CENTER);
 		
 		panel = new BackgroundPanel(GuiHelper.getImage(GuiHelper.getPanelBackgroundFile()));
-//		panel = new BackgroundPanel();
-		
-//		panel.setPreferredSize(new Dimension(220, 168));
-//		panel.setMinimumSize(new Dimension(220, 68));
-//		panel.setMaximumSize(new Dimension(220, 68));
 		
 //		panel.add(scrollPane);
 		panel.setLayout(new GridBagLayout());
@@ -300,7 +293,6 @@ public class ComposerGui implements ActionListener //TODO: zaimplementowac menu 
 		gc.gridx = 0;
 		gc.gridwidth = 3;
 		panel.add(titleLabel, gc);
-//		panel.add(new JLabel(), gc);
 		
 		mainPanel.add(panel, BorderLayout.WEST);
 //		content.add(panel, BorderLayout.WEST);

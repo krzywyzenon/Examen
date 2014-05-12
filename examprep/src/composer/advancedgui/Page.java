@@ -70,7 +70,6 @@ public class Page extends JComponent
 		
 		for(NoteDrawing nD : drawnNotes)
 		{
-			if(nD.draw)
 			nD.paintComponent(g);
 		}
 	}

@@ -2,6 +2,8 @@ package composer.advancedgui.shapes;
 
 import java.awt.Graphics;
 
+import composer.advancedgui.Staff;
+
 
 public class EighthNote extends NoteDrawing {
 
@@ -21,6 +23,7 @@ public class EighthNote extends NoteDrawing {
 		yPoints = new int[3];
 		invXPoints = new int[3]; 
 		invYPoints = new int[3]; 
+		this.staff = Staff.getActiveStaff();
 	}
 	
 	public EighthNote(int bFX, int bFY, boolean checkForC)
@@ -39,8 +42,9 @@ public class EighthNote extends NoteDrawing {
 		this.yPoints[0] = this.stickFromY + 8; 
 		this.yPoints[1] = this.stickFromY + 6;
 		this.yPoints[2] = this.stickFromY;
-		this.checkIfNoteIsC = checkForC;
+		this.checkIfNoteIsLow = checkForC;
 		setLowParameters();
+		this.staff = Staff.getActiveStaff();
 		
 	}
 	public EighthNote(int bFX, int bFY, boolean checkForC, boolean inverted)
@@ -65,9 +69,10 @@ public class EighthNote extends NoteDrawing {
 		this.invYPoints[0] = this.ballFromY + 44;
 		this.invYPoints[1] = this.ballFromY + 54;
 		this.invYPoints[2] = this.ballFromY + 48;
-		this.checkIfNoteIsC = checkForC;
+		this.checkIfNoteIsLow = checkForC;
 		this.inverted = inverted;
 		setLowParameters();
+		this.staff = Staff.getActiveStaff();
 		
 	}
 
@@ -90,7 +95,7 @@ public class EighthNote extends NoteDrawing {
 		this.invYPoints[0] = this.ballFromY + 44;
 		this.invYPoints[1] = this.ballFromY + 54;
 		this.invYPoints[2] = this.ballFromY + 48;
-		this.checkIfNoteIsC = checkC;
+		this.checkIfNoteIsLow = checkC;
 		setLowParameters();
 
 	}

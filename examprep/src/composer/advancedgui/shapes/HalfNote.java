@@ -4,6 +4,8 @@ import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
+import composer.advancedgui.Staff;
+
 
 public class HalfNote extends NoteDrawing {
 
@@ -20,8 +22,9 @@ public class HalfNote extends NoteDrawing {
 		this.ballFromY = bFY;
 		this.stickFromX= this.ballFromX + 17;
 		this.stickFromY = this.ballFromY - 40;
-		this.checkIfNoteIsC = checkForC;
+		this.checkIfNoteIsLow = checkForC;
 		setLowParameters();
+		this.staff = Staff.getActiveStaff();
 	}
 	
 	public HalfNote(int bFX, int bFY, boolean checkForC, boolean inverted)
@@ -30,9 +33,10 @@ public class HalfNote extends NoteDrawing {
 		this.ballFromY = bFY;
 		this.stickFromX= this.ballFromX + 17;
 		this.stickFromY = this.ballFromY - 40;
-		this.checkIfNoteIsC = checkForC;
+		this.checkIfNoteIsLow = checkForC;
 		this.inverted = inverted;
 		setLowParameters();
+		this.staff = Staff.getActiveStaff();
 	}
 	
 
@@ -42,7 +46,7 @@ public class HalfNote extends NoteDrawing {
 		this.ballFromY = bFY;
 		this.stickFromX= this.ballFromX + 17;
 		this.stickFromY = this.ballFromY - 40;
-		this.checkIfNoteIsC = checkForC;
+		this.checkIfNoteIsLow = checkForC;
 		setLowParameters();
 
 	}

@@ -4,6 +4,8 @@ import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
+import composer.advancedgui.Staff;
+
 
 public class FullNote extends NoteDrawing 
 {
@@ -18,15 +20,16 @@ public class FullNote extends NoteDrawing
 	{
 		this.ballFromX = bFX;
 		this.ballFromY = bFY;
-		this.checkIfNoteIsC = checkForC;
+		this.checkIfNoteIsLow = checkForC;
 		setLowParameters();
+		this.staff = Staff.getActiveStaff();
 	}
 
 	@Override
 	public void setParameters(int bFX, int bFY, boolean checkForC) {
 		this.ballFromX = bFX;
 		this.ballFromY = bFY;
-		this.checkIfNoteIsC = checkForC;
+		this.checkIfNoteIsLow = checkForC;
 		setLowParameters();
 	}
 

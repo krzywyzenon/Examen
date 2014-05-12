@@ -51,7 +51,6 @@ public class Player implements Runnable
 	    	mc[5].noteOn(note.getTone(), VolumeController.getVolume());
 			
 	    	Thread.sleep(note.getLength());
-//	    	mc[5].allNotesOff();
 	    	if(song.indexOf(note)<song.size() -1)
 	    	mc[5].noteOff(note.getTone());
 	    	
@@ -66,7 +65,7 @@ public class Player implements Runnable
 			
 		}
 		
-//		synth.close();
+		synth.close();
 		
 			
 	}

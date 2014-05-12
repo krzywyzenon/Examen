@@ -4,6 +4,8 @@ import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
+import composer.advancedgui.Staff;
+
 
 public class SharpMarking extends NoteDrawing {
 
@@ -22,6 +24,7 @@ public class SharpMarking extends NoteDrawing {
 		this.fromX = startX;
 		this.fromY = startY;
 		this.inverted = false;
+		this.staff = Staff.getActiveStaff();
 	}
 
 	@Override
