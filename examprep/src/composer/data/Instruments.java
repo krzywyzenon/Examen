@@ -1,5 +1,11 @@
 package composer.data;
 
+/**
+ * 
+ * @author Tomek
+ * Enumeration with the instruments which are available to the user
+ *
+ */
 public enum Instruments implements MidiDataExtractor{
 	PIANO(0),
 	HARPSICHORD(6),

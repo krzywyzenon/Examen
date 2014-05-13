@@ -13,11 +13,21 @@ import com.google.common.collect.ImmutableMap;
 import composer.data.MidiDataExtractor;
 import composer.data.Tones;
 
+/**
+ * 
+ * @author Tomek
+ * This is helper class, containing most of the variables necessary for the GUI creation. It also has helper methods for getting,
+ * checking and counting coordinates, and creating image files.
+ *
+ */
 public class GuiHelper
 {
+	//Those two variables determine the mode in which gui is working (adding a new note or editing the existing one).
+	//They are used in order to correctly set the size of the "hitbox" while grabbing the note in order to drag it.
 	public static final Integer ADD = 0;
 	public static final Integer EDIT = 1;
 	
+	//Map containing the original horizontal starting coordinates of the "boxes" with the notes for grabbing
 	private static final Map<String, Integer> BOXES_STARTPOINTS = ImmutableMap.of(
 			"First", 0,
 			"Second", 60,
@@ -37,12 +47,14 @@ public class GuiHelper
 	private static final File DELETE_LAST_NOTE_FILE = new File("resources/deletenote.png");
 	private static final File TITLE_BUTTON_FILE = new File("resources/titlebutton.png");
 	
+	//Those are created to avoid using string literals
 	private static final String FIRST = "First";
 	private static final String SECOND = "Second";
 	private static final String THIRD = "Third";
 	private static final String FOURTH = "Fourth";
 	private static final String FIFTH = "Fifth";
 	
+	//Vertical coords of the first staff's lines.
 	private static final Integer ORIGINAL_FIRST_ROW_VERTICAL_COORD = 100;
 	private static final Integer ORIGINAL_SECOND_ROW_VERTICAL_COORD = 115; 
 	private static final Integer ORIGINAL_THIRD_ROW_VERTICAL_COORD = 130; 
@@ -51,6 +63,7 @@ public class GuiHelper
 	private static final Integer ORIGINAL_SIXTH_ROW_VERTICAL_COORD = 175; 
 	private static final Integer ORIGINAL_SEVENTH_ROW_VERTICAL_COORD = 190; 
 	
+	//These coordinates are the ones which are exposed to other classes
 	private static final Integer FIRST_BOX_STARTING_POINT = BOXES_STARTPOINTS.get(FIRST);
 	private static final Integer SECOND_BOX_STARTING_POINT = BOXES_STARTPOINTS.get(SECOND);
 	private static final Integer THIRD_BOX_STARTING_POINT = BOXES_STARTPOINTS.get(THIRD);
@@ -62,6 +75,7 @@ public class GuiHelper
 	private static final Integer BOX_WIDTH = 40;
 	private static final Integer BOX_HEIGHT = 70;
 	
+	//These are coordinates of the notes - they are not the sound coordinates however, but the coordinates of the drawn notes.
 	private static final Integer A1_TONE = (ORIGINAL_SIXTH_ROW_VERTICAL_COORD + ORIGINAL_SEVENTH_ROW_VERTICAL_COORD)/2 + 2;
 	private static final Integer B1_TONE = ORIGINAL_SIXTH_ROW_VERTICAL_COORD;
 	private static final Integer C_TONE = (ORIGINAL_FIFTH_ROW_VERTICAL_COORD + ORIGINAL_SIXTH_ROW_VERTICAL_COORD)/2 + 2;
@@ -75,8 +89,8 @@ public class GuiHelper
 	private static final Integer D2_TONE = (ORIGINAL_FIRST_ROW_VERTICAL_COORD + ORIGINAL_SECOND_ROW_VERTICAL_COORD)/2 + 2;
 	private static final Integer E2_TONE = ORIGINAL_FIRST_ROW_VERTICAL_COORD;
 	private static final Integer F2_TONE = ORIGINAL_FIRST_ROW_VERTICAL_COORD - 8;
-	//Sharps
 	
+	//Sharps
 	private static final Integer A1_SHARP = A1_TONE + 1000;
 	private static final Integer C_SHARP = C_TONE + 1000;
 	private static final Integer D_SHARP = D_TONE + 1000;
@@ -87,7 +101,7 @@ public class GuiHelper
 	private static final Integer D2_SHARP = D2_TONE + 1000;
 	private static final Integer F2_SHARP = F2_TONE + 1000;
 	
-			
+	//Map connecting the coordinate of the note drawings to the tones which they represent		
 	private static final Map<Integer, MidiDataExtractor> TONES = ImmutableMap.<Integer, MidiDataExtractor>builder()
 			.put(A1_TONE, Tones.A1)
 			.put(A1_SHARP, Tones.AIS1)
@@ -113,35 +127,39 @@ public class GuiHelper
 			.put(F2_SHARP, Tones.FIS2)
 			.build();
 	
-	private static final Map<Integer, Boolean> SHARP_TONES = new HashMap<Integer,Boolean>();
+	//Map used to determine if the given note should be globally played as sharp or not
+	private static final Map<Integer, Boolean> GLOBAL_SHARP_TONES = new HashMap<Integer,Boolean>();
 	static
 	{
-		SHARP_TONES.put(A1_TONE, false);
-		SHARP_TONES.put(C_TONE, false);
-		SHARP_TONES.put(D_TONE, false);
-		SHARP_TONES.put(F_TONE, false);
-		SHARP_TONES.put(G_TONE, false);
-		SHARP_TONES.put(A_TONE, false);
-		SHARP_TONES.put(C2_TONE, false);
-		SHARP_TONES.put(D2_TONE, false);
-		SHARP_TONES.put(F2_TONE, false);
+		GLOBAL_SHARP_TONES.put(A1_TONE, false);
+		GLOBAL_SHARP_TONES.put(C_TONE, false);
+		GLOBAL_SHARP_TONES.put(D_TONE, false);
+		GLOBAL_SHARP_TONES.put(F_TONE, false);
+		GLOBAL_SHARP_TONES.put(G_TONE, false);
+		GLOBAL_SHARP_TONES.put(A_TONE, false);
+		GLOBAL_SHARP_TONES.put(C2_TONE, false);
+		GLOBAL_SHARP_TONES.put(D2_TONE, false);
+		GLOBAL_SHARP_TONES.put(F2_TONE, false);
 		
 	}
 	
-	private static final Map<Integer, Boolean> TEMPORARY_SHARP_TONES = new HashMap<Integer,Boolean>();
+	//Map used to determine if the given note should be locally played as sharp or not
+	private static final Map<Integer, Boolean> LOCAL_SHARP_TONES = new HashMap<Integer,Boolean>();
 	static
 	{
-		TEMPORARY_SHARP_TONES.put(A1_TONE, false);
-		TEMPORARY_SHARP_TONES.put(C_TONE, false);
-		TEMPORARY_SHARP_TONES.put(D_TONE, false);
-		TEMPORARY_SHARP_TONES.put(F_TONE, false);
-		TEMPORARY_SHARP_TONES.put(G_TONE, false);
-		TEMPORARY_SHARP_TONES.put(A_TONE, false);
-		TEMPORARY_SHARP_TONES.put(C2_TONE, false);
-		TEMPORARY_SHARP_TONES.put(D2_TONE, false);
-		TEMPORARY_SHARP_TONES.put(F2_TONE, false);
+		LOCAL_SHARP_TONES.put(A1_TONE, false);
+		LOCAL_SHARP_TONES.put(C_TONE, false);
+		LOCAL_SHARP_TONES.put(D_TONE, false);
+		LOCAL_SHARP_TONES.put(F_TONE, false);
+		LOCAL_SHARP_TONES.put(G_TONE, false);
+		LOCAL_SHARP_TONES.put(A_TONE, false);
+		LOCAL_SHARP_TONES.put(C2_TONE, false);
+		LOCAL_SHARP_TONES.put(D2_TONE, false);
+		LOCAL_SHARP_TONES.put(F2_TONE, false);
 		
 	}
+	
+	//Map which binds tones with their sharp counterparts
 	private static final Map<Integer, Integer> TONES_TO_SHARP = ImmutableMap.<Integer, Integer>builder()
 			.put(A1_TONE, A1_SHARP)
 			.put(C_TONE, C_SHARP)
@@ -199,12 +217,12 @@ public class GuiHelper
 
 
 	public static Map<Integer, Boolean> getSharpTones() {
-		return SHARP_TONES;
+		return GLOBAL_SHARP_TONES;
 	}
 
 
 	public static Map<Integer, Boolean> getTemporarySharpTones() {
-		return TEMPORARY_SHARP_TONES;
+		return LOCAL_SHARP_TONES;
 	}
 
 
@@ -212,6 +230,13 @@ public class GuiHelper
 		return TONES_TO_SHARP;
 	}
 	
+	/**
+	 * Methods which count the vertical coordinate at which the note should be placed
+	 * @param verticalPosition - position of the current note upon releasing mouse button
+	 * @param firstRowVertivalCoordinate - vertical coordinate of the first row in the staff upon which the note is drawn
+	 * @param text - just for controll purposes - will be deleted in final version
+	 * @return
+	 */
 	public static Integer countVerticalCoordinate(Integer verticalPosition, Integer firstRowVertivalCoordinate ,JTextArea text)
 	{
 		Integer coordinate = null;
@@ -281,11 +306,22 @@ public class GuiHelper
 		return coordinate;
 	}
 	
-	public static boolean isCursorWithinLimits(int x, int y, int destinedX, int destinedY, Integer mode)
+	/**
+	 * The method checks if cursor is within desired "hitbox". Depending on the mode (ADD/EDIT) the "hitbox" size differs
+	 * @param horizontalPosition - cursor horizontal position
+	 * @param verticalPosition - cursor vertical position
+	 * @param horizontalBeginningCoordinate - "hitbox" horizontal beggining coord
+	 * @param verticalBeginningCoordinate - "hitbox" vertical beggining coord
+	 * @param mode - mode in which the program is functioning (ADD or EDIT)
+	 * @return
+	 */
+	public static boolean isCursorWithinLimits(int horizontalPosition, int verticalPosition, int horizontalBeginningCoordinate, 
+			int verticalBeginningCoordinate, Integer mode)
 	{
 		Integer horizontalLimit = (mode == ADD)? getBoxWidth() : 20;
 		Integer verticalLimit = (mode == ADD) ? getBoxHeight() : 60;
-		if((x>=destinedX && x <= destinedX + horizontalLimit) && (y >= destinedY && y <= destinedY + verticalLimit))
+		if((horizontalPosition>=horizontalBeginningCoordinate && horizontalPosition <= horizontalBeginningCoordinate + horizontalLimit) 
+				&& (verticalPosition >= verticalBeginningCoordinate && verticalPosition <= verticalBeginningCoordinate + verticalLimit))
 		{
 			return true;
 		}
@@ -349,22 +385,39 @@ public class GuiHelper
 		return SAVES_DIRECTORY;
 	}
 	
+	/**
+	 * Method returns vertical beginning coordinate of the active staff
+	 * @return
+	 */
 	public static Integer getActiveStaffBeginningCoordinate()
 	{
-		return Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff());
+		return Staff.getStaffVerticalBeginningCoordinates().get(Staff.getActiveStaff());
 	}
 	
+	/**
+	 * Method returns vertical coordinate of the row destined for lower C note
+	 * @return
+	 */
 	public static Integer getCLineCoord()
 	{
-		return Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff()) + 5 * Staff.getSpaceBetweenRows();
+		return Staff.getStaffVerticalBeginningCoordinates().get(Staff.getActiveStaff()) + 5 * Staff.getSpaceBetweenRows();
 	}
 
+	/**
+	 * Method returns vertical coordinate of the row destined for lower A note
+	 * @return
+	 */
 	public static Integer getA1LineCoord()
 	{
-		return Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff()) + 6 * Staff.getSpaceBetweenRows();
+		return Staff.getStaffVerticalBeginningCoordinates().get(Staff.getActiveStaff()) + 6 * Staff.getSpaceBetweenRows();
 	}
 
 
+	/**
+	 * Method creates an image from the file
+	 * @param file - the file containing image
+	 * @return
+	 */
 	public static BufferedImage getImage(File file)
 	{
 		try

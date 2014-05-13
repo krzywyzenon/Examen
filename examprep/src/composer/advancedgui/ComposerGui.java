@@ -34,8 +34,10 @@ import javax.swing.ScrollPaneConstants;
 
 import com.google.common.collect.ImmutableMap;
 import composer.advancedgui.shapes.NoteDrawing;
-import composer.controller.Player;
-import composer.controller.SaveAndLoad;
+import composer.controller.PageController;
+import composer.controller.PlayController;
+import composer.controller.SaveAndLoadController;
+import composer.controller.SongProcessor;
 import composer.controller.State;
 import composer.data.Instruments;
 import composer.data.SoundDrawRelations;
@@ -58,6 +60,8 @@ public class ComposerGui implements ActionListener
 	private static final int HARP = 12;
 	private static final int TUBULAR_BELL = 13;
 	private static final int VIOLIN = 14;
+	private static final int CELLO = 15;
+	private static final int CONTRABAS = 16;
 
 	private static Instruments instrument = Instruments.PIANO;
 	private ComposerSheet composerSheet;
@@ -73,7 +77,7 @@ public class ComposerGui implements ActionListener
 	private JFrame frame;
 	private JTextField title;
 	
-	JLabel titleLabel;
+	private JLabel titleLabel;
 	
 	private BackgroundPanel mainPanel;
 	
@@ -89,8 +93,9 @@ public class ComposerGui implements ActionListener
 	private JMenuItem saveItem;
 	private JMenuItem quitItem;
 	private JRadioButtonMenuItem pianoItem, organItem = new JRadioButtonMenuItem("Organs"), harpItem = new JRadioButtonMenuItem("Harp"), 
-			tubularBellItem = new JRadioButtonMenuItem("Tubular Bell"), violinItem = new JRadioButtonMenuItem("Violin") ;
-	private final JRadioButtonMenuItem[] instrumentList = {organItem, harpItem, tubularBellItem, violinItem};
+			tubularBellItem = new JRadioButtonMenuItem("Tubular Bell"), violinItem = new JRadioButtonMenuItem("Violin"), celloItem = new JRadioButtonMenuItem("Cello"),
+			contrabasItem = new JRadioButtonMenuItem("Contrabas");
+	private final JRadioButtonMenuItem[] instrumentList = {organItem, harpItem, tubularBellItem, violinItem, celloItem, contrabasItem};
 	private ButtonGroup instrumentGroup;
 	
 	private MyMenuBar menuBar;
@@ -185,6 +190,8 @@ public class ComposerGui implements ActionListener
 					.put(harpItem, 12)
 					.put(tubularBellItem, 13)
 					.put(violinItem, 14)
+					.put(celloItem, 15)
+					.put(contrabasItem, 16)
 					.build();
 		
 		content = frame.getContentPane();
@@ -324,7 +331,7 @@ public class ComposerGui implements ActionListener
 			}
 			case PLAY:
 			{
-				Player p = new Player(SongProcessor.getSong(), instrument);
+				PlayController p = new PlayController(SongProcessor.getSong(), instrument);
 				Thread t = new Thread(p);
 				t.start();
 				break;
@@ -369,7 +376,7 @@ public class ComposerGui implements ActionListener
 					File file = fc.getSelectedFile();
 					State state;
 					try {
-						state = SaveAndLoad.loadSong(file);
+						state = SaveAndLoadController.loadSong(file);
 						SongProcessor.setSong(state.getSong());
 						PageController.setPages(state.getPages());
 						SoundDrawRelations.setDrawingsAndSoundsRelations(state.getRelations());
@@ -394,7 +401,7 @@ public class ComposerGui implements ActionListener
 					String name = (title.getText() != null)  ? title.getText() : "";
 					State state = new State(SongProcessor.getSong(), PageController.getPages(), SoundDrawRelations.getDrawingsAndSoundsRelations(), name);
 					try {
-						SaveAndLoad.saveSong(state, file);
+						SaveAndLoadController.saveSong(state, file);
 					} catch (FileNotFoundException e1) {
 						e1.printStackTrace();
 					} catch (IOException e1) {
@@ -446,6 +453,16 @@ public class ComposerGui implements ActionListener
 			case VIOLIN:
 			{
 				instrument = Instruments.VIOLIN;
+				break;
+			}
+			case CELLO:
+			{
+				instrument = Instruments.CELLO;
+				break;
+			}
+			case CONTRABAS:
+			{
+				instrument = Instruments.CONTRABAS;
 				break;
 			}
 		}

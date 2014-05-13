@@ -19,16 +19,23 @@ import composer.advancedgui.shapes.HalfNote;
 import composer.advancedgui.shapes.NoteDrawing;
 import composer.advancedgui.shapes.QuarterNote;
 import composer.advancedgui.shapes.SharpMarking;
+import composer.controller.PageController;
+import composer.controller.SongProcessor;
 import composer.data.Lengths;
 import composer.data.MidiDataExtractor;
 import composer.data.SoundDrawRelations;
 
+/**
+ * 
+ * @author Tomek
+ * This is the sheet upon which every staff and note are being drawn
+ */
 class ComposerSheet extends JComponent 
 {
 	private static final long serialVersionUID = 1L;
-	Image image;
-	Graphics2D graphics2D;
-	int currentX, currentY, oldX, oldY;
+	private Image image;
+	private Graphics2D graphics2D;
+	private int currentX, currentY, oldX, oldY;
 	private int allowedX = 80;
 	private Integer originalVerticalPosition = null;
 	
@@ -36,15 +43,9 @@ class ComposerSheet extends JComponent
 	
 	private boolean editingMode = false;
 	private boolean isInverted = false;
+	private NoteDrawing currentNote;
 	
-	EighthNote eighthNote = new EighthNote();
-	QuarterNote quarterNote = new QuarterNote(); 
-	HalfNote halfNote = new HalfNote();
-	FullNote fullNote = new FullNote();
-	SharpMarking sharpMarking = new SharpMarking();
-	NoteDrawing currentNote;
-	
-	Integer activeStaff = 1;
+	private Integer activeStaff = 1;
 	
 	public ComposerSheet(){
 		
@@ -55,29 +56,35 @@ class ComposerSheet extends JComponent
 
 		setDoubleBuffered(false);
 
+		/**
+		 * While the mouse is pressed, the listener checks for the cursor position. If it is within the shapes which can be drawn
+		 * to the staff, it sets the dynamic object's (currentNote) value to the chosen note. Otherwise if the cursor is positioned
+		 * on the note which has already been drawn, the listener assumes that the user chooses to edit the chosen note's position
+		 * and sets working mode to editing.
+		 */
 		addMouseListener(new MouseAdapter(){
 			public void mousePressed(MouseEvent e){
 				oldX = e.getX();
 				oldY = e.getY();
 				if(GuiHelper.isCursorWithinLimits(e.getX(), e.getY(), GuiHelper.getFirstBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.ADD))
 				{
-					currentNote = eighthNote;
+					currentNote = new EighthNote();
 				}
 				else if(GuiHelper.isCursorWithinLimits(e.getX(), e.getY(), GuiHelper.getSecondBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.ADD))
 				{
-					currentNote = quarterNote;
+					currentNote = new QuarterNote();
 				}
 				else if(GuiHelper.isCursorWithinLimits(e.getX(), e.getY(), GuiHelper.getThirdBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.ADD))
 				{
-					currentNote = halfNote;	
+					currentNote = new HalfNote();	
 				}
 				else if(GuiHelper.isCursorWithinLimits(e.getX(), e.getY(),  GuiHelper.getFourthBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.ADD))
 				{
-					currentNote = fullNote;
+					currentNote = new FullNote();
 				}
 				else if(GuiHelper.isCursorWithinLimits(e.getX(), e.getY(), GuiHelper.getFifthBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.ADD))
 				{
-					currentNote = sharpMarking;
+					currentNote = new SharpMarking();
 					
 				}
 				else
@@ -90,7 +97,6 @@ class ComposerSheet extends JComponent
 					{
 						if(GuiHelper.isCursorWithinLimits(oldX, oldY, noteDrawing.getBallFromX(), noteDrawing.getBallFromY(), GuiHelper.EDIT))
 						{
-							System.out.println("Hello World");
 							editingMode = true;
 							currentNote = noteDrawing;
 							originalVerticalPosition = noteDrawing.getBallFromY();
@@ -108,6 +114,12 @@ class ComposerSheet extends JComponent
 				repaint();
 			}
 		});
+		
+		/**
+		 * Upon releasing the mouse button, the listener checks for the mode - if the mode is normal, the listener adjusts note's
+		 * position, paints it on the staff and adds a new sound to the song. While editing mode is on, the listener adjusts note's
+		 * position, paints it on the staff and modifies corresponding sound in the song.
+		 */
 		addMouseListener(new MouseAdapter(){
 			public void mouseReleased(MouseEvent e){
 
@@ -178,8 +190,8 @@ class ComposerSheet extends JComponent
 							}
 							if(allowedX + 10 > 525 && Staff.getActiveStaff() < 3)
 							{
-								allowedX = 0;
 								Staff.setActiveStaff(Staff.getActiveStaff() + 1);
+								allowedX = (Page.getStaves().get(Staff.getActiveStaff()).isViolinKey()) ? 80 : 0;
 							}
 							else if(allowedX + 10 > 525 && Staff.getActiveStaff() == 3)
 							{
@@ -188,13 +200,17 @@ class ComposerSheet extends JComponent
 								PageController.getPages().put(pageDisplayed, new Page(pageDisplayed));
 								PageController.setActivePage(pageDisplayed);
 								Staff.setActiveStaff(1);
-								allowedX = 80;
+								allowedX = (Page.getStaves().get(Staff.getActiveStaff()).isViolinKey()) ? 80 : 0;
+//								allowedX = 80;
+								System.out.println(Page.getStaves().get(Staff.getActiveStaff()).isViolinKey());
 							}
 						}
 					}
 					else
 					{
-						//Editing existing note
+						//Actions taken in editing mode. If the position, which user tries to move note to is invalid, the note is 
+						//put back in its original position and the sound is not changed. IMPORTANT: it is only possible to change
+						//the vertical position of the note - the horizontal position always remains the same.
 						if(e.getY() >= GuiHelper.getActiveStaffBeginningCoordinate() - 15 && e.getY() <= GuiHelper.getActiveStaffBeginningCoordinate() + 90)
 						{
 							if(!(currentNote instanceof SharpMarking))
@@ -230,6 +246,10 @@ class ComposerSheet extends JComponent
 			}
 		});
 		
+		/**
+		 * In normal mode the listener paints the note which the user is dragging, at the cursor position. In editing mode only
+		 * vertical position changes
+		 */
 		addMouseMotionListener(new MouseMotionAdapter(){
 			public void mouseDragged(MouseEvent e){
 				currentX = e.getX() - 10 ;
@@ -318,18 +338,30 @@ class ComposerSheet extends JComponent
 		paintLines();
 	}
 	
-	public boolean setInverted(Integer value)
+	/**
+	 * As some notes at the staff are painted inverted, this method checks if such invertion is necessary
+	 * @param verticalPosition - the vertical coordinate of the painted note
+	 * @return
+	 */
+	public boolean setInverted(Integer verticalPosition)
 	{
-		if(value<130)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+//		if(verticalPosition<130)
+//		{
+//			return true;
+//		}
+//		else
+//		{
+//			return false;
+//		}
+		return verticalPosition<130;
 	}
 	
+	/**
+	 * The method saves the current note's object in the List of the notes which are to be drawn on screen. Then it creates a connection
+	 * between the note drawing and the corresponding sound.
+	 * @param drawing - the note which user wishes to draw
+	 * @param index - index of the sound object, in the List, which corresponds to the drawn note.
+	 */
 	public void addingNoteDrawing(NoteDrawing drawing, Integer index){
 		
 		PageController.getPages().get(pageDisplayed).getDrawnNotes().add(drawing);

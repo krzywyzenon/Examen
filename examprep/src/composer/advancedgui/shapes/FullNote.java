@@ -45,8 +45,7 @@ public class FullNote extends NoteDrawing
 
 	@Override
 	public void inverted(Graphics g) {
-		// TODO Auto-generated method stub
-		
+		//Never used as the note's graphic representation is a simple oval
 	}
 
 }

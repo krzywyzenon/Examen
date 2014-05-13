@@ -7,26 +7,32 @@ import javax.swing.JComponent;
 import composer.advancedgui.GuiHelper;
 import composer.advancedgui.Staff;
 
+/**
+ * 
+ * @author Tomek
+ * Abstract class from which all the notes' and markings' shapes inherit
+ */
 public abstract class NoteDrawing extends JComponent
 {
 	private static final long serialVersionUID = 1L;
 	public static final boolean CHECK = true;
 	public static final boolean SKIP_CHECK = false;
-	boolean checkIfNoteIsLow = false;
+	
+	protected boolean checkIfNoteIsLow = false;
 	protected boolean inverted = false;
 	protected Integer staff;
 
-	int ballFromX;
-	int ballFromY;
-	int stickFromX;
-	int stickFromY;
+	protected int ballFromX;
+	protected int ballFromY;
+	protected int stickFromX;
+	protected int stickFromY;
 	
-	int coordinateForCNote;
-	int coordinateForB1Note;
-	int coordinateForA1Note;
+	protected int coordinateForCNote;
+	protected int coordinateForB1Note;
+	protected int coordinateForA1Note;
 	
-	int hiddenLineCoord;
-	int a1LineCoord;
+	protected int coordForRowOfNoteC;
+	protected int coordForRowOfNoteLowA;
 	
 	public void paintComponent(Graphics g)
 	{
@@ -46,16 +52,21 @@ public abstract class NoteDrawing extends JComponent
 	
 	public abstract void setParameters(int bFX, int bFY, boolean checkC);
 	
+	/**
+	 * Method for drawing rows for the low C, B and A notes. These rows are not usually visible and are drawn only if the respective
+	 * note appears
+	 * @param g
+	 */
 	public void paintShortLine(Graphics g)
 	{
 		if(checkIfNoteIsLow && (this.ballFromY == this.coordinateForCNote || this.ballFromY == this.coordinateForB1Note))
 		{
-			g.drawLine(ballFromX - 5,hiddenLineCoord, ballFromX + 25, hiddenLineCoord);			
+			g.drawLine(ballFromX - 5,coordForRowOfNoteC, ballFromX + 25, coordForRowOfNoteC);			
 		}
 		else if(checkIfNoteIsLow && this.ballFromY == this.coordinateForA1Note)
 		{
-			g.drawLine(ballFromX - 5,hiddenLineCoord, ballFromX + 25, hiddenLineCoord);			
-			g.drawLine(ballFromX - 5,a1LineCoord, ballFromX + 25, a1LineCoord);			
+			g.drawLine(ballFromX - 5,coordForRowOfNoteC, ballFromX + 25, coordForRowOfNoteC);			
+			g.drawLine(ballFromX - 5,coordForRowOfNoteLowA, ballFromX + 25, coordForRowOfNoteLowA);			
 		}
 	}
 
@@ -78,13 +89,16 @@ public abstract class NoteDrawing extends JComponent
 		return checkIfNoteIsLow;
 	}
 	
+	/**
+	 * Method sets coordinates for low C, B, A notes and their corresponding rows.
+	 */
 	public void setLowParameters()
 	{
-		this.coordinateForA1Note = (2 * Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff()) + 11 * Staff.getSpaceBetweenRows()) / 2 + 2;
-		this.coordinateForCNote = (2 * Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff()) + 9 * Staff.getSpaceBetweenRows()) / 2 + 2;
-		this.coordinateForB1Note = (Staff.getStaffBeginningCoordinates().get(Staff.getActiveStaff()) + 5 * Staff.getSpaceBetweenRows());
-		this.hiddenLineCoord = GuiHelper.getCLineCoord();
-		this.a1LineCoord = GuiHelper.getA1LineCoord();
+		this.coordinateForA1Note = (2 * Staff.getStaffVerticalBeginningCoordinates().get(Staff.getActiveStaff()) + 11 * Staff.getSpaceBetweenRows()) / 2 + 2;
+		this.coordinateForCNote = (2 * Staff.getStaffVerticalBeginningCoordinates().get(Staff.getActiveStaff()) + 9 * Staff.getSpaceBetweenRows()) / 2 + 2;
+		this.coordinateForB1Note = (Staff.getStaffVerticalBeginningCoordinates().get(Staff.getActiveStaff()) + 5 * Staff.getSpaceBetweenRows());
+		this.coordForRowOfNoteC = GuiHelper.getCLineCoord();
+		this.coordForRowOfNoteLowA = GuiHelper.getA1LineCoord();
 	}
 	public boolean isInverted() {
 		return inverted;

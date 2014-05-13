@@ -49,7 +49,7 @@ public class SharpMarking extends NoteDrawing {
 	@Override
 	public void inverted(Graphics g) 
 	{
-		
+		//Never used - only notes' graphic representations have their inverted versions
 	}
 
 }

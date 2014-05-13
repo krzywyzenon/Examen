@@ -11,7 +11,13 @@ import composer.data.MidiDataExtractor;
 import composer.sound.Note;
 import composer.sound.Song;
 
-public class Player implements Runnable
+/**
+ * 
+ * @author Tomek
+ * Class which plays back the song.
+ *
+ */
+public class PlayController implements Runnable
 {
 	Synthesizer synth = null;
 	MidiChannel[] mc;
@@ -20,7 +26,7 @@ public class Player implements Runnable
 	Instrument instr;
 	Song song;
 
-	public Player(Song song, MidiDataExtractor instrument)
+	public PlayController(Song song, MidiDataExtractor instrument)
 	{
 		this.song = song;
 		try {
@@ -42,7 +48,6 @@ public class Player implements Runnable
 	{
 		Thread.sleep(250);
 				
-		int waitAfterLast = 0;
 	    
 	    for(Object o : song)
 	    {
@@ -54,11 +59,9 @@ public class Player implements Runnable
 	    	if(song.indexOf(note)<song.size() -1)
 	    	mc[5].noteOff(note.getTone());
 	    	
-	    	waitAfterLast = note.getLength();
 	    }
 	    
-	    
-//		Thread.sleep(waitAfterLast);
+	    //after playing the last note the sound simply dies out instead of being finished rapidly
 		for(int i = 100; i>=0; i--){
 			mc[5].controlChange(7, i);
 			Thread.sleep(i);

@@ -3,9 +3,11 @@ package composer.advancedgui;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JComponent;
 
+import com.google.common.collect.ImmutableMap;
 import composer.advancedgui.shapes.EighthNote;
 import composer.advancedgui.shapes.FullNote;
 import composer.advancedgui.shapes.HalfNote;
@@ -13,6 +15,12 @@ import composer.advancedgui.shapes.NoteDrawing;
 import composer.advancedgui.shapes.QuarterNote;
 import composer.advancedgui.shapes.SharpMarking;
 
+/**
+ * 
+ * @author Tomek
+ * The class is the graphic representation of a single page which is shown in the ComposerSheet - thus it contains information about
+ * all the staffs and notes which are draw at the given page
+ */
 public class Page extends JComponent 
 {
 	
@@ -26,28 +34,34 @@ public class Page extends JComponent
 	private static final FullNote FULL_NOTE = new FullNote(GuiHelper.getFourthBoxStartingPoint() + 10, 60, NoteDrawing.SKIP_CHECK);
 	private static final SharpMarking SHARP_MARKING = new SharpMarking(GuiHelper.getFifthBoxStartingPoint() + 15,30);
 	
-	Staff firstStaff = new Staff(Staff.getStaffBeginningCoordinates().get(1), Staff.VIOLIN_KEY);
-	Staff secondStaff = new Staff(Staff.getStaffBeginningCoordinates().get(2), Staff.NO_VIOLIN_KEY);
-	Staff thirdStaff = new Staff(Staff.getStaffBeginningCoordinates().get(3), Staff.NO_VIOLIN_KEY);
+	private static Staff firstStaff = new Staff(Staff.getStaffVerticalBeginningCoordinates().get(1), Staff.VIOLIN_KEY);
+	private static Staff secondStaff = new Staff(Staff.getStaffVerticalBeginningCoordinates().get(2), Staff.NO_VIOLIN_KEY);
+	private static Staff thirdStaff = new Staff(Staff.getStaffVerticalBeginningCoordinates().get(3), Staff.NO_VIOLIN_KEY);
 	
 	private final List<NoteDrawing> drawnNotes = new ArrayList<NoteDrawing>();
 	
+	private static final Map<Integer, Staff> STAVES = ImmutableMap.of(
+			1, firstStaff,
+			2, secondStaff,
+			3, thirdStaff);
+	
+	//This constructor is called only upon creating the first page
 	public Page()
 	{
 		isActive = true;
 	}
-	public Page(int page)
+	public Page(int pageNumber)
 	{
 		isActive = true;
-		this.pageNumber = page;
+		this.pageNumber = pageNumber;
 	}
 	
 	public void paintComponent(Graphics g)
 	{
 		g.drawImage(GuiHelper.getImage(GuiHelper.getPageBackgroundFile()), 0, 0, null);
 		firstStaff.paintComponent(g);
-		g.drawLine(150, Staff.getStaffBeginningCoordinates().get(1), 150, Staff.getStaffBeginningCoordinates().get(1) + 4 * Staff.getSpaceBetweenRows());
-		g.drawLine(152, Staff.getStaffBeginningCoordinates().get(1), 152, Staff.getStaffBeginningCoordinates().get(1) + 4 * Staff.getSpaceBetweenRows());
+		g.drawLine(150, Staff.getStaffVerticalBeginningCoordinates().get(1), 150, Staff.getStaffVerticalBeginningCoordinates().get(1) + 4 * Staff.getSpaceBetweenRows());
+		g.drawLine(152, Staff.getStaffVerticalBeginningCoordinates().get(1), 152, Staff.getStaffVerticalBeginningCoordinates().get(1) + 4 * Staff.getSpaceBetweenRows());
 		
 		g.drawRect(GuiHelper.getFirstBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.getBoxWidth(), GuiHelper.getBoxHeight());
 		g.drawRect(GuiHelper.getSecondBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.getBoxWidth(), GuiHelper.getBoxHeight());
@@ -84,6 +98,10 @@ public class Page extends JComponent
 
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
+	}
+	
+	public static Map<Integer, Staff> getStaves() {
+		return STAVES;
 	}
 
 }

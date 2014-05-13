@@ -10,7 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-import composer.controller.Player;
+import composer.controller.PlayController;
 import composer.controller.VolumeController;
 import composer.data.Instruments;
 import composer.data.Lengths;
@@ -147,7 +147,7 @@ public class Composer extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
-				Player p = new Player(song, Instruments.PIANO);
+				PlayController p = new PlayController(song, Instruments.PIANO);
 				Thread t = new Thread(p);
 				t.start();
 			}

@@ -6,6 +6,12 @@ import java.util.Map;
 
 import composer.advancedgui.shapes.NoteDrawing;
 
+/**
+ * 
+ * @author Tomek
+ * Class holding information about connections between graphic and sound representations of notes in the song
+ *
+ */
 public class SoundDrawRelations implements Serializable{
 	
 	private static final long serialVersionUID = -4102369720630056643L;

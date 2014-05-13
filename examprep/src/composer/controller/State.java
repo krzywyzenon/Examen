@@ -7,6 +7,12 @@ import composer.advancedgui.Page;
 import composer.advancedgui.shapes.NoteDrawing;
 import composer.sound.Song;
 
+/**
+ * 
+ * @author Tomek
+ * Object for saving songs
+ *
+ */
 public class State implements Serializable 
 {
 	private static final long serialVersionUID = -7805892302184595880L;
@@ -15,6 +21,7 @@ public class State implements Serializable
 
 	private Map<Integer, Page> pages;
 	
+	//This connects note drawings to the sounds in the song by pointing at sounds' indexes
 	private Map<NoteDrawing, Integer> relations;
 	
 	private String title;

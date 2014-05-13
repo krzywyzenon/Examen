@@ -6,11 +6,17 @@ import java.awt.Image;
 
 import javax.swing.JPanel;
 
+/**
+ * 
+ * @author Tomek
+ * Class is the extenstion of the JPanel, created to enable setting the chosen image as the background
+ *
+ */
 public class BackgroundPanel extends JPanel 
 {
 	private static final long serialVersionUID = 1L;
 	
-	Image img;
+	private Image img;
 	
 	public BackgroundPanel()
 	{

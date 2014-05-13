@@ -1,9 +1,17 @@
-package composer.advancedgui;
+package composer.controller;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import composer.advancedgui.Page;
+
+/**
+ * 
+ * @author Tomek
+ * Controller class for page objects - contains information about the number of pages in the current song and about which page is active.
+ * The class enables clearing the pages of all the notes.
+ */
 public class PageController 
 {
 	private static Map<Integer, Page> PAGES = new HashMap<>();

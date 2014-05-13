@@ -9,19 +9,26 @@ import javax.swing.JComponent;
 
 import com.google.common.collect.ImmutableMap;
 
+/**
+ * 
+ * @author Tomek
+ * Graphic representation of the staff - contains information about rows coordinates, space between rows and if the given staff
+ * should have a violin key or not
+ */
 public class Staff extends JComponent 
 {
+	public static final boolean VIOLIN_KEY = true;
+	public static final boolean NO_VIOLIN_KEY = false;
+	
 	private static final long serialVersionUID = 1L;
 	private static Integer activeStaff = 1;
 	private Integer rowsBeginning;
 	private static final Integer SPACE_BETWEEN_ROWS = 15;
 	private static final Integer ROW_HORIZONTAL_STARTING_POINT = 0;
 	private static final Integer ROW_HORIZONTAL_ENDING_POINT = 550;
-	public static final boolean VIOLIN_KEY = true;
-	public static final boolean NO_VIOLIN_KEY = false;
 	private boolean violinKey;
 	
-	private static final Map<Integer, Integer> STAFF_BEGINNING_COORDINATES = ImmutableMap.of(
+	private static final Map<Integer, Integer> STAFF_VERTICAL_BEGINNING_COORDINATES = ImmutableMap.of(
 			1, 100,
 			2, 250,
 			3, 400);
@@ -32,7 +39,7 @@ public class Staff extends JComponent
 	public Staff(Integer beginning, boolean violinKey)
 	{
 		this.rowsBeginning = beginning;
-		this.violinKey = violinKey;
+		this.setViolinKey(violinKey);
 		for(int i = 0; i<5; i++)
 		{
 			coordinates.add(rowsBeginning + i*SPACE_BETWEEN_ROWS);
@@ -41,7 +48,7 @@ public class Staff extends JComponent
 	
 	public void paintComponent(Graphics g)
 	{
-		if(violinKey)
+		if(isViolinKey())
 		g.drawImage(GuiHelper.getImage(GuiHelper.getViolinKeyFile()), 0, rowsBeginning -20, 100, 100, null);
 		for(Integer coord : coordinates)
 		{
@@ -58,12 +65,20 @@ public class Staff extends JComponent
 		Staff.activeStaff = activeStaff;
 	}
 
-	public static Map<Integer, Integer> getStaffBeginningCoordinates() {
-		return STAFF_BEGINNING_COORDINATES;
+	public static Map<Integer, Integer> getStaffVerticalBeginningCoordinates() {
+		return STAFF_VERTICAL_BEGINNING_COORDINATES;
 	}
 
 	public static Integer getSpaceBetweenRows() {
 		return SPACE_BETWEEN_ROWS;
+	}
+
+	public boolean isViolinKey() {
+		return violinKey;
+	}
+
+	public void setViolinKey(boolean violinKey) {
+		this.violinKey = violinKey;
 	}
 
 }

@@ -1,5 +1,10 @@
 package composer.data;
 
+/**
+ * 
+ * @author Tomek
+ * Enumeration with note lengths
+ */
 public enum Lengths implements MidiDataExtractor
 {
 	EIGHT(250),

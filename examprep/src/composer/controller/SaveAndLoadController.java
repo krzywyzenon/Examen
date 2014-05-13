@@ -8,7 +8,13 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-public class SaveAndLoad 
+/**
+ * 
+ * @author Tomek
+ * Controller class for saving and loading songs.
+ *
+ */
+public class SaveAndLoadController 
 {
 	public static void saveSong(State state, File file) throws FileNotFoundException, IOException
 	{
