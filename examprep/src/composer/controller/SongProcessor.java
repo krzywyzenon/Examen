@@ -28,13 +28,16 @@ public class SongProcessor
 	public static Integer[] addNote(Integer noteVerticalCoordinate, Lengths length)
 	{
 		MidiDataExtractor tone;
+		noteVerticalCoordinate = readjustVerticalCoordinate(noteVerticalCoordinate);
 		Object[] temp = getMidiTone(noteVerticalCoordinate);
 		tone = (MidiDataExtractor) temp[0];
 		if(isLocallySharp(noteVerticalCoordinate))
 		{
+			System.out.println("it is locally sharp");
 			tone = GuiHelper.getTones().get(GuiHelper.getTonesToSharp().get(noteVerticalCoordinate));
 			GuiHelper.getTemporarySharpTones().put(noteVerticalCoordinate, false);
 		}
+		System.out.println(tone.value());
 		Note note = new Note(tone, length);	
 		SONG.add(note);
 		Integer[] data = {(Integer) temp[1], SONG.indexOf(note)};
@@ -48,8 +51,6 @@ public class SongProcessor
 	 */
 	public static Object[] getMidiTone(Integer noteVerticalCoordinate)
 	{
-		if(Staff.getActiveStaff() != 1)
-		noteVerticalCoordinate = noteVerticalCoordinate - (Staff.getStaffVerticalBeginningCoordinates().get(Staff.getActiveStaff()) - Staff.getStaffVerticalBeginningCoordinates().get(1));
 		MidiDataExtractor tone;
 		if(isGloballySharp(noteVerticalCoordinate))
 		{
@@ -124,6 +125,7 @@ public class SongProcessor
 		if(GuiHelper.getTemporarySharpTones().containsKey(noteVerticalParameter))
 		{
 			GuiHelper.getTemporarySharpTones().put(noteVerticalParameter, true);
+			System.out.println("made locally sharp");
 		}
 		
 	}
@@ -138,6 +140,13 @@ public class SongProcessor
 		{
 			sharpNotesMap.put(entry.getKey(), false);
 		}
+	}
+	
+	private static Integer readjustVerticalCoordinate(Integer noteVerticalCoordinate)
+	{
+		if(Staff.getActiveStaff() != 1)
+			noteVerticalCoordinate = noteVerticalCoordinate - (Staff.getStaffVerticalBeginningCoordinates().get(Staff.getActiveStaff()) - Staff.getStaffVerticalBeginningCoordinates().get(1));
+		return noteVerticalCoordinate;
 	}
 	
 	public static Song getSong() {
