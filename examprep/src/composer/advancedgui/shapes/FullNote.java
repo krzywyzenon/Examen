@@ -46,6 +46,12 @@ public class FullNote extends NoteDrawing
 	@Override
 	public void inverted(Graphics g) {
 		//Never used as the note's graphic representation is a simple oval
+		System.out.println("Inveerted");
+	}
+	
+	public void setInverted(boolean inverted)
+	{
+		this.inverted = false;
 	}
 
 }

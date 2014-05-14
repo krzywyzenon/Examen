@@ -44,6 +44,7 @@ public abstract class NoteDrawing extends JComponent
 		{
 			normal(g);
 		}
+		repaint();
 	}
 	
 	public abstract void normal(Graphics g);

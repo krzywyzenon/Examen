@@ -13,6 +13,7 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JTextArea;
 
+import composer.advancedgui.shapes.FlatMarking;
 import composer.advancedgui.shapes.EighthNote;
 import composer.advancedgui.shapes.FullNote;
 import composer.advancedgui.shapes.HalfNote;
@@ -87,6 +88,11 @@ class ComposerSheet extends JComponent
 					currentNote = new SharpMarking();
 					
 				}
+				else if(GuiHelper.isCursorWithinLimits(e.getX(), e.getY(), GuiHelper.getSixthBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.ADD))
+				{
+					currentNote = new FlatMarking();
+					
+				}
 				else
 				{
 					oldX = e.getX();
@@ -111,6 +117,7 @@ class ComposerSheet extends JComponent
 			public void mouseClicked(MouseEvent e){
 				text.append("allowed x " + allowedX + "\nX: " + e.getX() + "\nY: " + e.getY());
 				System.out.println("x: " + e.getX());
+				System.out.println("y: " + e.getY());
 				repaint();
 			}
 		});
@@ -129,7 +136,7 @@ class ComposerSheet extends JComponent
 						if(e.getY() >= GuiHelper.getActiveStaffBeginningCoordinate() - 15 && e.getY() <= GuiHelper.getActiveStaffBeginningCoordinate() + 90)
 						{
 							
-							if(e.getX()> allowedX + 10 && e.getX() > ((Staff.getActiveStaff() == 1) ? 160 : allowedX + 10) && !(currentNote instanceof SharpMarking))
+							if(e.getX()> allowedX + 10 && e.getX() > ((Staff.getActiveStaff() == 1) ? 160 : allowedX + 10) && !(currentNote instanceof SharpMarking || currentNote instanceof FlatMarking))
 							{
 								graphics2D.setPaint(Color.BLACK);
 								Integer verticalCoordinate = GuiHelper.countVerticalCoordinate(e.getY(),GuiHelper.getActiveStaffBeginningCoordinate() ,text);
@@ -170,20 +177,41 @@ class ComposerSheet extends JComponent
 								paintLines();
 								
 							}
-							else if(currentNote instanceof SharpMarking && e.getX()> allowedX + 10)
+							else if((currentNote instanceof SharpMarking || currentNote instanceof FlatMarking) && e.getX()> allowedX + 10)
 							{
 								allowedX = 10 + e.getX();
 								Integer verticalCoordinate = GuiHelper.countVerticalCoordinate(e.getY(),GuiHelper.getActiveStaffBeginningCoordinate() ,text);
-								PageController.getPages().get(pageDisplayed).getDrawnNotes().add(new SharpMarking(e.getX() - 10, verticalCoordinate - 10));
+								if(currentNote instanceof SharpMarking)
+								{
+									PageController.getPages().get(pageDisplayed).getDrawnNotes().add(new SharpMarking(e.getX() - 10, verticalCoordinate - 10));
+								}
+								else
+								{
+									PageController.getPages().get(pageDisplayed).getDrawnNotes().add(new FlatMarking(e.getX() -20, verticalCoordinate -35));
+								}
 								currentNote.setParameters(currentX, verticalCoordinate, true);
 								currentNote.paint(graphics2D);
 								if(e.getX() < 120 && Staff.getActiveStaff() == 1)
 								{
-									SongProcessor.makeNoteSharpGlobally(verticalCoordinate);
+									if(currentNote instanceof SharpMarking)
+									{
+										SongProcessor.makeNoteSharpGlobally(verticalCoordinate);
+									}
+									else
+									{
+										SongProcessor.makeNoteFlatGlobally(verticalCoordinate);
+									}
 								}
 								else
 								{
-									SongProcessor.makeNoteLocallySharp(verticalCoordinate);
+									if(currentNote instanceof SharpMarking)
+									{
+										SongProcessor.makeNoteLocallySharp(verticalCoordinate);
+									}
+									else
+									{
+										SongProcessor.makeNoteLocallyFlat(verticalCoordinate);
+									}
 								}
 								
 								paintLines();
@@ -274,6 +302,7 @@ class ComposerSheet extends JComponent
 					}
 						
 				}
+				e.getComponent().repaint();
 			}
 		});		
 	}

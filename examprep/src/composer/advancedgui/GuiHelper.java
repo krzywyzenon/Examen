@@ -3,6 +3,7 @@ package composer.advancedgui;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import javax.swing.JTextArea;
 import com.google.common.collect.ImmutableMap;
 import composer.data.MidiDataExtractor;
 import composer.data.Tones;
+import composer.sound.Note;
 
 /**
  * 
@@ -28,12 +30,14 @@ public class GuiHelper
 	public static final Integer EDIT = 1;
 	
 	//Map containing the original horizontal starting coordinates of the "boxes" with the notes for grabbing
-	private static final Map<String, Integer> BOXES_STARTPOINTS = ImmutableMap.of(
-			"First", 0,
-			"Second", 60,
-			"Third", 120,
-			"Fourth", 180,
-			"Fifth", 240);
+	private static final Map<String, Integer> BOXES_STARTPOINTS = ImmutableMap.<String, Integer>builder()
+			.put("First", 0)
+			.put("Second", 60)
+			.put("Third", 120)
+			.put("Fourth", 180)
+			.put("Fifth", 240)
+			.put("Sixth", 300)
+			.build();
 			
 	private static final File VIOLIN_KEY_FILE = new File("resources/violinkey.png");
 	private static final File PLAY_KEY_FILE = new File("resources/play.png");
@@ -53,6 +57,7 @@ public class GuiHelper
 	private static final String THIRD = "Third";
 	private static final String FOURTH = "Fourth";
 	private static final String FIFTH = "Fifth";
+	private static final String SIXTH = "Sixth";
 	
 	//Vertical coords of the first staff's lines.
 	private static final Integer ORIGINAL_FIRST_ROW_VERTICAL_COORD = 100;
@@ -69,6 +74,7 @@ public class GuiHelper
 	private static final Integer THIRD_BOX_STARTING_POINT = BOXES_STARTPOINTS.get(THIRD);
 	private static final Integer FOURTH_BOX_STARTING_POINT = BOXES_STARTPOINTS.get(FOURTH);
 	private static final Integer FIFTH_BOX_STARTING_POINT = BOXES_STARTPOINTS.get(FIFTH);
+	private static final Integer SIXTH_BOX_STARTING_POINT = BOXES_STARTPOINTS.get(SIXTH);
 	
 	private static final Integer BOX_VERTICAL_STARTING_POINT = 10;
 	
@@ -171,6 +177,43 @@ public class GuiHelper
 			.put(D2_TONE, D2_SHARP)
 			.put(F2_TONE, F2_SHARP)
 			.build();
+	private static final Map<Integer, Boolean> GLOBAL_FLAT_TONES = new HashMap<Integer,Boolean>();
+	static
+	{
+		GLOBAL_FLAT_TONES.put(E2_TONE, false);
+		GLOBAL_FLAT_TONES.put(D2_TONE, false);
+		GLOBAL_FLAT_TONES.put(B_TONE, false);
+		GLOBAL_FLAT_TONES.put(A_TONE, false);
+		GLOBAL_FLAT_TONES.put(G_TONE, false);
+		GLOBAL_FLAT_TONES.put(E_TONE, false);
+		GLOBAL_FLAT_TONES.put(D_TONE, false);
+		GLOBAL_FLAT_TONES.put(B1_TONE, false);
+	}
+	
+	private static final Map<Integer, Boolean> LOCAL_FLAT_TONES = new HashMap<Integer,Boolean>();
+	static
+	{
+		LOCAL_FLAT_TONES.put(E2_TONE, false);
+		LOCAL_FLAT_TONES.put(D2_TONE, false);
+		LOCAL_FLAT_TONES.put(B_TONE, false);
+		LOCAL_FLAT_TONES.put(A_TONE, false);
+		LOCAL_FLAT_TONES.put(G_TONE, false);
+		LOCAL_FLAT_TONES.put(E_TONE, false);
+		LOCAL_FLAT_TONES.put(D_TONE, false);
+		LOCAL_FLAT_TONES.put(B1_TONE, false);
+		
+	}
+	
+	private static final Map<Integer, Integer> TONES_TO_FLAT = ImmutableMap.<Integer, Integer>builder()
+			.put(E2_TONE, D2_SHARP)
+			.put(D2_TONE, C2_SHARP)
+			.put(B_TONE, A_SHARP)
+			.put(A_TONE, G_SHARP)
+			.put(G_TONE, F_SHARP)
+			.put(E_TONE, D_SHARP)
+			.put(D_TONE, C_SHARP)
+			.put(B1_TONE, A1_SHARP)
+			.build();
 
 	public static Integer getFirstBoxStartingPoint() {
 		return FIRST_BOX_STARTING_POINT;
@@ -194,6 +237,11 @@ public class GuiHelper
 
 	public static Integer getFifthBoxStartingPoint() {
 		return FIFTH_BOX_STARTING_POINT;
+	}
+
+
+	public static Integer getSixthBoxStartingPoint() {
+		return SIXTH_BOX_STARTING_POINT;
 	}
 
 
@@ -228,6 +276,18 @@ public class GuiHelper
 
 	public static Map<Integer, Integer> getTonesToSharp() {
 		return TONES_TO_SHARP;
+	}
+	
+	public static Map<Integer, Boolean> getFlatTones() {
+		return GLOBAL_FLAT_TONES;
+	}
+	
+	public static Map<Integer, Boolean> getTemporaryFlatTones() {
+		return LOCAL_FLAT_TONES;
+	}
+	
+	public static Map<Integer, Integer> getTonesToFlat() {
+		return TONES_TO_FLAT;
 	}
 	
 	/**
@@ -430,6 +490,6 @@ public class GuiHelper
 			return null;
 		}
 	}
-	
+
 
 }
