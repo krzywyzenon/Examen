@@ -15,12 +15,12 @@ public class FlatMarking extends NoteDrawing {
 	int length = 40;
 	
 	
-	private static final File B_MOLL_FILE = new File("resources/bmoll.png");
+	private static final File FLAT_MARK_FILE = new File("resources/bmoll.png");
 	Image bmoll;
 	
 	public FlatMarking()
 	{
-		bmoll = GuiHelper.getImage(B_MOLL_FILE);
+		bmoll = GuiHelper.getImage(FLAT_MARK_FILE);
 	}
 	
 	public FlatMarking(int startX, int startY)
@@ -29,7 +29,7 @@ public class FlatMarking extends NoteDrawing {
 		this.fromY = startY;
 		this.inverted = false;
 		this.staff = Staff.getActiveStaff();
-		bmoll = GuiHelper.getImage(B_MOLL_FILE);
+		bmoll = GuiHelper.getImage(FLAT_MARK_FILE);
 	}
 
 	@Override

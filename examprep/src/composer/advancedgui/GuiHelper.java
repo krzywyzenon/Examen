@@ -3,7 +3,6 @@ package composer.advancedgui;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +12,6 @@ import javax.swing.JTextArea;
 import com.google.common.collect.ImmutableMap;
 import composer.data.MidiDataExtractor;
 import composer.data.Tones;
-import composer.sound.Note;
 
 /**
  * 

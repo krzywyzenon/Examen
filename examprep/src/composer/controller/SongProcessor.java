@@ -12,7 +12,7 @@ import composer.sound.Song;
 /**
  * 
  * @author Tomek
- * Controller class which adds the correct note to the song upon receiving coordinates from GUI
+ * Controller class which adds the correct note to the song upon receiving coordinates from GUI and takes care of markings
  *
  */
 public class SongProcessor 
@@ -28,13 +28,11 @@ public class SongProcessor
 	public static Integer[] addNote(Integer noteVerticalCoordinate, Lengths length)
 	{
 		MidiDataExtractor tone;
-		Object[] temp = getMidiTone(noteVerticalCoordinate);
-//		noteVerticalCoordinate = readjustVerticalCoordinate(noteVerticalCoordinate);
-		tone = (MidiDataExtractor) temp[0];
-		noteVerticalCoordinate = (Integer) temp[1];
+		Object[] toneInfo = getMidiTone(noteVerticalCoordinate);
+		tone = (MidiDataExtractor) toneInfo[0];
+		noteVerticalCoordinate = (Integer) toneInfo[1];
 		if(isLocallySharp(noteVerticalCoordinate))
 		{
-			System.out.println("it is locally sharp");
 			tone = GuiHelper.getTones().get(GuiHelper.getTonesToSharp().get(noteVerticalCoordinate));
 			GuiHelper.getTemporarySharpTones().put(noteVerticalCoordinate, false);
 		}
@@ -46,12 +44,10 @@ public class SongProcessor
 		System.out.println(tone.value());
 		Note note = new Note(tone, length);	
 		SONG.add(note);
-		Integer[] data = {(Integer) temp[1], SONG.indexOf(note)};
-		return data;
+		Integer[] toneData = {(Integer) toneInfo[1], SONG.indexOf(note)};
+		return toneData;
 	}
 	
-	
-
 	/**
 	 * Method gets the midi tone which corresponds to the vertical coordinate of the note drawing
 	 * @param noteVerticalCoordinate - vertical coordinate on which the note is drawn
@@ -78,7 +74,6 @@ public class SongProcessor
 		Object[] data = {tone, noteVerticalCoordinate};
 		return data;
 	}
-	
 
 	/**
 	 * Method checks if the note should be globally played sharp
@@ -87,27 +82,19 @@ public class SongProcessor
 	 */
 	public static boolean isGloballySharp(Integer noteVerticalCoordinate)
 	{
-		if(GuiHelper.getSharpTones().containsKey(noteVerticalCoordinate))
-		{
-			return GuiHelper.getSharpTones().get(noteVerticalCoordinate);		
-		}
-		else
-		{
-			return false;
-		}
+		return checkIfNoteIsMarked(GuiHelper.getSharpTones(), noteVerticalCoordinate);
 	}
 	
+	/**
+	 * Method checks if the note should be globally played flat
+	 * @param noteVerticalCoordinate - vertical coordinate on which the note is drawn
+	 * @return
+	 */
 	private static boolean isGloballyFlat(Integer noteVerticalCoordinate) 
 	{
-		if(GuiHelper.getFlatTones().containsKey(noteVerticalCoordinate))
-		{
-			return GuiHelper.getFlatTones().get(noteVerticalCoordinate);		
-		}
-		else
-		{
-			return false;
-		}
+		return checkIfNoteIsMarked(GuiHelper.getFlatTones(), noteVerticalCoordinate);
 	}
+	
 	/**
 	 * Method checks if the note should be locally played sharp
 	 * @param noteVerticalCoordinate - vertical coordinate on which the note is drawn
@@ -115,88 +102,82 @@ public class SongProcessor
 	 */
 	public static boolean isLocallySharp(Integer noteVerticalCoordinate)
 	{
-		if(GuiHelper.getTemporarySharpTones().containsKey(noteVerticalCoordinate))
-		{
-			return GuiHelper.getTemporarySharpTones().get(noteVerticalCoordinate);		
-		}
-		else
-		{
-			return false;
-		}
+		return checkIfNoteIsMarked(GuiHelper.getTemporarySharpTones(), noteVerticalCoordinate);
 	}
 	
-	private static boolean isLocallyFlat(Integer noteVerticalCoordinate) {
-		if(GuiHelper.getTemporaryFlatTones().containsKey(noteVerticalCoordinate))
-		{
-			return GuiHelper.getTemporaryFlatTones().get(noteVerticalCoordinate);		
-		}
-		else
-		{
-			return false;
-		}
+	/**
+	 * Method checks if the note should be locally played flat
+	 * @param noteVerticalCoordinate - vertical coordinate on which the note is drawn
+	 * @return
+	 */
+	private static boolean isLocallyFlat(Integer noteVerticalCoordinate) 
+	{
+		return checkIfNoteIsMarked(GuiHelper.getTemporaryFlatTones(), noteVerticalCoordinate);
 	}
 	
 	/**
 	 * Method marks the note as the global sharp
 	 * @param noteVerticalCoordinate - vertical coordinate on which the note is drawn
-	 * @return
 	 */
 	public static void makeNoteSharpGlobally(Integer noteVerticalCoordinate)
 	{
-		noteVerticalCoordinate = reAdjustVerticalCoordinate(noteVerticalCoordinate);
-		if(GuiHelper.getSharpTones().containsKey(noteVerticalCoordinate))
-		{
-			GuiHelper.getSharpTones().put(noteVerticalCoordinate, true);
-		}
-			
+		markTheNotes(GuiHelper.getSharpTones(), reAdjustVerticalCoordinate(noteVerticalCoordinate));
 	}
 	
 	/**
 	 * Method marks the note as the local sharp
 	 * @param noteVerticalCoordinate - vertical coordinate on which the note is drawn
-	 * @return
 	 */
 	public static void makeNoteLocallySharp(Integer noteVerticalCoordinate)
 	{
-		noteVerticalCoordinate = reAdjustVerticalCoordinate(noteVerticalCoordinate);
-		if(GuiHelper.getTemporarySharpTones().containsKey(noteVerticalCoordinate))
-		{
-			GuiHelper.getTemporarySharpTones().put(noteVerticalCoordinate, true);
-			System.out.println("made locally sharp");
-		}
-		
+		markTheNotes(GuiHelper.getTemporarySharpTones(), reAdjustVerticalCoordinate(noteVerticalCoordinate));
 	}
 	
+	/**
+	 * Method marks the note as the global flat
+	 * @param noteVerticalCoordinate - vertical coordinate on which the note is drawn
+	 */
 	public static void makeNoteFlatGlobally(Integer noteVerticalCoordinate)
 	{
-		noteVerticalCoordinate = reAdjustVerticalCoordinate(noteVerticalCoordinate);
-		if(GuiHelper.getFlatTones().containsKey(noteVerticalCoordinate))
-		{
-			GuiHelper.getFlatTones().put(noteVerticalCoordinate, true);
-		}
+		markTheNotes(GuiHelper.getFlatTones(), reAdjustVerticalCoordinate(noteVerticalCoordinate));
 	}
 	
+	/**
+	 * Method marks the note as the local flat
+	 * @param noteVerticalCoordinate - vertical coordinate on which the note is drawn
+	 */
 	public static void makeNoteLocallyFlat(Integer noteVerticalCoordinate) 
 	{
-		noteVerticalCoordinate = reAdjustVerticalCoordinate(noteVerticalCoordinate);
-		if(GuiHelper.getTemporaryFlatTones().containsKey(noteVerticalCoordinate))
-		{
-			GuiHelper.getTemporaryFlatTones().put(noteVerticalCoordinate, true);
-			System.out.println("made locally flat");
-		}
+		markTheNotes(GuiHelper.getTemporaryFlatTones(), reAdjustVerticalCoordinate(noteVerticalCoordinate));
 	}
+	
 	/**
 	 * Method cleans all the sharp markings from the song (not their graphic representations, but their function)
 	 */
 	public static void cleanAllSharps()
 	{
 		Map<Integer, Boolean> sharpNotesMap = GuiHelper.getSharpTones();
-		for(Map.Entry<Integer, Boolean> entry : sharpNotesMap.entrySet())
-		{
-			sharpNotesMap.put(entry.getKey(), false);
-		}
+		invalidateMarkings(sharpNotesMap);
+		sharpNotesMap = GuiHelper.getTemporarySharpTones();
+		invalidateMarkings(sharpNotesMap);
 	}
 	
+	/**
+	 * Method cleans all the flat markings from the song (not their graphic representations, but their function)
+	 */
+	public static void cleanAllFlats() 
+	{
+		Map<Integer, Boolean> flatNotesMap = GuiHelper.getFlatTones();
+		invalidateMarkings(flatNotesMap);
+		flatNotesMap = GuiHelper.getTemporaryFlatTones();
+		invalidateMarkings(flatNotesMap);
+	}
+	
+	/**
+	 * Method calculates vertical coordinate of the note in relation to the first staff on the screen
+	 * @param noteVerticalCoordinate - vertical coordinate on which the note is drawn
+	 * @return noteVerticalCoordinate
+	 */
 	private static Integer reAdjustVerticalCoordinate(Integer noteVerticalCoordinate)
 	{
 		if(Staff.getActiveStaff() != 1)
@@ -211,5 +192,52 @@ public class SongProcessor
 	public static void setSong(Song song) {
 		SONG = song;
 	}
+	
+	/**
+	 * Helper method to invalidate markings in the map which contains them
+	 * @param mapToClean - map destined for cleaning
+	 */
+	private static void invalidateMarkings(Map<Integer, Boolean> mapToClean)
+	{
+		for(Map.Entry<Integer, Boolean> entry : mapToClean.entrySet())
+		{
+			mapToClean.put(entry.getKey(), false);
+		}
+	}
+	
+	/**
+	 * Helper method to check if the note is marked flat or sharp
+	 * @param mapToCheck - map containing proper sharp/flat markings
+	 * @param noteVerticalCoordinate - vertical coordinate on which the note is drawn 
+	 * @return
+	 */
+	private static boolean checkIfNoteIsMarked(Map<Integer, Boolean> mapToCheck, Integer noteVerticalCoordinate)
+	{
+		if(mapToCheck.containsKey(noteVerticalCoordinate))
+		{
+			return mapToCheck.get(noteVerticalCoordinate);		
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	/**
+	 * Helper method to mark the note as flat or sharp
+	 * @param mapToCheck - map containing proper sharp/flat markings
+	 * @param noteVerticalCoordinate - vertical coordinate on which the note is drawn 
+	 * @return
+	 */
+	private static void markTheNotes(Map<Integer, Boolean> mapForMarking, Integer noteVerticalCoordinate)
+	{
+		if(mapForMarking.containsKey(noteVerticalCoordinate))
+		{
+			mapForMarking.put(noteVerticalCoordinate, true);
+		}
+	}
+
+
+
 
 }

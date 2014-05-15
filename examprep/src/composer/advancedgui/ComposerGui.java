@@ -13,7 +13,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
@@ -208,6 +207,8 @@ public class ComposerGui implements ActionListener
 		previousPage.setToolTipText("Previous page");
 		clearButton.setIcon(clearIcon);
 		clearButton.setBorder(null);
+		clearButton.setPreferredSize(new Dimension(clearIcon.getIconWidth(), clearIcon.getIconHeight()));
+		clearButton.setMinimumSize(new Dimension(clearIcon.getIconWidth(), clearIcon.getIconHeight()));
 		clearButton.setToolTipText("Clear current song");
 		deleteLastButton.setIcon(deleteNoteIcon);
 		deleteLastButton.setBorder(null);
@@ -264,7 +265,7 @@ public class ComposerGui implements ActionListener
 		panel.add(previousPage, gc);
 		
 		gc.gridx = 1;
-		JLabel pageLabel = new JLabel("   PAGE");
+		JLabel pageLabel = new JLabel("PAGE");
 		pageLabel.setFont(new Font("Serif", Font.BOLD, 24));
 		pageLabel.setForeground(Color.BLACK);
 		pageLabel.setMinimumSize(new Dimension(120, 40));
@@ -274,16 +275,18 @@ public class ComposerGui implements ActionListener
 		gc.weightx =1;
 		
 		gc.gridx = 2;
-		gc.anchor = GridBagConstraints.EAST;
+		gc.anchor = GridBagConstraints.CENTER;
 		panel.add(nextPage, gc);
 		
-		gc.anchor = GridBagConstraints.CENTER;
+		gc.anchor = GridBagConstraints.WEST;
 		gc.weightx = 1;
 		gc.gridy = 2;
 		gc.gridx = 0;
+		gc.gridwidth = 2;
 		panel.add(clearButton, gc);
+		gc.gridwidth = 1;
 		
-		gc.gridx = 1;
+		gc.gridx = 2;
 		panel.add(deleteLastButton, gc);
 		gc.anchor = GridBagConstraints.WEST;
 		gc.weightx = 0;
@@ -362,6 +365,7 @@ public class ComposerGui implements ActionListener
 				composerSheet.setAllowedX(80);
 				SongProcessor.getSong().clear();
 				SongProcessor.cleanAllSharps();
+				SongProcessor.cleanAllFlats();
 				SoundDrawRelations.resetRelations();
 				title.setText("");
 				titleLabel.setText("Title:");
