@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
@@ -25,11 +26,8 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
-import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
 
 import com.google.common.collect.ImmutableMap;
 import composer.advancedgui.shapes.NoteDrawing;
@@ -63,63 +61,58 @@ public class ComposerGui implements ActionListener
 	private static final int CONTRABAS = 16;
 
 	private static Instruments instrument = Instruments.PIANO;
+	
 	private ComposerSheet composerSheet;
 	
-	private ImageIcon playIcon;
-	private ImageIcon nextIcon;
-	private ImageIcon previousIcon;
-	private ImageIcon clearIcon;
-	private ImageIcon deleteNoteIcon;
-	private ImageIcon titleIcon;
+	private ImageIcon playIcon, nextIcon, previousIcon, clearIcon,deleteNoteIcon, titleIcon;
+	private Image background, menuBackground, controlPanelBackground;
 	
-	private JTextArea text;
 	private JFrame frame;
 	private JTextField title;
 	
 	private JLabel titleLabel;
 	
-	private BackgroundPanel mainPanel;
+	private BackgroundPanel mainPanel, controlPanel;
 	
 	private Container content;
 	
-	private JButton clearButton;
-	private JButton nextPage;
-	private JButton previousPage;
-	private JButton playButton;
-	private JButton deleteLastButton;
-	private JButton setTitleButton;
-	private JMenuItem loadItem;
-	private JMenuItem saveItem;
-	private JMenuItem quitItem;
+	private JButton clearButton, nextPage, previousPage, playButton, deleteLastButton, setTitleButton;
+	
+	private JMenuItem loadItem, saveItem, quitItem;
+	
 	private JRadioButtonMenuItem pianoItem, organItem = new JRadioButtonMenuItem("Organs"), harpItem = new JRadioButtonMenuItem("Harp"), 
 			tubularBellItem = new JRadioButtonMenuItem("Tubular Bell"), violinItem = new JRadioButtonMenuItem("Violin"), celloItem = new JRadioButtonMenuItem("Cello"),
 			contrabasItem = new JRadioButtonMenuItem("Contrabas");
-	private final JRadioButtonMenuItem[] instrumentList = {organItem, harpItem, tubularBellItem, violinItem, celloItem, contrabasItem};
+	
 	private ButtonGroup instrumentGroup;
 	
 	private MyMenuBar menuBar;
-	private JMenu fileMenu;
-	private JMenu instrumentsMenu;
-	
-	private BackgroundPanel panel;
+	private JMenu fileMenu, instrumentsMenu;
 	
 	private JFileChooser fc;
 	
 	private GridBagConstraints gc;
+
+	private final JRadioButtonMenuItem[] instrumentList = {organItem, harpItem, tubularBellItem, violinItem, celloItem, contrabasItem};
+
+	private JButton[] buttons ={clearButton = new JButton(), nextPage = new JButton(), previousPage = new JButton(), playButton = new JButton(), deleteLastButton = new JButton()
+	,setTitleButton = new JButton()};
+	
+	private ImageIcon[] icons = {clearIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getClearKeyFile())), nextIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getNextPageKeyFile())),
+			previousIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getPreviousPageKeyFile())), playIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getPlayKeyFile())),
+			deleteNoteIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getDeleteLastNoteFile())), titleIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getTitleButtonFile()))};
+	
+	private String[] tooltips = {"Clear this song", "Next Page", "Previous page", "Play this song", "Delete the last note", "Name your song"};
+	
+	private JMenuItem[] fileMenuItems = {loadItem = new JMenuItem("Load song"), saveItem = new JMenuItem("Save song"), quitItem = new JMenuItem("Quit")};
 	
 	public ComposerGui() {
-		
+		//initializing variables and configuring gui elements
 		gc = new GridBagConstraints();
-		playIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getPlayKeyFile()));
-		nextIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getNextPageKeyFile()));
-		previousIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getPreviousPageKeyFile()));
-		clearIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getClearKeyFile()));
-		deleteNoteIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getDeleteLastNoteFile()));
-		titleIcon = new ImageIcon(GuiHelper.getImage(GuiHelper.getTitleButtonFile()));
-		Image background = GuiHelper.getImage(GuiHelper.getMainBackgroundFile());
+		background = GuiHelper.getImage(GuiHelper.getMainBackgroundFile());
+		menuBackground = GuiHelper.getImage(GuiHelper.getMenuBackgroundFile());
+		controlPanelBackground = GuiHelper.getImage(GuiHelper.getPanelBackgroundFile());
 		frame = new JFrame("Composer");
-		text = new JTextArea();
-		text.setPreferredSize(new Dimension(210,1168));
 		mainPanel = new BackgroundPanel(background);
 		mainPanel.setLayout(new BorderLayout());
 		title = new JTextField(10);
@@ -132,35 +125,18 @@ public class ComposerGui implements ActionListener
 		titleLabel.setForeground(Color.BLACK);
 		titleLabel.setText("Title:");
 		
-		composerSheet  = new ComposerSheet(text);
-		clearButton = new JButton();
-		nextPage = new JButton();
-		previousPage = new JButton();
-		playButton = new JButton();
-		deleteLastButton = new JButton();
-		setTitleButton = new JButton();
-
-		loadItem = new JMenuItem("Load song");
-		loadItem.setBackground(new Color(157,75,35));
-		loadItem.setForeground(Color.ORANGE);
-		saveItem = new JMenuItem("Save song");
-		saveItem.setBackground(new Color(157,75,35));
-		saveItem.setForeground(Color.ORANGE);
-		quitItem = new JMenuItem("Quit");
-		quitItem.setBackground(new Color(157,75,35));
-		quitItem.setForeground(Color.ORANGE);
-		
 		instrumentGroup = new ButtonGroup();
 		instrumentsMenu = new JMenu("Instruments");
 		instrumentsMenu.setForeground(Color.ORANGE);
+		fc = new JFileChooser();
+		fc.setCurrentDirectory(GuiHelper.getSavesDirectory());
 		
-		pianoItem = new JRadioButtonMenuItem("Piano");
-		pianoItem.setSelected(true);
-		pianoItem.addActionListener(this);
-		pianoItem.setBackground(new Color(157,75,35));
-		pianoItem.setForeground(Color.ORANGE);
-		instrumentGroup.add(pianoItem);
-		instrumentsMenu.add(pianoItem);
+		for(JMenuItem menuItem : fileMenuItems)
+		{
+			menuItem.setBackground(new Color(157,75,35));
+			menuItem.setForeground(Color.ORANGE);
+			menuItem.addActionListener(this);
+		}
 		
 		for(JRadioButtonMenuItem button : instrumentList)
 		{
@@ -171,8 +147,27 @@ public class ComposerGui implements ActionListener
 			instrumentsMenu.add(button);
 		}
 		
-		fc = new JFileChooser();
-		fc.setCurrentDirectory(GuiHelper.getSavesDirectory());
+		for(JButton button : buttons )
+		{
+			button.setIcon(icons[Arrays.asList(buttons).indexOf(button)]);
+			button.setBorder(null);
+			button.setToolTipText(tooltips[Arrays.asList(buttons).indexOf(button)]);
+			button.addActionListener(this);
+		}
+		
+		composerSheet  = new ComposerSheet();
+
+		
+		
+		pianoItem = new JRadioButtonMenuItem("Piano");
+		pianoItem.setSelected(true);
+		pianoItem.addActionListener(this);
+		pianoItem.setBackground(new Color(157,75,35));
+		pianoItem.setForeground(Color.ORANGE);
+		instrumentGroup.add(pianoItem);
+		instrumentsMenu.add(pianoItem);
+
+		
 		
 		SOURCE = ImmutableMap.<Object, Integer>builder()
 					.put(loadItem, 1)
@@ -196,29 +191,8 @@ public class ComposerGui implements ActionListener
 		content = frame.getContentPane();
 		content.setLayout(new BorderLayout());
 		
-		playButton.setIcon(playIcon);
-		playButton.setBorder(null);
-		playButton.setToolTipText("Play current song");
-		nextPage.setIcon(nextIcon);
-		nextPage.setBorder(null);
-		nextPage.setToolTipText("Next page");
-		previousPage.setIcon(previousIcon);
-		previousPage.setBorder(null);
-		previousPage.setToolTipText("Previous page");
-		clearButton.setIcon(clearIcon);
-		clearButton.setBorder(null);
-		clearButton.setPreferredSize(new Dimension(clearIcon.getIconWidth(), clearIcon.getIconHeight()));
-		clearButton.setMinimumSize(new Dimension(clearIcon.getIconWidth(), clearIcon.getIconHeight()));
-		clearButton.setToolTipText("Clear current song");
-		deleteLastButton.setIcon(deleteNoteIcon);
-		deleteLastButton.setBorder(null);
-		deleteLastButton.setToolTipText("Delete last note");
-		setTitleButton.setIcon(titleIcon);
-		setTitleButton.setBorder(null);
-		setTitleButton.setToolTipText("Set title for current song");
 		
-		
-		menuBar = new MyMenuBar(GuiHelper.getImage(new File("resources/menuback.png")));
+		menuBar = new MyMenuBar(menuBackground);
 		menuBar.setBorder(null);
 		fileMenu = new JMenu("File");
 		fileMenu.setForeground(Color.ORANGE);
@@ -233,79 +207,61 @@ public class ComposerGui implements ActionListener
 		menuBar.add(instrumentsMenu);
 		frame.setJMenuBar(menuBar);
 		
-		quitItem.addActionListener(this);
-		loadItem.addActionListener(this); 
-		saveItem.addActionListener(this); 
-		playButton.addActionListener(this);
-		clearButton.addActionListener(this);
-		nextPage.addActionListener(this);
-		previousPage.addActionListener(this);
-		deleteLastButton.addActionListener(this);
-		setTitleButton.addActionListener(this);
-	
-		JScrollPane scrollPane = new JScrollPane(text);
-		scrollPane.setPreferredSize(new Dimension(210,168));
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		
-		
 		mainPanel.add(composerSheet, BorderLayout.CENTER);
 		
-		panel = new BackgroundPanel(GuiHelper.getImage(GuiHelper.getPanelBackgroundFile()));
+		controlPanel = new BackgroundPanel(controlPanelBackground);
 		
-//		panel.add(scrollPane);
-		panel.setLayout(new GridBagLayout());
+		controlPanel.setLayout(new GridBagLayout());
 		gc.anchor = GridBagConstraints.WEST;
 		gc.weighty = 0.05;
 		gc.weightx = 1;
 		gc.gridx = 0;
 		gc.gridy = 0;
-		panel.add(playButton, gc);
+		controlPanel.add(playButton, gc);
 		gc.gridx = 0;
 		gc.gridy = 1;
-		panel.add(previousPage, gc);
+		controlPanel.add(previousPage, gc);
 		
 		gc.gridx = 1;
 		JLabel pageLabel = new JLabel("PAGE");
 		pageLabel.setFont(new Font("Serif", Font.BOLD, 24));
 		pageLabel.setForeground(Color.BLACK);
 		pageLabel.setMinimumSize(new Dimension(120, 40));
-//		pageLabel.setBorder(BorderFactory.createBevelBorder(1));
 		gc.weightx = 0.01;
-		panel.add(pageLabel, gc);
+		controlPanel.add(pageLabel, gc);
 		gc.weightx =1;
 		
 		gc.gridx = 2;
 		gc.anchor = GridBagConstraints.CENTER;
-		panel.add(nextPage, gc);
+		controlPanel.add(nextPage, gc);
 		
 		gc.anchor = GridBagConstraints.WEST;
 		gc.weightx = 1;
 		gc.gridy = 2;
 		gc.gridx = 0;
 		gc.gridwidth = 2;
-		panel.add(clearButton, gc);
+		controlPanel.add(clearButton, gc);
 		gc.gridwidth = 1;
 		
 		gc.gridx = 2;
-		panel.add(deleteLastButton, gc);
+		controlPanel.add(deleteLastButton, gc);
 		gc.anchor = GridBagConstraints.WEST;
 		gc.weightx = 0;
 		gc.gridy = 3;
 		gc.gridx = 0;
 		gc.gridwidth = 2;
-		panel.add(title, gc);
+		controlPanel.add(title, gc);
 		gc.gridwidth = 1;
 		gc.gridx = 2;
-		panel.add(setTitleButton, gc);
+		controlPanel.add(setTitleButton, gc);
 		
 		gc.gridy = 4;
 		gc.weighty = 1;
 		gc.gridx = 0;
 		gc.gridwidth = 3;
-		panel.add(titleLabel, gc);
+		controlPanel.add(titleLabel, gc);
 		
-		mainPanel.add(panel, BorderLayout.WEST);
-//		content.add(panel, BorderLayout.WEST);
+		mainPanel.add(controlPanel, BorderLayout.WEST);
 		
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 5));
 		
@@ -320,10 +276,10 @@ public class ComposerGui implements ActionListener
 
 	}
 
+	//Action Listener
 	@Override
 	public void actionPerformed(ActionEvent e) 
 	{
-		System.out.println(e.getSource()  +"");
 		int source = SOURCE.get(e.getSource());
 		switch(source)
 		{
@@ -345,8 +301,6 @@ public class ComposerGui implements ActionListener
 				{
 					composerSheet.setPageDisplayed(composerSheet.getPageDisplayed() + 1);
 				}
-					
-				text.append("\nCurrent page: " + composerSheet.getPageDisplayed());
 				break;
 			}
 			case PREVIOUS:
@@ -355,7 +309,6 @@ public class ComposerGui implements ActionListener
 				{
 					composerSheet.setPageDisplayed(composerSheet.getPageDisplayed() - 1);
 				}
-				text.append("\nCurrent page: " + composerSheet.getPageDisplayed());
 				break;
 			}
 			case CLEAR:
@@ -424,7 +377,6 @@ public class ComposerGui implements ActionListener
 				SongProcessor.getSong().remove(index);
 				page.getDrawnNotes().remove(size -1);
 				composerSheet.setAllowedX(composerSheet.getAllowedX() - 25);
-				System.out.println("allowed x: " + composerSheet.getAllowedX());
 				composerSheet.paintLines();
 				break;
 			}

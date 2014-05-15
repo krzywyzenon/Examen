@@ -16,7 +16,7 @@ public class SharpMarking extends NoteDrawing {
 	int length = 40;
 	public SharpMarking()
 	{
-		
+		this.inverted = false;
 	}
 	
 	public SharpMarking(int startX, int startY)

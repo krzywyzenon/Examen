@@ -12,15 +12,18 @@ import composer.advancedgui.shapes.NoteDrawing;
  * Class holding information about connections between graphic and sound representations of notes in the song
  *
  */
-public class SoundDrawRelations implements Serializable{
+public class SoundDrawRelations implements Serializable
+{
 	
 	private static final long serialVersionUID = -4102369720630056643L;
 	private static Map<NoteDrawing, Integer> drawingsAndSoundsRelations = new HashMap<NoteDrawing, Integer>();
 	
-	public static Map<NoteDrawing, Integer> getDrawingsAndSoundsRelations() {
+	public static Map<NoteDrawing, Integer> getDrawingsAndSoundsRelations() 
+	{
 		return drawingsAndSoundsRelations;
 	}
-	public static void setDrawingsAndSoundsRelations(
+	public static void setDrawingsAndSoundsRelations
+	(
 			Map<NoteDrawing, Integer> drawingsAndSoundsRelations) {
 		SoundDrawRelations.drawingsAndSoundsRelations = drawingsAndSoundsRelations;
 	}

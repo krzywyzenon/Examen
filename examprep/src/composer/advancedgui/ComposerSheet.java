@@ -11,7 +11,6 @@ import java.awt.event.MouseMotionAdapter;
 import java.util.List;
 
 import javax.swing.JComponent;
-import javax.swing.JTextArea;
 
 import composer.advancedgui.shapes.FlatMarking;
 import composer.advancedgui.shapes.EighthNote;
@@ -36,7 +35,7 @@ class ComposerSheet extends JComponent
 	private static final long serialVersionUID = 1L;
 	private Image image;
 	private Graphics2D graphics2D;
-	private int currentX, currentY, oldX, oldY;
+	private int currentX, currentY;
 	private int allowedX = 80;
 	private Integer originalVerticalPosition = null;
 	
@@ -49,10 +48,6 @@ class ComposerSheet extends JComponent
 	private Integer activeStaff = 1;
 	
 	public ComposerSheet(){
-		
-	}
-	
-	public ComposerSheet(final JTextArea text){
 		super();
 
 		setDoubleBuffered(false);
@@ -65,8 +60,8 @@ class ComposerSheet extends JComponent
 		 */
 		addMouseListener(new MouseAdapter(){
 			public void mousePressed(MouseEvent e){
-				oldX = e.getX();
-				oldY = e.getY();
+				currentX = e.getX();
+				currentY = e.getY();
 				if(GuiHelper.isCursorWithinLimits(e.getX(), e.getY(), GuiHelper.getFirstBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.ADD))
 				{
 					currentNote = new EighthNote();
@@ -95,13 +90,13 @@ class ComposerSheet extends JComponent
 				}
 				else
 				{
-					oldX = e.getX();
-					oldY = e.getY();
+					currentX = e.getX();
+					currentY = e.getY();
 					Page page = PageController.getPages().get(pageDisplayed);
 					List<NoteDrawing> list = page.getDrawnNotes();
 					for(NoteDrawing noteDrawing : list)
 					{
-						if(GuiHelper.isCursorWithinLimits(oldX, oldY, noteDrawing.getBallFromX(), noteDrawing.getBallFromY(), GuiHelper.EDIT))
+						if(GuiHelper.isCursorWithinLimits(currentX, currentY, noteDrawing.getBallFromX(), noteDrawing.getBallFromY(), GuiHelper.EDIT))
 						{
 							editingMode = true;
 							currentNote = noteDrawing;
@@ -115,7 +110,6 @@ class ComposerSheet extends JComponent
 		});
 		addMouseListener(new MouseAdapter(){
 			public void mouseClicked(MouseEvent e){
-				text.append("allowed x " + allowedX + "\nX: " + e.getX() + "\nY: " + e.getY());
 				System.out.println("x: " + e.getX());
 				System.out.println("y: " + e.getY());
 				repaint();
@@ -139,7 +133,7 @@ class ComposerSheet extends JComponent
 							if(e.getX()> allowedX + 10 && e.getX() > ((Staff.getActiveStaff() == 1) ? 160 : allowedX + 10) && !(currentNote instanceof SharpMarking || currentNote instanceof FlatMarking))
 							{
 								graphics2D.setPaint(Color.BLACK);
-								Integer verticalCoordinate = GuiHelper.countVerticalCoordinate(e.getY(),GuiHelper.getActiveStaffBeginningCoordinate() ,text);
+								Integer verticalCoordinate = GuiHelper.countVerticalCoordinate(e.getY(),GuiHelper.getActiveStaffBeginningCoordinate());
 								currentNote.setParameters(currentX, verticalCoordinate, true);
 								Integer [] toneData = null;
 								
@@ -149,28 +143,28 @@ class ComposerSheet extends JComponent
 								if(currentNote instanceof EighthNote)
 								{
 									toneData = SongProcessor.addNote(verticalCoordinate, Lengths.EIGHT);
-									isInverted = setInverted(toneData[0]);
+									isInverted = determineInverted(toneData[0]);
 									EighthNote noteToAdd = new EighthNote(e.getX() - 10,verticalCoordinate, NoteDrawing.CHECK, isInverted);
 									addingNoteDrawing(noteToAdd, toneData[1]);
 								}
 								if(currentNote instanceof QuarterNote)
 								{
 									toneData = SongProcessor.addNote(verticalCoordinate, Lengths.QUARTER);
-									isInverted = setInverted(toneData[0]);
+									isInverted = determineInverted(toneData[0]);
 									QuarterNote noteToAdd = new QuarterNote(e.getX() - 10, verticalCoordinate, NoteDrawing.CHECK, isInverted);
 									addingNoteDrawing(noteToAdd, toneData[1]);
 								}
 								if(currentNote instanceof HalfNote)
 								{
 									toneData = SongProcessor.addNote(verticalCoordinate, Lengths.HALF);
-									isInverted = setInverted(toneData[0]);
+									isInverted = determineInverted(toneData[0]);
 									HalfNote noteToAdd = new HalfNote(e.getX() - 10, verticalCoordinate, NoteDrawing.CHECK, isInverted);
 									addingNoteDrawing(noteToAdd, toneData[1]);
 								}
 								if(currentNote instanceof FullNote)
 								{
 									toneData = SongProcessor.addNote(verticalCoordinate, Lengths.WHOLE);
-									isInverted = setInverted(toneData[0]);
+									isInverted = determineInverted(toneData[0]);
 									FullNote noteToAdd = new FullNote(e.getX() - 10, verticalCoordinate, NoteDrawing.CHECK);
 									addingNoteDrawing(noteToAdd, toneData[1]);
 								}
@@ -180,7 +174,7 @@ class ComposerSheet extends JComponent
 							else if((currentNote instanceof SharpMarking || currentNote instanceof FlatMarking) && e.getX()> allowedX + 10)
 							{
 								allowedX = 10 + e.getX();
-								Integer verticalCoordinate = GuiHelper.countVerticalCoordinate(e.getY(),GuiHelper.getActiveStaffBeginningCoordinate() ,text);
+								Integer verticalCoordinate = GuiHelper.countVerticalCoordinate(e.getY(),GuiHelper.getActiveStaffBeginningCoordinate());
 								if(currentNote instanceof SharpMarking)
 								{
 									PageController.getPages().get(pageDisplayed).getDrawnNotes().add(new SharpMarking(e.getX() - 10, verticalCoordinate - 10));
@@ -229,7 +223,6 @@ class ComposerSheet extends JComponent
 								PageController.setActivePage(pageDisplayed);
 								Staff.setActiveStaff(1);
 								allowedX = (Page.getStaves().get(Staff.getActiveStaff()).isViolinKey()) ? 80 : 0;
-//								allowedX = 80;
 								System.out.println(Page.getStaves().get(Staff.getActiveStaff()).isViolinKey());
 							}
 						}
@@ -244,11 +237,11 @@ class ComposerSheet extends JComponent
 							if(!(currentNote instanceof SharpMarking))
 							{
 								graphics2D.setPaint(Color.BLACK);
-								Integer verticalCoordinate = GuiHelper.countVerticalCoordinate(e.getY(),GuiHelper.getActiveStaffBeginningCoordinate() ,text);
+								Integer verticalCoordinate = GuiHelper.countVerticalCoordinate(e.getY(),GuiHelper.getActiveStaffBeginningCoordinate());
 								Integer noteIndex = SoundDrawRelations.getDrawingsAndSoundsRelations().get(currentNote);
 								Object[] data = SongProcessor.getMidiTone(verticalCoordinate);
 								Integer noteVerticalCoord = (Integer) data[1];
-								isInverted = setInverted(noteVerticalCoord);
+								isInverted = determineInverted(noteVerticalCoord);
 								currentNote.setParameters(currentNote.getBallFromX(), verticalCoordinate, true);
 								currentNote.setInverted(isInverted);
 								currentNote.paint(graphics2D);
@@ -285,8 +278,6 @@ class ComposerSheet extends JComponent
 				
 				if(currentNote != null)
 				{
-					oldX = currentX;
-					oldY = currentY;
 					paintLines();
 					if(!editingMode)
 					{
@@ -372,16 +363,8 @@ class ComposerSheet extends JComponent
 	 * @param verticalPosition - the vertical coordinate of the painted note
 	 * @return
 	 */
-	public boolean setInverted(Integer verticalPosition)
+	public boolean determineInverted(Integer verticalPosition)
 	{
-//		if(verticalPosition<130)
-//		{
-//			return true;
-//		}
-//		else
-//		{
-//			return false;
-//		}
 		return verticalPosition<130;
 	}
 	

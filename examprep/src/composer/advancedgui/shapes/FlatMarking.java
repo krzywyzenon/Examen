@@ -20,6 +20,7 @@ public class FlatMarking extends NoteDrawing {
 	
 	public FlatMarking()
 	{
+		this.inverted = false;
 		bmoll = GuiHelper.getImage(FLAT_MARK_FILE);
 	}
 	
@@ -40,8 +41,7 @@ public class FlatMarking extends NoteDrawing {
 
 	@Override
 	public void inverted(Graphics g) {
-		// TODO Auto-generated method stub
-
+		//never used
 	}
 
 	@Override

@@ -17,7 +17,11 @@ import composer.data.Lengths;
 import composer.data.Tones;
 import composer.sound.Note;
 import composer.sound.Song;
-
+/**
+ * 
+ * @author Tomek
+ * Original gui - kept exclusively for history purposes
+ */
 public class Composer extends JFrame {
 
 	private static final long serialVersionUID = -6911938639603955230L;

@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
-import javax.swing.JTextArea;
 
 import com.google.common.collect.ImmutableMap;
 import composer.data.MidiDataExtractor;
@@ -46,6 +45,7 @@ public class GuiHelper
 	private static final File MAIN_BACKGROUND_FILE = new File("resources/wood.png");
 	private static final File PANEL_BACKGROUND_FILE = new File("resources/leftwood1.png");
 	private static final File PAGE_BACKGROUND_FILE = new File("resources/papyrus.png");
+	private static final File MENU_BACKGROUND_FILE = new File("resources/menuback.png");
 	private static final File DELETE_LAST_NOTE_FILE = new File("resources/deletenote.png");
 	private static final File TITLE_BUTTON_FILE = new File("resources/titlebutton.png");
 	
@@ -295,7 +295,7 @@ public class GuiHelper
 	 * @param text - just for controll purposes - will be deleted in final version
 	 * @return
 	 */
-	public static Integer countVerticalCoordinate(Integer verticalPosition, Integer firstRowVertivalCoordinate ,JTextArea text)
+	public static Integer countVerticalCoordinate(Integer verticalPosition, Integer firstRowVertivalCoordinate)
 	{
 		Integer coordinate = null;
 		if(verticalPosition >= firstRowVertivalCoordinate - 15 && verticalPosition < firstRowVertivalCoordinate - 5)
@@ -305,52 +305,42 @@ public class GuiHelper
 		else if(verticalPosition >= firstRowVertivalCoordinate - 5 && verticalPosition < (firstRowVertivalCoordinate + firstRowVertivalCoordinate + Staff.getSpaceBetweenRows())/2)
 		{
 			coordinate = firstRowVertivalCoordinate;
-			text.append("\nfirst");
 		}
 		else if(verticalPosition >= (firstRowVertivalCoordinate + firstRowVertivalCoordinate + Staff.getSpaceBetweenRows())/2 && verticalPosition < (firstRowVertivalCoordinate + Staff.getSpaceBetweenRows()))
 		{
 			coordinate = (firstRowVertivalCoordinate + firstRowVertivalCoordinate + Staff.getSpaceBetweenRows())/2 + 2;
-			text.append("\nsecond half ");
 		}
 		else if(verticalPosition >= (firstRowVertivalCoordinate + Staff.getSpaceBetweenRows()) && verticalPosition < (firstRowVertivalCoordinate + Staff.getSpaceBetweenRows() + firstRowVertivalCoordinate + 2*Staff.getSpaceBetweenRows())/2)
 		{
 			coordinate = (firstRowVertivalCoordinate + Staff.getSpaceBetweenRows());
-			text.append("\nsecond");
 		}
 		else if(verticalPosition >= (firstRowVertivalCoordinate + Staff.getSpaceBetweenRows() + firstRowVertivalCoordinate + 2*Staff.getSpaceBetweenRows())/2 && verticalPosition < (firstRowVertivalCoordinate + 2*Staff.getSpaceBetweenRows()))
 		{
 			coordinate = (firstRowVertivalCoordinate + Staff.getSpaceBetweenRows() + firstRowVertivalCoordinate + 2*Staff.getSpaceBetweenRows())/2 + 2;
-			text.append("\nthird half");
 		}
 		else if(verticalPosition >= (firstRowVertivalCoordinate + 2*Staff.getSpaceBetweenRows()) && verticalPosition < (firstRowVertivalCoordinate + 2*Staff.getSpaceBetweenRows() + firstRowVertivalCoordinate + 3*Staff.getSpaceBetweenRows())/2)
 		{
 			coordinate = (firstRowVertivalCoordinate + 2*Staff.getSpaceBetweenRows());
-			text.append("\nthird");
 		}
 		else if(verticalPosition >= (firstRowVertivalCoordinate + 2*Staff.getSpaceBetweenRows() + firstRowVertivalCoordinate + 3*Staff.getSpaceBetweenRows())/2 && verticalPosition < (firstRowVertivalCoordinate + 3*Staff.getSpaceBetweenRows()))
 		{
 			coordinate = (firstRowVertivalCoordinate + 2*Staff.getSpaceBetweenRows() + firstRowVertivalCoordinate + 3*Staff.getSpaceBetweenRows())/2 + 2;
-			text.append("\nfour half");
 		}
 		else if(verticalPosition >= (firstRowVertivalCoordinate + 3*Staff.getSpaceBetweenRows()) && verticalPosition < (firstRowVertivalCoordinate + 3*Staff.getSpaceBetweenRows() + firstRowVertivalCoordinate + 4*Staff.getSpaceBetweenRows())/2)
 		{
 			coordinate = (firstRowVertivalCoordinate + 3*Staff.getSpaceBetweenRows());
-			text.append("\nfourth");
 		}
 		else if(verticalPosition >= (firstRowVertivalCoordinate + 3*Staff.getSpaceBetweenRows() + firstRowVertivalCoordinate + 4*Staff.getSpaceBetweenRows())/2 && verticalPosition < (firstRowVertivalCoordinate + 4*Staff.getSpaceBetweenRows()))
 		{
 			coordinate = (firstRowVertivalCoordinate + 3*Staff.getSpaceBetweenRows() + firstRowVertivalCoordinate + 4*Staff.getSpaceBetweenRows())/2 + 2;
-			text.append("\nfifth half");
 		}
 		else if(verticalPosition >= (firstRowVertivalCoordinate + 4*Staff.getSpaceBetweenRows()) && verticalPosition < (firstRowVertivalCoordinate + 4*Staff.getSpaceBetweenRows() + firstRowVertivalCoordinate + 5*Staff.getSpaceBetweenRows())/2)
 		{
 			coordinate = firstRowVertivalCoordinate + 4*Staff.getSpaceBetweenRows();
-			text.append("\nfifth");
 		}
 		else if(verticalPosition >= (firstRowVertivalCoordinate + 4*Staff.getSpaceBetweenRows() + firstRowVertivalCoordinate + 5*Staff.getSpaceBetweenRows())/2 && verticalPosition < firstRowVertivalCoordinate + 5*Staff.getSpaceBetweenRows())
 		{
 			coordinate = (firstRowVertivalCoordinate + 4*Staff.getSpaceBetweenRows() + firstRowVertivalCoordinate + 5*Staff.getSpaceBetweenRows())/2 + 2;
-			text.append("\n And finaly C");
 		}
 		else if(verticalPosition >= firstRowVertivalCoordinate + 5*Staff.getSpaceBetweenRows() && verticalPosition < (2 *firstRowVertivalCoordinate + 11*Staff.getSpaceBetweenRows())/2)
 		{
@@ -435,6 +425,11 @@ public class GuiHelper
 
 	public static File getPageBackgroundFile() {
 		return PAGE_BACKGROUND_FILE;
+	}
+
+
+	public static File getMenuBackgroundFile() {
+		return MENU_BACKGROUND_FILE;
 	}
 
 
