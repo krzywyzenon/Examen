@@ -31,11 +31,11 @@ import composer.data.SoundDrawRelations;
  * @author Tomek
  * This is the sheet upon which every staff and note are being drawn
  */
-class ComposerSheet extends JComponent 
+public class ComposerSheet extends JComponent 
 {
 	private static final long serialVersionUID = 1L;
 	private Image image;
-	private Graphics2D graphics2D;
+	private static Graphics2D graphics2D;
 	private int currentX, currentY;
 	private int allowedX = 80;
 	private Integer originalVerticalPosition = null;
@@ -199,7 +199,7 @@ class ComposerSheet extends JComponent
 								}
 								currentNote.setParameters(currentX, verticalCoordinate, true);
 								currentNote.paint(graphics2D);
-								if(e.getX() < 120 && Staff.getActiveStaff() == 1)
+								if(e.getX() < 140 && Staff.getActiveStaff() == 1)
 								{
 									if(currentNote instanceof SharpMarking)
 									{
@@ -231,13 +231,14 @@ class ComposerSheet extends JComponent
 							}
 							else if(allowedX + 10 > 525 && Staff.getActiveStaff() == 3)
 							{
+								NoteDrawing changer = PageController.getPages().get(pageDisplayed).getDrawnNotes().get((PageController.getPages().get(pageDisplayed).getDrawnNotes().size() - 1));
+								changer.setPageChanger(true);
 								PageController.getPages().get(pageDisplayed).setActive(false);
 								pageDisplayed += 1;
 								PageController.getPages().put(pageDisplayed, new Page(pageDisplayed));
 								PageController.setActivePage(pageDisplayed);
 								Staff.setActiveStaff(1);
 								allowedX = (Page.getStaves().get(Staff.getActiveStaff()).isViolinKey()) ? 80 : 0;
-								System.out.println(Page.getStaves().get(Staff.getActiveStaff()).isViolinKey());
 							}
 						}
 					}
@@ -372,6 +373,7 @@ class ComposerSheet extends JComponent
 	public void setPageDisplayed(int page) {
 		this.pageDisplayed = page;
 		paintLines();
+		repaint();
 	}
 	
 	/**
@@ -394,6 +396,15 @@ class ComposerSheet extends JComponent
 		
 		PageController.getPages().get(pageDisplayed).getDrawnNotes().add(drawing);
 		SoundDrawRelations.getDrawingsAndSoundsRelations().put(drawing, index);
+	}
+	
+	public void paintNote(NoteDrawing noteDrawing, Color color)
+	{
+		PageController.getPages().get(pageDisplayed).paintComponent(graphics2D);
+		Graphics2D g2D = (Graphics2D) graphics2D.create();
+		g2D.setColor(color);
+		noteDrawing.paintComponent(g2D);
+		repaint();
 	}
 
 }

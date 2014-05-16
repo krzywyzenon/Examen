@@ -34,6 +34,8 @@ public abstract class NoteDrawing extends JComponent
 	protected int coordForRowOfNoteC;
 	protected int coordForRowOfNoteLowA;
 	
+	protected boolean pageChanger = false;
+	
 	public void paintComponent(Graphics g)
 	{
 		if(inverted)
@@ -111,6 +113,16 @@ public abstract class NoteDrawing extends JComponent
 
 	public Integer staffForThisNote() {
 		return staff;
+	}
+	
+	public void setPageChanger(boolean changeNow)
+	{
+		this.pageChanger = true;
+	}
+	
+	public boolean isPageChanger()
+	{
+		return this.pageChanger;
 	}
 	
 }

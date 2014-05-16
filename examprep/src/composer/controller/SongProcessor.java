@@ -33,16 +33,6 @@ public class SongProcessor
 			Object[] toneInfo = getMidiTone(noteVerticalCoordinate);
 			tone = (MidiDataExtractor) toneInfo[0];
 			noteVerticalCoordinate = (Integer) toneInfo[1];
-			if(isLocallySharp(noteVerticalCoordinate))
-			{
-				tone = GuiHelper.getTones().get(GuiHelper.getTonesToSharp().get(noteVerticalCoordinate));
-				GuiHelper.getTemporarySharpTones().put(noteVerticalCoordinate, false);
-			}
-			else if(isLocallyFlat(noteVerticalCoordinate))
-			{
-				tone = GuiHelper.getTones().get(GuiHelper.getTonesToFlat().get(noteVerticalCoordinate));
-				GuiHelper.getTemporaryFlatTones().put(noteVerticalCoordinate, false);
-			}
 			System.out.println(tone.value());
 			Note note = new Note(tone, length);	
 			SONG.add(note);
@@ -68,11 +58,23 @@ public class SongProcessor
 		if(isGloballySharp(noteVerticalCoordinate))
 		{
 			tone = GuiHelper.getTones().get(GuiHelper.getTonesToSharp().get(noteVerticalCoordinate));
+			GuiHelper.getTemporarySharpTones().put(noteVerticalCoordinate, false);
 		}
 		
 		else if(isGloballyFlat(noteVerticalCoordinate))
 		{
 			tone = GuiHelper.getTones().get(GuiHelper.getTonesToFlat().get(noteVerticalCoordinate));
+			GuiHelper.getTemporaryFlatTones().put(noteVerticalCoordinate, false);
+		}
+		else if(isLocallySharp(noteVerticalCoordinate))
+		{
+			tone = GuiHelper.getTones().get(GuiHelper.getTonesToSharp().get(noteVerticalCoordinate));
+			GuiHelper.getTemporarySharpTones().put(noteVerticalCoordinate, false);
+		}
+		else if(isLocallyFlat(noteVerticalCoordinate))
+		{
+			tone = GuiHelper.getTones().get(GuiHelper.getTonesToFlat().get(noteVerticalCoordinate));
+			GuiHelper.getTemporaryFlatTones().put(noteVerticalCoordinate, false);
 		}
 		else 
 		{

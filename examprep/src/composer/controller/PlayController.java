@@ -1,5 +1,9 @@
 package composer.controller;
 
+import java.awt.Color;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import javax.sound.midi.Instrument;
 import javax.sound.midi.MidiChannel;
 import javax.sound.midi.MidiSystem;
@@ -7,7 +11,10 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Soundbank;
 import javax.sound.midi.Synthesizer;
 
+import composer.advancedgui.ComposerSheet;
+import composer.advancedgui.shapes.NoteDrawing;
 import composer.data.MidiDataExtractor;
+import composer.data.SoundDrawRelations;
 import composer.sound.Note;
 import composer.sound.Song;
 
@@ -25,6 +32,9 @@ public class PlayController implements Runnable
 	Instrument[] i;
 	Instrument instr;
 	Song song;
+	NoteDrawing nd; 
+	
+	static ComposerSheet composerSheet;
 
 	public PlayController(Song song, MidiDataExtractor instrument)
 	{
@@ -46,17 +56,26 @@ public class PlayController implements Runnable
     
 	public void playSong(Song song) throws InterruptedException
 	{
+		composerSheet.setPageDisplayed(1);
 		mc[5].programChange(instr.getPatch().getProgram());
 		Thread.sleep(250);
 				
-	    
+		Set<Entry<NoteDrawing, Integer>> entrySet = SoundDrawRelations.getDrawingsAndSoundsRelations().entrySet();
 	    for(Object o : song)
 	    {
 	    	Note note = (Note) o;
 	    	if(!note.isSilent())
-	    	{
+	    	{	
 	    		mc[5].noteOn(note.getTone(), VolumeController.getVolume());
-	    		
+	    		for(Entry entry : entrySet)
+	    		{
+	    			if(song.indexOf(note) == (Integer) entry.getValue())
+	    			{
+	    				System.out.println(entry.getKey());
+	    				nd = (NoteDrawing) entry.getKey();
+	    				composerSheet.paintNote(nd, Color.GREEN);
+	    			}
+	    		}
 	    		Thread.sleep(note.getLength());
 	    		Integer currentIndex = song.indexOf(note);
 	    		if(song.indexOf(note)<song.size() -1)
@@ -85,7 +104,12 @@ public class PlayController implements Runnable
 //	    		Thread.sleep(note.getLength());
 	    		Thread.sleep(note.getLength());
 	    	}
-	    	
+	    	composerSheet.paintNote(nd, Color.BLACK);
+	    	if(nd.isPageChanger())
+	    	{
+	    		System.out.println("NOOOOOOW");
+	    		composerSheet.setPageDisplayed(composerSheet.getPageDisplayed() + 1);
+	    	}
 	    }
 	    
 	    //after playing the last note the sound simply dies out instead of being finished rapidly
@@ -111,5 +135,10 @@ public class PlayController implements Runnable
 		{
 			e.printStackTrace();
 		}
+    }
+    
+    public static void setComposerSheet(ComposerSheet comp)
+    {
+    	composerSheet = comp;
     }
 }

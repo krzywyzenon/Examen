@@ -15,6 +15,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -313,6 +315,11 @@ public class ComposerGui implements ActionListener
 			}
 			case CLEAR:
 			{
+				Set<Entry<NoteDrawing, Integer>> entrySet = SoundDrawRelations.getDrawingsAndSoundsRelations().entrySet();
+				for(Entry entry : entrySet)
+				{
+					System.out.println(entry.getValue() + " " + entry.getKey());
+				}
 				PageController.clearNotes();
 				composerSheet.setPageDisplayed(1);
 				composerSheet.setAllowedX(80);
@@ -422,10 +429,16 @@ public class ComposerGui implements ActionListener
 				break;
 			}
 		}
+		
+	}
+	public ComposerSheet getComposerSheet()
+	{
+		return this.composerSheet;
 	}
 	
 	public static void main(String[] args) {
 		ComposerGui gui = new ComposerGui();
+		PlayController.setComposerSheet(gui.getComposerSheet());
 	}
 
 }
