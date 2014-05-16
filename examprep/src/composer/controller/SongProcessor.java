@@ -25,26 +25,34 @@ public class SongProcessor
 	 * @param length - length of the note
 	 * @return - returns vertical coordinate on which the note is drawn and index of the tone in the song
 	 */
-	public static Integer[] addNote(Integer noteVerticalCoordinate, Lengths length)
-	{
-		MidiDataExtractor tone;
-		Object[] toneInfo = getMidiTone(noteVerticalCoordinate);
-		tone = (MidiDataExtractor) toneInfo[0];
-		noteVerticalCoordinate = (Integer) toneInfo[1];
-		if(isLocallySharp(noteVerticalCoordinate))
+	public static Integer[] addNote(Integer noteVerticalCoordinate, Lengths length, boolean isRest)
+	{	
+		if(!isRest)
 		{
-			tone = GuiHelper.getTones().get(GuiHelper.getTonesToSharp().get(noteVerticalCoordinate));
-			GuiHelper.getTemporarySharpTones().put(noteVerticalCoordinate, false);
+			MidiDataExtractor tone;
+			Object[] toneInfo = getMidiTone(noteVerticalCoordinate);
+			tone = (MidiDataExtractor) toneInfo[0];
+			noteVerticalCoordinate = (Integer) toneInfo[1];
+			if(isLocallySharp(noteVerticalCoordinate))
+			{
+				tone = GuiHelper.getTones().get(GuiHelper.getTonesToSharp().get(noteVerticalCoordinate));
+				GuiHelper.getTemporarySharpTones().put(noteVerticalCoordinate, false);
+			}
+			else if(isLocallyFlat(noteVerticalCoordinate))
+			{
+				tone = GuiHelper.getTones().get(GuiHelper.getTonesToFlat().get(noteVerticalCoordinate));
+				GuiHelper.getTemporaryFlatTones().put(noteVerticalCoordinate, false);
+			}
+			System.out.println(tone.value());
+			Note note = new Note(tone, length);	
+			SONG.add(note);
+			Integer[] toneData = {(Integer) toneInfo[1], SONG.indexOf(note)};
+			return toneData;
 		}
-		else if(isLocallyFlat(noteVerticalCoordinate))
-		{
-			tone = GuiHelper.getTones().get(GuiHelper.getTonesToFlat().get(noteVerticalCoordinate));
-			GuiHelper.getTemporaryFlatTones().put(noteVerticalCoordinate, false);
-		}
-		System.out.println(tone.value());
-		Note note = new Note(tone, length);	
+		
+		Note note = new Note(length);
 		SONG.add(note);
-		Integer[] toneData = {(Integer) toneInfo[1], SONG.indexOf(note)};
+		Integer[] toneData = {null, SONG.indexOf(note)};
 		return toneData;
 	}
 	

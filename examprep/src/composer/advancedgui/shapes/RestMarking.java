@@ -5,36 +5,35 @@ import java.awt.Graphics;
 import composer.advancedgui.GuiHelper;
 import composer.advancedgui.Staff;
 
-public class FlatMarking extends NoteDrawing {
+public class RestMarking extends NoteDrawing 
+{
+	private static final long serialVersionUID = 2322863143779107310L;
 	
-	private static final long serialVersionUID = 1L;
-	int fromX;
-	int fromY;
-	int length = 40;
-	
-	
-	public FlatMarking()
+	Integer fromX;
+	Integer fromY;
+
+	public RestMarking()
 	{
 		this.inverted = false;
 	}
 	
-	public FlatMarking(int startX, int startY)
+	public RestMarking(Integer startX, Integer startY)
 	{
 		this.fromX = startX;
 		this.fromY = startY;
 		this.inverted = false;
 		this.staff = Staff.getActiveStaff();
 	}
-
 	@Override
 	public void normal(Graphics g) {
-		g.drawImage(GuiHelper.getImage(GuiHelper.getFlatMarkFile()),fromX, fromY,null);
+		g.drawImage(GuiHelper.getImage(GuiHelper.getRestMarkFile()),fromX, fromY,null);
 
 	}
 
 	@Override
 	public void inverted(Graphics g) {
-		//never used
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override

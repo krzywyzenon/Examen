@@ -34,6 +34,7 @@ public class GuiHelper
 			.put("Fourth", 180)
 			.put("Fifth", 240)
 			.put("Sixth", 300)
+			.put("Seventh", 360)
 			.build();
 			
 	private static final File VIOLIN_KEY_FILE = new File("resources/violinkey.png");
@@ -48,6 +49,8 @@ public class GuiHelper
 	private static final File MENU_BACKGROUND_FILE = new File("resources/menuback.png");
 	private static final File DELETE_LAST_NOTE_FILE = new File("resources/deletenote.png");
 	private static final File TITLE_BUTTON_FILE = new File("resources/titlebutton.png");
+	private static final File REST_MARK_FILE = new File("resources/rest.png");
+	private static final File FLAT_MARK_FILE = new File("resources/bmoll.png");
 	
 	//Those are created to avoid using string literals
 	private static final String FIRST = "First";
@@ -56,6 +59,7 @@ public class GuiHelper
 	private static final String FOURTH = "Fourth";
 	private static final String FIFTH = "Fifth";
 	private static final String SIXTH = "Sixth";
+	private static final String SEVENTH = "Seventh";
 	
 	//Vertical coords of the first staff's lines.
 	private static final Integer ORIGINAL_FIRST_ROW_VERTICAL_COORD = 100;
@@ -73,6 +77,7 @@ public class GuiHelper
 	private static final Integer FOURTH_BOX_STARTING_POINT = BOXES_STARTPOINTS.get(FOURTH);
 	private static final Integer FIFTH_BOX_STARTING_POINT = BOXES_STARTPOINTS.get(FIFTH);
 	private static final Integer SIXTH_BOX_STARTING_POINT = BOXES_STARTPOINTS.get(SIXTH);
+	private static final Integer SEVENTH_BOX_STARTING_POINT = BOXES_STARTPOINTS.get(SEVENTH);
 	
 	private static final Integer BOX_VERTICAL_STARTING_POINT = 10;
 	
@@ -240,6 +245,10 @@ public class GuiHelper
 
 	public static Integer getSixthBoxStartingPoint() {
 		return SIXTH_BOX_STARTING_POINT;
+	}
+	
+	public static Integer getSeventhBoxStartingPoint() {
+		return SEVENTH_BOX_STARTING_POINT;
 	}
 
 
@@ -433,6 +442,16 @@ public class GuiHelper
 	}
 
 
+	public static File getRestMarkFile() {
+		return REST_MARK_FILE;
+	}
+
+
+	public static File getFlatMarkFile() {
+		return FLAT_MARK_FILE;
+	}
+
+
 	public static File getSavesDirectory()
 	{
 		return SAVES_DIRECTORY;
@@ -483,6 +502,5 @@ public class GuiHelper
 			return null;
 		}
 	}
-
 
 }

@@ -14,6 +14,7 @@ import composer.advancedgui.shapes.FullNote;
 import composer.advancedgui.shapes.HalfNote;
 import composer.advancedgui.shapes.NoteDrawing;
 import composer.advancedgui.shapes.QuarterNote;
+import composer.advancedgui.shapes.RestMarking;
 import composer.advancedgui.shapes.SharpMarking;
 
 /**
@@ -35,6 +36,7 @@ public class Page extends JComponent
 	private static final FullNote FULL_NOTE = new FullNote(GuiHelper.getFourthBoxStartingPoint() + 10, 60, NoteDrawing.SKIP_CHECK);
 	private static final SharpMarking SHARP_MARKING = new SharpMarking(GuiHelper.getFifthBoxStartingPoint() + 15,30);
 	private static final FlatMarking FLAT_MARKING = new FlatMarking(GuiHelper.getSixthBoxStartingPoint() + 5,15);
+	private static final RestMarking REST_MARKING = new RestMarking(GuiHelper.getSeventhBoxStartingPoint() + 5, 15);
 	
 	private static Staff firstStaff = new Staff(Staff.getStaffVerticalBeginningCoordinates().get(1), Staff.VIOLIN_KEY);
 	private static Staff secondStaff = new Staff(Staff.getStaffVerticalBeginningCoordinates().get(2), Staff.NO_VIOLIN_KEY);
@@ -71,6 +73,7 @@ public class Page extends JComponent
 		g.drawRect(GuiHelper.getFourthBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.getBoxWidth(), GuiHelper.getBoxHeight());
 		g.drawRect(GuiHelper.getFifthBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.getBoxWidth(), GuiHelper.getBoxHeight());
 		g.drawRect(GuiHelper.getSixthBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.getBoxWidth(), GuiHelper.getBoxHeight());
+		g.drawRect(GuiHelper.getSeventhBoxStartingPoint(), GuiHelper.getBoxVerticalStartingPoint(), GuiHelper.getBoxWidth(), GuiHelper.getBoxHeight());
 		
 		g.drawString("Page: " + pageNumber, 500, 50);
 		
@@ -82,6 +85,8 @@ public class Page extends JComponent
 		SHARP_MARKING.paintComponent(g);
 		
 		FLAT_MARKING.paintComponent(g);
+		
+		REST_MARKING.paintComponent(g);
 		
 		secondStaff.paintComponent(g);
 		

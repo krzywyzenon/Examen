@@ -10,11 +10,13 @@ public class Note implements Serializable
 	private static final long serialVersionUID = 324375778088678131L;
 	private Integer tone;
 	private Integer length;
+	private boolean isSilent;
 	
 	
-	public Note()
+	public Note(MidiDataExtractor length)
 	{
-		
+		this.length = length.value();
+		this.isSilent = true;
 	}
 	public Note(MidiDataExtractor tone, MidiDataExtractor length)
 	{
@@ -31,5 +33,11 @@ public class Note implements Serializable
 	
 	public Integer getLength() {
 		return length;
+	}
+	public boolean isSilent() {
+		return isSilent;
+	}
+	public void setSilent(boolean isSilent) {
+		this.isSilent = isSilent;
 	}
 }

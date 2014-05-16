@@ -46,18 +46,45 @@ public class PlayController implements Runnable
     
 	public void playSong(Song song) throws InterruptedException
 	{
+		mc[5].programChange(instr.getPatch().getProgram());
 		Thread.sleep(250);
 				
 	    
 	    for(Object o : song)
 	    {
 	    	Note note = (Note) o;
-	    	mc[5].programChange(instr.getPatch().getProgram());
-	    	mc[5].noteOn(note.getTone(), VolumeController.getVolume());
-			
-	    	Thread.sleep(note.getLength());
-	    	if(song.indexOf(note)<song.size() -1)
-	    	mc[5].noteOff(note.getTone());
+	    	if(!note.isSilent())
+	    	{
+	    		mc[5].noteOn(note.getTone(), VolumeController.getVolume());
+	    		
+	    		Thread.sleep(note.getLength());
+	    		Integer currentIndex = song.indexOf(note);
+	    		if(song.indexOf(note)<song.size() -1)
+	    		{
+	    			if(song.get(currentIndex + 1).isSilent())
+		    		{
+		    			for(int i = 100; i>=0; i--)
+		    			{
+		    				mc[5].controlChange(7, i);
+		    				Thread.sleep(i/5);
+		    			}
+		    			mc[5].noteOff(note.getTone());
+		    			Thread.sleep(200);
+		    			mc[5].controlChange(7, 100);
+		    		}
+	    			else
+	    			{
+	    				mc[5].noteOff(note.getTone());
+	    			}
+	    		}
+	    		
+	    		
+	    	}
+	    	else
+	    	{
+//	    		Thread.sleep(note.getLength());
+	    		Thread.sleep(note.getLength());
+	    	}
 	    	
 	    }
 	    

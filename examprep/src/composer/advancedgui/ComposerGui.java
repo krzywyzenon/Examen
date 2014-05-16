@@ -376,7 +376,7 @@ public class ComposerGui implements ActionListener
 				SoundDrawRelations.getDrawingsAndSoundsRelations().remove(nD);
 				SongProcessor.getSong().remove(index);
 				page.getDrawnNotes().remove(size -1);
-				composerSheet.setAllowedX(composerSheet.getAllowedX() - 25);
+				composerSheet.setAllowedX(composerSheet.getAllowedX() - 45);
 				composerSheet.paintLines();
 				break;
 			}

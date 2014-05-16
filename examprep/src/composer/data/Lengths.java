@@ -10,7 +10,8 @@ public enum Lengths implements MidiDataExtractor
 	EIGHT(250),
 	QUARTER(500),
 	HALF(1000),
-	WHOLE(2000);
+	WHOLE(2000),
+	REST(0);
 	
 	Integer length;
 	
