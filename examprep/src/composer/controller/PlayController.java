@@ -63,6 +63,7 @@ public class PlayController implements Runnable
 		Set<Entry<NoteDrawing, Integer>> entrySet = SoundDrawRelations.getDrawingsAndSoundsRelations().entrySet();
 	    for(Object o : song)
 	    {
+	    	nd = null;
 	    	Note note = (Note) o;
 	    	if(!note.isSilent())
 	    	{	
@@ -101,13 +102,14 @@ public class PlayController implements Runnable
 	    	}
 	    	else
 	    	{
-//	    		Thread.sleep(note.getLength());
 	    		Thread.sleep(note.getLength());
 	    	}
-	    	composerSheet.paintNote(nd, Color.BLACK);
-	    	if(nd.isPageChanger())
+	    	if(!note.isSilent())
 	    	{
-	    		System.out.println("NOOOOOOW");
+	    		composerSheet.paintNote(nd, Color.BLACK);
+	    	}
+	    	if(nd!=null && nd.isPageChanger())
+	    	{
 	    		composerSheet.setPageDisplayed(composerSheet.getPageDisplayed() + 1);
 	    	}
 	    }

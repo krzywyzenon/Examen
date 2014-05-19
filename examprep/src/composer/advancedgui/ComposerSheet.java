@@ -178,7 +178,7 @@ public class ComposerSheet extends JComponent
 								}
 								if(currentNote instanceof RestMarking)
 								{
-									toneData = SongProcessor.addNote(verticalCoordinate, Lengths.EIGHT, true);
+									toneData = SongProcessor.addNote(verticalCoordinate, Lengths.REST, true);
 									RestMarking noteToAdd = new RestMarking(e.getX() - 10, Staff.getStaffVerticalBeginningCoordinates().get(Staff.getActiveStaff()));
 									addingNoteDrawing(noteToAdd, toneData[1]);
 								}
