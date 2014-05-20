@@ -34,7 +34,6 @@ public class QuarterNote extends NoteDrawing
 		this.checkIfNoteIsLow = checkForC;
 		this.inverted = inverted;
 		setLowParameters();
-		System.out.println("Create");
 		this.staff = Staff.getActiveStaff();
 	}
 	

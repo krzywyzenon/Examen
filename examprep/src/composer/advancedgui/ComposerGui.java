@@ -158,8 +158,6 @@ public class ComposerGui implements ActionListener
 		}
 		
 		composerSheet  = new ComposerSheet();
-
-		
 		
 		pianoItem = new JRadioButtonMenuItem("Piano");
 		pianoItem.setSelected(true);
@@ -169,8 +167,6 @@ public class ComposerGui implements ActionListener
 		instrumentGroup.add(pianoItem);
 		instrumentsMenu.add(pianoItem);
 
-		
-		
 		SOURCE = ImmutableMap.<Object, Integer>builder()
 					.put(loadItem, 1)
 					.put(saveItem, 2)
@@ -193,7 +189,6 @@ public class ComposerGui implements ActionListener
 		content = frame.getContentPane();
 		content.setLayout(new BorderLayout());
 		
-		
 		menuBar = new MyMenuBar(menuBackground);
 		menuBar.setBorder(null);
 		fileMenu = new JMenu("File");
@@ -202,8 +197,6 @@ public class ComposerGui implements ActionListener
 		fileMenu.add(loadItem);
 		fileMenu.add(new JSeparator());
 		fileMenu.add(quitItem);
-		
-		
 		
 		menuBar.add(fileMenu);
 		menuBar.add(instrumentsMenu);
@@ -274,7 +267,6 @@ public class ComposerGui implements ActionListener
 		frame.setVisible(true);
 		composerSheet.initialize();
 		frame.repaint();
-		System.out.println(composerSheet.getSize());
 
 	}
 
@@ -315,11 +307,6 @@ public class ComposerGui implements ActionListener
 			}
 			case CLEAR:
 			{
-				Set<Entry<NoteDrawing, Integer>> entrySet = SoundDrawRelations.getDrawingsAndSoundsRelations().entrySet();
-				for(Entry entry : entrySet)
-				{
-					System.out.println(entry.getValue() + " " + entry.getKey());
-				}
 				PageController.clearNotes();
 				composerSheet.setPageDisplayed(1);
 				composerSheet.setAllowedX(80);

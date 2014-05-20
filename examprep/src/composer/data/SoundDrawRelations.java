@@ -43,10 +43,6 @@ public class SoundDrawRelations implements Serializable
 			{
 				return entry.getKey();
 			}
-			else
-			{
-				return null;
-			}
 			
 		}
 		return null;

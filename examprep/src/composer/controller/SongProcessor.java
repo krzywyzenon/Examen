@@ -33,7 +33,6 @@ public class SongProcessor
 			Object[] toneInfo = getMidiTone(noteVerticalCoordinate);
 			tone = (MidiDataExtractor) toneInfo[0];
 			noteVerticalCoordinate = (Integer) toneInfo[1];
-			System.out.println(tone.value());
 			Note note = new Note(tone, length);	
 			SONG.add(note);
 			Integer[] toneData = {(Integer) toneInfo[1], SONG.indexOf(note)};

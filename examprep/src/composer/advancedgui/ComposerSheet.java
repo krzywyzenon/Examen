@@ -114,13 +114,6 @@ public class ComposerSheet extends JComponent
 				}
 			}
 		});
-		addMouseListener(new MouseAdapter(){
-			public void mouseClicked(MouseEvent e){
-				System.out.println("x: " + e.getX());
-				System.out.println("y: " + e.getY());
-				repaint();
-			}
-		});
 		
 		/**
 		 * Upon releasing the mouse button, the listener checks for the mode - if the mode is normal, the listener adjusts note's
@@ -140,8 +133,6 @@ public class ComposerSheet extends JComponent
 							{
 								graphics2D.setPaint(Color.BLACK);
 								Integer verticalCoordinate = GuiHelper.countVerticalCoordinate(e.getY(),GuiHelper.getActiveStaffBeginningCoordinate());
-								System.out.println(verticalCoordinate);
-								System.out.println(currentX);
 								currentNote.setParameters(currentX, verticalCoordinate, true);
 								Integer [] toneData = null;
 								
@@ -249,7 +240,8 @@ public class ComposerSheet extends JComponent
 						//the vertical position of the note - the horizontal position always remains the same.
 						if(e.getY() >= GuiHelper.getActiveStaffBeginningCoordinate() - 15 && e.getY() <= GuiHelper.getActiveStaffBeginningCoordinate() + 90)
 						{
-							if(!(currentNote instanceof SharpMarking) && currentNote != null)
+							if(!(currentNote instanceof SharpMarking
+									|| currentNote instanceof FlatMarking) && currentNote != null)
 							{
 								graphics2D.setPaint(Color.BLACK);
 								Integer verticalCoordinate = GuiHelper.countVerticalCoordinate(e.getY(),GuiHelper.getActiveStaffBeginningCoordinate());
@@ -319,7 +311,6 @@ public class ComposerSheet extends JComponent
 	{
 		Staff.setActiveStaff(1);
 		allowedX = 80;
-//		image = createImage(getSize().width, getSize().height);
 		image = createImage(559, 531);
 		graphics2D = (Graphics2D)image.getGraphics();
 		graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -336,7 +327,6 @@ public class ComposerSheet extends JComponent
 
 	public void paintComponent(Graphics g){
 		if(image == null){
-			System.out.println("witdth: " + getSize().width + " height: " + getSize().height);
 			image = createImage(getSize().width, getSize().height);
 			graphics2D = (Graphics2D)image.getGraphics();
 			graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

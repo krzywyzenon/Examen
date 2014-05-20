@@ -149,7 +149,6 @@ public class GuiHelper
 		GLOBAL_SHARP_TONES.put(C2_TONE, false);
 		GLOBAL_SHARP_TONES.put(D2_TONE, false);
 		GLOBAL_SHARP_TONES.put(F2_TONE, false);
-		
 	}
 	
 	//Map used to determine if the given note should be locally played as sharp or not
@@ -218,82 +217,99 @@ public class GuiHelper
 			.put(B1_TONE, A1_SHARP)
 			.build();
 
-	public static Integer getFirstBoxStartingPoint() {
+	public static Integer getFirstBoxStartingPoint() 
+	{
 		return FIRST_BOX_STARTING_POINT;
 	}
 
 
-	public static Integer getSecondBoxStartingPoint() {
+	public static Integer getSecondBoxStartingPoint() 
+	{
 		return SECOND_BOX_STARTING_POINT;
 	}
 
 
-	public static Integer getThirdBoxStartingPoint() {
+	public static Integer getThirdBoxStartingPoint() 
+	{
 		return THIRD_BOX_STARTING_POINT;
 	}
 
 
-	public static Integer getFourthBoxStartingPoint() {
+	public static Integer getFourthBoxStartingPoint() 
+	{
 		return FOURTH_BOX_STARTING_POINT;
 	}
 
 
-	public static Integer getFifthBoxStartingPoint() {
+	public static Integer getFifthBoxStartingPoint() 
+	{
 		return FIFTH_BOX_STARTING_POINT;
 	}
 
 
-	public static Integer getSixthBoxStartingPoint() {
+	public static Integer getSixthBoxStartingPoint() 
+	{
 		return SIXTH_BOX_STARTING_POINT;
 	}
 	
-	public static Integer getSeventhBoxStartingPoint() {
+	public static Integer getSeventhBoxStartingPoint() 
+	{
 		return SEVENTH_BOX_STARTING_POINT;
 	}
 
 
-	public static Integer getBoxVerticalStartingPoint() {
+	public static Integer getBoxVerticalStartingPoint() 
+	{
 		return BOX_VERTICAL_STARTING_POINT;
 	}
 
 
-	public static Integer getBoxWidth() {
+	public static Integer getBoxWidth() 
+	{
 		return BOX_WIDTH;
 	}
 
 
-	public static Integer getBoxHeight() {
+	public static Integer getBoxHeight() 
+	{
 		return BOX_HEIGHT;
 	}
 	
-	public static Map<Integer, MidiDataExtractor> getTones() {
+	public static Map<Integer, MidiDataExtractor> getTones() 
+	{
 		return TONES;
 	}
 
 
-	public static Map<Integer, Boolean> getSharpTones() {
+	public static Map<Integer, Boolean> getSharpTones() 
+	{
 		return GLOBAL_SHARP_TONES;
 	}
 
 
-	public static Map<Integer, Boolean> getTemporarySharpTones() {
+	public static Map<Integer, Boolean> getTemporarySharpTones() 
+	{
 		return LOCAL_SHARP_TONES;
 	}
 
 
-	public static Map<Integer, Integer> getTonesToSharp() {
+	public static Map<Integer, Integer> getTonesToSharp() 
+	{
 		return TONES_TO_SHARP;
 	}
 	
-	public static Map<Integer, Boolean> getFlatTones() {
+	public static Map<Integer, Boolean> getFlatTones() 
+	{
 		return GLOBAL_FLAT_TONES;
 	}
 	
-	public static Map<Integer, Boolean> getTemporaryFlatTones() {
+	public static Map<Integer, Boolean> getTemporaryFlatTones() 
+	{
 		return LOCAL_FLAT_TONES;
 	}
 	
-	public static Map<Integer, Integer> getTonesToFlat() {
+	public static Map<Integer, Integer> getTonesToFlat() 
+	{
 		return TONES_TO_FLAT;
 	}
 	
@@ -370,7 +386,7 @@ public class GuiHelper
 	 * @param horizontalBeginningCoordinate - "hitbox" horizontal beggining coord
 	 * @param verticalBeginningCoordinate - "hitbox" vertical beggining coord
 	 * @param mode - mode in which the program is functioning (ADD or EDIT)
-	 * @return
+	 * @return true if cursor's coordinates are in the desired limits and false otherwise 
 	 */
 	public static boolean isCursorWithinLimits(int horizontalPosition, int verticalPosition, int horizontalBeginningCoordinate, 
 			int verticalBeginningCoordinate, Integer mode)
@@ -388,66 +404,79 @@ public class GuiHelper
 		}
 	}
 	
-	public static File getViolinKeyFile() {
+	public static File getViolinKeyFile() 
+	{
 		return VIOLIN_KEY_FILE;
 	}
 
 
-	public static File getPlayKeyFile() {
+	public static File getPlayKeyFile() 
+	{
 		return PLAY_KEY_FILE;
 	}
 	
-	public static File getNextPageKeyFile() {
+	public static File getNextPageKeyFile() 
+	{
 		return NEXT_PAGE_KEY_FILE;
 	}
 
 
-	public static File getPreviousPageKeyFile() {
+	public static File getPreviousPageKeyFile() 
+	{
 		return PREVIOUS_PAGE_KEY_FILE;
 	}
 
 
-	public static File getClearKeyFile() {
+	public static File getClearKeyFile() 
+	{
 		return CLEAR_KEY_FILE;
 	}
 
 
-	public static File getDeleteLastNoteFile() {
+	public static File getDeleteLastNoteFile() 
+	{
 		return DELETE_LAST_NOTE_FILE;
 	}
 
 
-	public static File getTitleButtonFile() {
+	public static File getTitleButtonFile() 
+	{
 		return TITLE_BUTTON_FILE;
 	}
 
 
-	public static File getMainBackgroundFile() {
+	public static File getMainBackgroundFile() 
+	{
 		return MAIN_BACKGROUND_FILE;
 	}
 
 
-	public static File getPanelBackgroundFile() {
+	public static File getPanelBackgroundFile() 
+	{
 		return PANEL_BACKGROUND_FILE;
 	}
 
 
-	public static File getPageBackgroundFile() {
+	public static File getPageBackgroundFile() 
+	{
 		return PAGE_BACKGROUND_FILE;
 	}
 
 
-	public static File getMenuBackgroundFile() {
+	public static File getMenuBackgroundFile() 
+	{
 		return MENU_BACKGROUND_FILE;
 	}
 
 
-	public static File getRestMarkFile() {
+	public static File getRestMarkFile() 
+	{
 		return REST_MARK_FILE;
 	}
 
 
-	public static File getFlatMarkFile() {
+	public static File getFlatMarkFile() 
+	{
 		return FLAT_MARK_FILE;
 	}
 

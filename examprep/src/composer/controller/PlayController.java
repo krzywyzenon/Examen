@@ -60,7 +60,6 @@ public class PlayController implements Runnable
 		mc[5].programChange(instr.getPatch().getProgram());
 		Thread.sleep(250);
 				
-		Set<Entry<NoteDrawing, Integer>> entrySet = SoundDrawRelations.getDrawingsAndSoundsRelations().entrySet();
 	    for(Object o : song)
 	    {
 	    	nd = null;
@@ -68,15 +67,8 @@ public class PlayController implements Runnable
 	    	if(!note.isSilent())
 	    	{	
 	    		mc[5].noteOn(note.getTone(), VolumeController.getVolume());
-	    		for(Entry entry : entrySet)
-	    		{
-	    			if(song.indexOf(note) == (Integer) entry.getValue())
-	    			{
-	    				System.out.println(entry.getKey());
-	    				nd = (NoteDrawing) entry.getKey();
-	    				composerSheet.paintNote(nd, Color.GREEN);
-	    			}
-	    		}
+	    		nd = SoundDrawRelations.getDrawing(song.indexOf(note));
+   				composerSheet.paintNote(nd, Color.GREEN);
 	    		Thread.sleep(note.getLength());
 	    		Integer currentIndex = song.indexOf(note);
 	    		if(song.indexOf(note)<song.size() -1)
