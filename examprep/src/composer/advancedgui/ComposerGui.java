@@ -32,7 +32,10 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 
 import com.google.common.collect.ImmutableMap;
+
+import composer.advancedgui.shapes.FlatMarking;
 import composer.advancedgui.shapes.NoteDrawing;
+import composer.advancedgui.shapes.SharpMarking;
 import composer.controller.PageController;
 import composer.controller.PlayController;
 import composer.controller.SaveAndLoadController;
@@ -366,9 +369,21 @@ public class ComposerGui implements ActionListener
 				Page page = PageController.getPages().get(PageController.getActivePage());
 				int size = page.getDrawnNotes().size();
 				NoteDrawing nD = page.getDrawnNotes().get(size -1);
-				int index = SoundDrawRelations.getDrawingsAndSoundsRelations().get(nD);
+				if(!(nD instanceof SharpMarking || nD instanceof FlatMarking))
+				{
+					int index = SoundDrawRelations.getDrawingsAndSoundsRelations().get(nD);
+					SongProcessor.getSong().remove(index);
+				}
+				if(nD instanceof SharpMarking)
+				{
+					SongProcessor.cleanLocalSharps();
+				}
+				if(nD instanceof FlatMarking)
+				{
+					SongProcessor.cleanLocalFlats();
+				}
+					
 				SoundDrawRelations.getDrawingsAndSoundsRelations().remove(nD);
-				SongProcessor.getSong().remove(index);
 				page.getDrawnNotes().remove(size -1);
 				composerSheet.setAllowedX(composerSheet.getAllowedX() - 45);
 				composerSheet.paintLines();

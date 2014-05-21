@@ -165,10 +165,19 @@ public class SongProcessor
 	 */
 	public static void cleanAllSharps()
 	{
+		cleanGlobalSharps();
+		cleanLocalSharps();
+	}
+	public static void cleanGlobalSharps()
+	{
 		Map<Integer, Boolean> sharpNotesMap = GuiHelper.getSharpTones();
 		invalidateMarkings(sharpNotesMap);
-		sharpNotesMap = GuiHelper.getTemporarySharpTones();
+	}
+	public static void cleanLocalSharps()
+	{
+		Map<Integer, Boolean> sharpNotesMap = GuiHelper.getTemporarySharpTones();
 		invalidateMarkings(sharpNotesMap);
+		
 	}
 	
 	/**
@@ -176,12 +185,20 @@ public class SongProcessor
 	 */
 	public static void cleanAllFlats() 
 	{
-		Map<Integer, Boolean> flatNotesMap = GuiHelper.getFlatTones();
-		invalidateMarkings(flatNotesMap);
-		flatNotesMap = GuiHelper.getTemporaryFlatTones();
-		invalidateMarkings(flatNotesMap);
+		cleanGlobalFlats();
+		cleanLocalFlats();
 	}
 	
+	public static void cleanGlobalFlats()
+	{
+		Map<Integer, Boolean> flatNotesMap = GuiHelper.getFlatTones();
+		invalidateMarkings(flatNotesMap);
+	}
+	public static void cleanLocalFlats()
+	{
+		Map<Integer, Boolean> flatNotesMap = GuiHelper.getTemporaryFlatTones();
+		invalidateMarkings(flatNotesMap);
+	}
 	/**
 	 * Method calculates vertical coordinate of the note in relation to the first staff on the screen
 	 * @param noteVerticalCoordinate - vertical coordinate on which the note is drawn
