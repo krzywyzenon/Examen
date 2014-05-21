@@ -11,18 +11,18 @@ import javax.swing.JMenuBar;
  * Class is the extenstion of the JMenuBar, created to enable setting the chosen image as the background
  *
  */
-public class MyMenuBar extends JMenuBar {
+public class BackgroundMenuBar extends JMenuBar {
 
 	private static final long serialVersionUID = 1L;
 	
 	private Image img;
 	
-	public MyMenuBar()
+	public BackgroundMenuBar()
 	{
 		img = null;
 	}
 	
-	public MyMenuBar(Image image)
+	public BackgroundMenuBar(Image image)
 	{
 		this.img = image;
 	}

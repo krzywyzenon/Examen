@@ -88,7 +88,7 @@ public class ComposerGui implements ActionListener
 	
 	private ButtonGroup instrumentGroup;
 	
-	private MyMenuBar menuBar;
+	private BackgroundMenuBar menuBar;
 	private JMenu fileMenu, instrumentsMenu;
 	
 	private JFileChooser fc;
@@ -189,7 +189,7 @@ public class ComposerGui implements ActionListener
 		content = frame.getContentPane();
 		content.setLayout(new BorderLayout());
 		
-		menuBar = new MyMenuBar(menuBackground);
+		menuBar = new BackgroundMenuBar(menuBackground);
 		menuBar.setBorder(null);
 		fileMenu = new JMenu("File");
 		fileMenu.setForeground(Color.ORANGE);

@@ -336,10 +336,6 @@ public class ComposerSheet extends JComponent
 		g.drawImage(image, 0, 0, null);
 	}
 	
-	public void paint(Graphics g){
-		super.paint(g);
-	}
-
 	public void clear()
 	{
 		graphics2D.setPaint(Color.white);
