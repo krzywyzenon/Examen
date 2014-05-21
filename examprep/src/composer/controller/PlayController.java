@@ -1,8 +1,6 @@
 package composer.controller;
 
 import java.awt.Color;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.sound.midi.Instrument;
 import javax.sound.midi.MidiChannel;
