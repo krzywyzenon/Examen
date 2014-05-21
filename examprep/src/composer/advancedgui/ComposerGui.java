@@ -15,8 +15,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -32,9 +30,12 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 
 import com.google.common.collect.ImmutableMap;
-
+import composer.advancedgui.shapes.EighthNote;
 import composer.advancedgui.shapes.FlatMarking;
+import composer.advancedgui.shapes.FullNote;
+import composer.advancedgui.shapes.HalfNote;
 import composer.advancedgui.shapes.NoteDrawing;
+import composer.advancedgui.shapes.QuarterNote;
 import composer.advancedgui.shapes.SharpMarking;
 import composer.controller.PageController;
 import composer.controller.PlayController;
@@ -42,12 +43,16 @@ import composer.controller.SaveAndLoadController;
 import composer.controller.SongProcessor;
 import composer.controller.State;
 import composer.data.Instruments;
+import composer.data.Lengths;
 import composer.data.SoundDrawRelations;
+import composer.sound.Note;
+import composer.sound.Song;
 
 public class ComposerGui implements ActionListener
 {
 	private static Map<Object, Integer> SOURCE = null;
 	
+	private static final int REVALIDATE = 0;
 	private static final int LOAD = 1;
 	private static final int SAVE = 2;
 	private static final int QUIT = 3;
@@ -83,7 +88,7 @@ public class ComposerGui implements ActionListener
 	
 	private JButton clearButton, nextPage, previousPage, playButton, deleteLastButton, setTitleButton;
 	
-	private JMenuItem loadItem, saveItem, quitItem;
+	private JMenuItem loadItem, saveItem, quitItem, revalidateItem;
 	
 	private JRadioButtonMenuItem pianoItem, organItem = new JRadioButtonMenuItem("Organs"), harpItem = new JRadioButtonMenuItem("Harp"), 
 			tubularBellItem = new JRadioButtonMenuItem("Tubular Bell"), violinItem = new JRadioButtonMenuItem("Violin"), celloItem = new JRadioButtonMenuItem("Cello"),
@@ -109,7 +114,8 @@ public class ComposerGui implements ActionListener
 	
 	private String[] tooltips = {"Clear this song", "Next Page", "Previous page", "Play this song", "Delete the last note", "Name your song"};
 	
-	private JMenuItem[] fileMenuItems = {loadItem = new JMenuItem("Load song"), saveItem = new JMenuItem("Save song"), quitItem = new JMenuItem("Quit")};
+	private JMenuItem[] fileMenuItems = {loadItem = new JMenuItem("Load song"), saveItem = new JMenuItem("Save song"), quitItem = new JMenuItem("Quit"),
+			revalidateItem = new JMenuItem("Revalidate")};
 	
 	public ComposerGui() {
 		//initializing variables and configuring gui elements
@@ -171,6 +177,7 @@ public class ComposerGui implements ActionListener
 		instrumentsMenu.add(pianoItem);
 
 		SOURCE = ImmutableMap.<Object, Integer>builder()
+					.put(revalidateItem, 0)
 					.put(loadItem, 1)
 					.put(saveItem, 2)
 					.put(quitItem, 3)
@@ -198,6 +205,7 @@ public class ComposerGui implements ActionListener
 		fileMenu.setForeground(Color.ORANGE);
 		fileMenu.add(saveItem);
 		fileMenu.add(loadItem);
+		fileMenu.add(revalidateItem);
 		fileMenu.add(new JSeparator());
 		fileMenu.add(quitItem);
 		
@@ -280,8 +288,37 @@ public class ComposerGui implements ActionListener
 		int source = SOURCE.get(e.getSource());
 		switch(source)
 		{
+			case REVALIDATE:
+			{
+				Song song = SongProcessor.getSong();
+				for (Note note : song)
+				{
+					if(SoundDrawRelations.getDrawing(song.indexOf(note)) instanceof EighthNote)
+					{
+						System.out.println("Eight");
+						note.setLength(Lengths.EIGHT);
+					}
+					else if(SoundDrawRelations.getDrawing(song.indexOf(note)) instanceof QuarterNote)
+					{
+						System.out.println("Quarter");
+						note.setLength(Lengths.QUARTER);
+					}
+					else if(SoundDrawRelations.getDrawing(song.indexOf(note)) instanceof HalfNote)
+					{
+						System.out.println("Half");
+						note.setLength(Lengths.HALF);
+					}
+					else if(SoundDrawRelations.getDrawing(song.indexOf(note)) instanceof FullNote)
+					{
+						System.out.println("Whole");
+						note.setLength(Lengths.WHOLE);
+					}
+				}
+				break;
+			}
 			case QUIT:
 			{
+				
 				System.exit(0);
 				break;
 			}

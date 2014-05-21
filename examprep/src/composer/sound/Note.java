@@ -2,6 +2,7 @@ package composer.sound;
 
 import java.io.Serializable;
 
+import composer.data.Lengths;
 import composer.data.MidiDataExtractor;
 
 public class Note implements Serializable
@@ -39,5 +40,8 @@ public class Note implements Serializable
 	}
 	public void setSilent(boolean isSilent) {
 		this.isSilent = isSilent;
+	}
+	public void setLength(MidiDataExtractor length) {
+		this.length = length.value();
 	}
 }
